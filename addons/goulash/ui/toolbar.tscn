@@ -1,0 +1,242 @@
+[gd_scene load_steps=9 format=3 uid="uid://chuytojhypqte"]
+
+[ext_resource type="Script" path="res://addons/goulash/ui/toolbar.gd" id="1_72a5i"]
+[ext_resource type="Texture2D" uid="uid://jnmhbl8m5hy2" path="res://addons/goulash/icons/ToolSelect.svg" id="2_7pmde"]
+[ext_resource type="Texture2D" uid="uid://da1imqfk7aeg5" path="res://addons/goulash/icons/Paint.svg" id="3_eks0u"]
+[ext_resource type="Texture2D" uid="uid://dodqbpb1r3722" path="res://addons/goulash/icons/Rectangle.svg" id="4_s08xu"]
+[ext_resource type="Texture2D" uid="uid://cf60f07corl3p" path="res://addons/goulash/icons/ColorPick.svg" id="5_8y7ry"]
+[ext_resource type="Texture2D" uid="uid://bduj3a2iwrk0c" path="res://addons/goulash/icons/Bucket.svg" id="6_83ojh"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_d636o"]
+bg_color = Color(0.286275, 0.286275, 0.286275, 0)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_774xs"]
+
+[node name="Toolbar" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_72a5i")
+
+[node name="Colors" type="Panel" parent="."]
+self_modulate = Color(1, 1, 1, 0.823529)
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -171.0
+offset_top = 25.0
+offset_right = -21.0
+offset_bottom = 230.0
+grow_horizontal = 0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="Colors"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Colors/MarginContainer"]
+layout_mode = 2
+
+[node name="ColorPicker" type="ColorPicker" parent="Colors/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/margin = 0
+theme_override_constants/sv_width = 0
+theme_override_constants/sv_height = 130
+theme_override_constants/h_width = 7
+can_add_swatches = false
+color_modes_visible = false
+sliders_visible = false
+hex_visible = false
+presets_visible = false
+
+[node name="UsedColors" type="HFlowContainer" parent="Colors/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Tools" type="Panel" parent="."]
+self_modulate = Color(1, 1, 1, 0.823529)
+layout_mode = 1
+offset_left = 7.0
+offset_top = 32.0
+offset_right = 81.0
+offset_bottom = 286.0
+scale = Vector2(1.00068, 1)
+
+[node name="MarginContainer" type="MarginContainer" parent="Tools"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Tools/MarginContainer"]
+layout_mode = 2
+
+[node name="GridContainer" type="GridContainer" parent="Tools/MarginContainer/VBoxContainer"]
+layout_mode = 2
+columns = 2
+
+[node name="ButtonSelect" type="Button" parent="Tools/MarginContainer/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+tooltip_text = "Select (Q)"
+theme_override_styles/disabled = SubResource("StyleBoxFlat_d636o")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_774xs")
+toggle_mode = true
+icon = ExtResource("2_7pmde")
+flat = true
+icon_alignment = 1
+
+[node name="ButtonBrush" type="Button" parent="Tools/MarginContainer/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+tooltip_text = "Brush Shape (B)"
+theme_override_styles/disabled = SubResource("StyleBoxFlat_d636o")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_774xs")
+toggle_mode = true
+icon = ExtResource("3_eks0u")
+flat = true
+icon_alignment = 1
+
+[node name="ButtonPen" type="Button" parent="Tools/MarginContainer/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+tooltip_text = "Outline Shape (Y)"
+theme_override_styles/disabled = SubResource("StyleBoxFlat_d636o")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_774xs")
+toggle_mode = true
+text = "☁️"
+flat = true
+icon_alignment = 1
+
+[node name="ButtonOval" type="Button" parent="Tools/MarginContainer/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+tooltip_text = "Circle Shape (O)"
+theme_override_styles/disabled = SubResource("StyleBoxFlat_d636o")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_774xs")
+toggle_mode = true
+text = "⚪"
+flat = true
+icon_alignment = 1
+
+[node name="ButtonRect" type="Button" parent="Tools/MarginContainer/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+tooltip_text = "Rect Shape (R)"
+theme_override_styles/disabled = SubResource("StyleBoxFlat_d636o")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_774xs")
+toggle_mode = true
+icon = ExtResource("4_s08xu")
+flat = true
+icon_alignment = 1
+
+[node name="ButtonEyedropper" type="Button" parent="Tools/MarginContainer/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+tooltip_text = "Eyedropper (I)
+"
+theme_override_styles/disabled = SubResource("StyleBoxFlat_d636o")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_774xs")
+toggle_mode = true
+icon = ExtResource("5_8y7ry")
+flat = true
+icon_alignment = 1
+
+[node name="ButtonFill" type="Button" parent="Tools/MarginContainer/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+theme_override_styles/disabled = SubResource("StyleBoxFlat_d636o")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_774xs")
+toggle_mode = true
+icon = ExtResource("6_83ojh")
+flat = true
+icon_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="Tools/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="PropertiesSelect" type="VBoxContainer" parent="Tools/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="MenuBar" type="MenuBar" parent="Tools/MarginContainer/VBoxContainer/PropertiesSelect"]
+layout_mode = 2
+
+[node name="Fall Off" type="PopupMenu" parent="Tools/MarginContainer/VBoxContainer/PropertiesSelect/MenuBar"]
+item_count = 2
+item_0/text = "Smooth"
+item_0/id = 0
+item_1/text = "Linear"
+item_1/id = 1
+
+[node name="PropertiesBrush" type="VBoxContainer" parent="Tools/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Tools/MarginContainer/VBoxContainer/PropertiesBrush"]
+layout_mode = 2
+text = "Size"
+horizontal_alignment = 1
+
+[node name="HSlider" type="HSlider" parent="Tools/MarginContainer/VBoxContainer/PropertiesBrush"]
+layout_mode = 2
+
+[node name="PropertiesFill" type="VBoxContainer" parent="Tools/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Tools/MarginContainer/VBoxContainer/PropertiesFill"]
+layout_mode = 2
+text = "Size"
+horizontal_alignment = 1
+
+[node name="HSlider" type="HSlider" parent="Tools/MarginContainer/VBoxContainer/PropertiesFill"]
+layout_mode = 2
+
+[connection signal="color_changed" from="Colors/MarginContainer/VBoxContainer/ColorPicker" to="." method="_on_color_picker_color_changed"]
+[connection signal="pressed" from="Tools/MarginContainer/VBoxContainer/GridContainer/ButtonSelect" to="." method="_on_button_select_pressed"]
+[connection signal="pressed" from="Tools/MarginContainer/VBoxContainer/GridContainer/ButtonBrush" to="." method="_on_button_brush_pressed"]
+[connection signal="pressed" from="Tools/MarginContainer/VBoxContainer/GridContainer/ButtonPen" to="." method="_on_button_pen_pressed"]
+[connection signal="pressed" from="Tools/MarginContainer/VBoxContainer/GridContainer/ButtonOval" to="." method="_on_button_oval_pressed"]
+[connection signal="pressed" from="Tools/MarginContainer/VBoxContainer/GridContainer/ButtonRect" to="." method="_on_button_rect_pressed"]
+[connection signal="pressed" from="Tools/MarginContainer/VBoxContainer/GridContainer/ButtonEyedropper" to="." method="_on_button_eyedropper_pressed"]
+[connection signal="pressed" from="Tools/MarginContainer/VBoxContainer/GridContainer/ButtonFill" to="." method="_on_button_fill_pressed"]

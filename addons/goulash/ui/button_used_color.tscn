@@ -1,0 +1,12 @@
+[gd_scene load_steps=2 format=3 uid="uid://dbnwg2psnoj0f"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1fh0c"]
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[node name="ButtonUsedColor" type="Button"]
+custom_minimum_size = Vector2(20, 20)
+theme_override_styles/normal = SubResource("StyleBoxFlat_1fh0c")

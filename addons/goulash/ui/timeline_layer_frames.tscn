@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://bc7ej480nujnp"]
+
+[ext_resource type="Script" path="res://addons/goulash/ui/timeline_layer_frames.gd" id="1_jjljs"]
+
+[node name="TimelineLayerFrames" type="HBoxContainer"]
+theme_override_constants/separation = 2
+script = ExtResource("1_jjljs")
