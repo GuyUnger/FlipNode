@@ -6,7 +6,7 @@ extends Resource
 @export var triggers: Array
 @export var frame_num: int
 
-@export var layer: BrushClipLayer
+@export var layer: BrushLayerData
 
 
 func copy() -> Keyframe:

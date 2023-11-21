@@ -343,7 +343,7 @@ func _action_start(mouse_position, alt):
 		TOOL_FILL:
 			action_fill_try(mouse_position)
 		TOOL_EYEDROPPER:
-			for stroke: BrushStrokeData in _get_editing_sprite().strokes:
+			for stroke: BrushStrokeData in _get_editing_sprite_data().strokes:
 				if stroke.is_point_inside(mouse_position):
 					current_color = stroke.color
 					toolbar._update_color_picker_color()
@@ -387,13 +387,13 @@ func forward_draw(target: BrushClip2D):
 			
 			target.draw_circle(mouse_position, 2.0 / zoom, Color.WHITE)
 		TOOL_SELECT:
-			for stroke: BrushStrokeData in _get_editing_sprite().strokes:
+			for stroke: BrushStrokeData in _get_editing_sprite_data().strokes:
 				if _is_hovering_edge(stroke, mouse_position):
 					target.draw_circle(
 							stroke.polygon_curve.get_closest_point(mouse_position), 3.0, Color.WHITE
 						)
 		TOOL_EYEDROPPER:
-			for stroke: BrushStrokeData in _get_editing_sprite().strokes:
+			for stroke: BrushStrokeData in _get_editing_sprite_data().strokes:
 				if stroke.is_point_inside(mouse_position):
 					target.draw_circle(mouse_position, 16.0, stroke.color)
 					_draw_circle_outline(target, mouse_position, 16.0, Color.WHITE)
@@ -421,7 +421,7 @@ var action_warp_selections := []
 
 func action_warp_try(action_position: Vector2) -> bool:
 	var range := 200.0
-	for stroke in _get_editing_sprite().strokes:
+	for stroke in _get_editing_sprite_data().strokes:
 		_warp_stroke_try(stroke, action_position, range)
 	if action_warp_selections.size() > 0:
 		_current_action = ACTION_WARP
@@ -551,7 +551,7 @@ class ActionWarpSelectionHole extends ActionWarpSelection:
 
 var moving_stroke
 func action_move_try(action_position: Vector2) -> bool:
-	for stroke: BrushStrokeData in _get_editing_sprite().strokes:
+	for stroke: BrushStrokeData in _get_editing_sprite_data().strokes:
 		if stroke.is_point_inside(action_position):
 			moving_stroke = stroke
 			_action_position_previous = action_position
@@ -574,12 +574,12 @@ func action_move_process(action_position: Vector2):
 ## ACTION FILL
 
 func action_fill_try(action_position: Vector2):
-	for stroke: BrushStrokeData in _get_editing_sprite().strokes:
+	for stroke: BrushStrokeData in _get_editing_sprite_data().strokes:
 		if stroke.is_point_inside(action_position):
 			stroke.color = current_color
 			merge_stroke(stroke)
 			return
-	for stroke: BrushStrokeData in _get_editing_sprite().strokes:
+	for stroke: BrushStrokeData in _get_editing_sprite_data().strokes:
 		for i in stroke.holes.size():
 			if Geometry2D.is_point_in_polygon(action_position, stroke.holes[i]):
 				if stroke.color == current_color:
@@ -587,7 +587,7 @@ func action_fill_try(action_position: Vector2):
 				else:
 					var polygon = stroke.holes[i].duplicate()
 					polygon.reverse()
-					_get_editing_sprite().add_stroke(BrushStrokeData.new(polygon, [], current_color))
+					_get_editing_sprite_data().add_stroke(BrushStrokeData.new(polygon, [], current_color))
 				editing_brush._redraw()
 				return
 
@@ -601,7 +601,7 @@ func action_paint_start(action_position: Vector2):
 	
 	var color = Color.WHITE if _action_alt else current_color
 	_action_paint_stroke = BrushStrokeData.new([], [], color)
-	_get_editing_sprite().add_stroke(_action_paint_stroke)
+	_get_editing_sprite_data().add_stroke(_action_paint_stroke)
 	
 	action_paint_process(action_position)
 	editing_brush._redraw()
@@ -617,8 +617,8 @@ func action_paint_complete():
 
 func _action_paint_complete_add():
 	var strokes := []
-	while _get_editing_sprite().strokes.size() > 0:
-		var stroke = _get_editing_sprite().strokes.pop_front()
+	while _get_editing_sprite_data().strokes.size() > 0:
+		var stroke = _get_editing_sprite_data().strokes.pop_front()
 		if stroke == _action_paint_stroke:
 			continue
 		if _action_paint_stroke.is_stroke_overlapping(stroke):
@@ -632,24 +632,24 @@ func _action_paint_complete_add():
 	strokes.push_back(_action_paint_stroke)
 	
 	for stroke in strokes:
-		_get_editing_sprite().add_stroke(stroke)
+		_get_editing_sprite_data().add_stroke(stroke)
 	
 	_action_paint_stroke = null
-	editing_brush._redraw()
+	editing_brush.draw()
 
 
 func _action_paint_complete_subtract():
 	var strokes := []
-	_get_editing_sprite().strokes.erase(_action_paint_stroke)
-	while _get_editing_sprite().strokes.size() > 0:
-		var stroke: BrushStrokeData = _get_editing_sprite().strokes.pop_front()
+	_get_editing_sprite_data().strokes.erase(_action_paint_stroke)
+	while _get_editing_sprite_data().strokes.size() > 0:
+		var stroke: BrushStrokeData = _get_editing_sprite_data().strokes.pop_front()
 		strokes.append_array(stroke.subtract_stroke(_action_paint_stroke))
 	
 	for stroke in strokes:
-		_get_editing_sprite().add_stroke(stroke)
+		_get_editing_sprite_data().add_stroke(stroke)
 	
 	_action_paint_stroke = null
-	editing_brush._redraw()
+	editing_brush.draw()
 
 
 func action_paint_process(action_position: Vector2):
@@ -688,11 +688,11 @@ func merge_stroke(stroke):
 	_action_paint_complete_add()
 
 
-func _get_editing_sprite():
+func _get_editing_sprite_data():
 	if _selected_frame:
-		return _selected_frame
+		return _selected_frame.sprite_data
 	else:
-		return editing_brush.layers[_selected_layer_id].get_frame(editing_brush.current_frame)
+		return editing_brush.layers[_selected_layer_id].get_frame(editing_brush.current_frame.sprite_data)
 
 func _get_current_layer():
 	return editing_brush.layers[_selected_layer_id]

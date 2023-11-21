@@ -1,18 +1,18 @@
 [gd_scene load_steps=6 format=3 uid="uid://cm2ianu7k74yv"]
 
 [ext_resource type="Script" path="res://addons/goulash/brush_clip2d.gd" id="1_slhv3"]
-[ext_resource type="Script" path="res://addons/goulash/keyframe.gd" id="2_n2kms"]
-[ext_resource type="Script" path="res://addons/goulash/brush_clip_layer.gd" id="4_cfetk"]
+[ext_resource type="Script" path="res://addons/goulash/brush_keyframe.gd" id="2_n2kms"]
+[ext_resource type="Script" path="res://addons/goulash/brush_layer_data.gd" id="4_cfetk"]
 
-[sub_resource type="Resource" id="Resource_tmmdv"]
+[sub_resource type="Resource" id="Resource_qmlte"]
 script = ExtResource("2_n2kms")
 triggers = []
 frame_num = 0
 
-[sub_resource type="Resource" id="Resource_oaykf"]
+[sub_resource type="Resource" id="Resource_bj1r6"]
 script = ExtResource("4_cfetk")
 name = "Layer"
-keyframes = [SubResource("Resource_tmmdv")]
+keyframes = [SubResource("Resource_qmlte")]
 transform_frames = []
 frame_count = 1
 visible = true
@@ -22,4 +22,4 @@ locked = false
 
 [node name="BrushClip2D" type="Node2D" parent="."]
 script = ExtResource("1_slhv3")
-layers = [SubResource("Resource_oaykf")]
+layers_data = [SubResource("Resource_bj1r6")]

@@ -11,7 +11,6 @@ signal frame_changed
 	set(value):
 		current_frame = value % (_frame_count)
 		frame_changed.emit()
-		_redraw()
 
 @export var _frame_count := 1:
 	get:
@@ -44,7 +43,7 @@ func _ready():
 		play()
 	else:
 		stop()
-	_redraw()
+	draw()
 
 
 func _process(delta):
@@ -100,33 +99,17 @@ func goto(frame_or_label):
 	else:
 		push_error("goto_and_stop only takes ints (frame number) or strings (label names).")
 
-func _redraw():
-	if not is_instance_valid(layers):
-		if has_node("Layers"):
-			layers = get_node("Layers")
-		else:
-			layers = Node2D.new()
-			add_child(layers)
-	
-	var layer_count = data.strokes.size()
-	
-	while layers.get_child_count() > layer_count:
-		layers.remove_child(strokes[strokes.size() - 1])
-		strokes.pop_back()
-	
-	while data.strokes.size() < layer_count:
-		var stroke = BrushStroke2D.instantiate()
-		add_child(stroke)
-		strokes.push_back(stroke)
-	
-	for i in strokes_data.size():
-		strokes[i].draw(strokes_data[i])
-	while layers.get_child_count() < 
-	
-	for layer_data in layers_data:
-		
-		#.append_array(layer_data.get_frame(current_frame) )
-	
+
+func draw():
+	var layer_count = layers_data.size()
+	for i in layer_count:
+		var layer_data = layers_data[i]
+		var layer = BrushLayer2D.new()
+		layer.name = layer_data.name
+		layer.layer_data = layer_data
+		add_child(layer)
+		layer.draw()
+		layer.owner = owner
 
 
 func _draw():
@@ -135,7 +118,7 @@ func _draw():
 
 
 func _create_layer_data():
-	var layer = BrushClipLayer.new()
+	var layer = BrushLayerData.new()
 	layers_data.push_back(layer)
 
 

@@ -1,5 +1,5 @@
 @tool
-class_name BrushClipLayer
+class_name BrushLayerData
 extends Resource
 
 @export var name := "Layer"
