@@ -1,5 +1,6 @@
 @tool
-class_name BrushClipLayer extends Resource
+class_name BrushClipLayer
+extends Resource
 
 @export var name := "Layer"
 
@@ -15,13 +16,9 @@ func _init():
 	set_keyframe(Keyframe.new(), 0)
 
 
-func get_shapes(frame_num: int) -> Array:
-	if frame_num >= frame_count:
-		return []
-	return get_frame(frame_num).shapes
-
-
 func get_frame(frame_num: int) -> Keyframe:
+	if frame_num > frame_count:
+		return null
 	for i in keyframes.size():
 		if keyframes[i].frame_num == frame_num:
 			return keyframes[i]

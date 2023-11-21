@@ -1,11 +1,9 @@
 @tool
 @icon("res://addons/goulash/brush_clip.svg")
-class_name BrushClip2D extends Node2D
-
-const BrushStroke2D = preload("res://addons/goulash/brush_stroke2d.tscn")
+class_name BrushClip2D
+extends Node2D
 
 signal frame_changed
-
 
 @export var current_frame: int = 0:
 	get:
@@ -28,19 +26,19 @@ var total_frames: int:
 @export var auto_play := true
 @export var is_playing := false
 
-@export var layers: Array
+@export var layers_data: Array
 @export var labels: Dictionary
 
 @export var expose_frames_in_tree := false
 
 ## DISPLAY
-var _brushes: Array
+var layers: Node2D
 
 var next_frame_delay := 0.0
 
 func _ready():
-	if layers.size() == 0:
-		_create_layer()
+	if layers_data.size() == 0:
+		_create_layer_data()
 	
 	if auto_play and not Engine.is_editor_hint():
 		play()
@@ -102,41 +100,49 @@ func goto(frame_or_label):
 	else:
 		push_error("goto_and_stop only takes ints (frame number) or strings (label names).")
 
-
 func _redraw():
-	var shapes := []
+	if not is_instance_valid(layers):
+		if has_node("Layers"):
+			layers = get_node("Layers")
+		else:
+			layers = Node2D.new()
+			add_child(layers)
 	
-	for layer in layers:
-		shapes.append_array(layer.get_shapes(current_frame) )
+	var layer_count = data.strokes.size()
 	
-	var shape_count = shapes.size()
-	while _brushes.size() < shape_count:
-		var brush_shape = BrushStroke2D.instantiate()
-		add_child(brush_shape)
-		_brushes.push_back(brush_shape)
+	while layers.get_child_count() > layer_count:
+		layers.remove_child(strokes[strokes.size() - 1])
+		strokes.pop_back()
 	
-	while _brushes.size() > shape_count:
-		remove_child(_brushes[_brushes.size()-1])
-		_brushes.pop_back()
+	while data.strokes.size() < layer_count:
+		var stroke = BrushStroke2D.instantiate()
+		add_child(stroke)
+		strokes.push_back(stroke)
 	
-	for i in shapes.size():
-		_brushes[i].draw(shapes[i])
+	for i in strokes_data.size():
+		strokes[i].draw(strokes_data[i])
+	while layers.get_child_count() < 
+	
+	for layer_data in layers_data:
+		
+		#.append_array(layer_data.get_frame(current_frame) )
+	
+
 
 func _draw():
 	if Goulash.editor:
 		Goulash.editor.forward_draw(self)
 
 
-func _create_layer():
+func _create_layer_data():
 	var layer = BrushClipLayer.new()
-	layers.push_back(layer)
+	layers_data.push_back(layer)
 
 
 func _update_frame_count():
-	var count = 1
-	for layer in layers:
-		count = max(count, layer.frame_count)
-	_frame_count = count
+	_frame_count = 1
+	for layer_data in layers_data:
+		_frame_count = max(_frame_count, layer_data.frame_count)
 
 
 func _get_fps():

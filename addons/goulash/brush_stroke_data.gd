@@ -1,5 +1,6 @@
 @tool
-class_name BrushShape2D extends Resource
+class_name BrushStrokeData
+extends Resource
 
 @export var container: Resource
 
@@ -15,11 +16,11 @@ func _init(polygon := PackedVector2Array(), holes: Array[PackedVector2Array] = [
 	self.color = color
 
 
-func union_shape(shape: BrushShape2D):
+func union_stroke(stroke: BrushStrokeData):
 	var polygon_a = polygon.duplicate()
-	var polygon_b = shape.polygon.duplicate()
+	var polygon_b = stroke.polygon.duplicate()
 	var holes_a = holes
-	var holes_b = shape.holes
+	var holes_b = stroke.holes
 	
 	var merged_polygon: PackedVector2Array
 	var merged_holes: Array[PackedVector2Array]
@@ -58,7 +59,7 @@ func union_shape(shape: BrushShape2D):
 
 
 func union_polygon(with_polygon: PackedVector2Array):
-	#💡 merge shape
+	#💡 merge stroke
 	var merged_polygons = Geometry2D.merge_polygons(polygon, with_polygon)
 	var new_polygon
 	for merged_polygon in merged_polygons:
@@ -82,24 +83,24 @@ func union_polygon(with_polygon: PackedVector2Array):
 			i += 1
 
 
-func subtract_shape(shape: BrushShape2D) -> Array:
-	if not is_shape_overlapping(shape):
+func subtract_stroke(stroke: BrushStrokeData) -> Array:
+	if not is_stroke_overlapping(stroke):
 		return [self]
 	
-	## Goes over all holes and "collects" overlapping ones into one shape, adds the hole back at the end
-	var subtract_polygon = shape.polygon
+	## Goes over all holes and "collects" overlapping ones into one stroke, adds the hole back at the end
+	var subtract_polygon = stroke.polygon
 	
 	var subtracted_holes: Array[PackedVector2Array]
-	var shapes := []
+	var strokes := []
 	
 	for hole in holes:
 		if Geometry2D.intersect_polygons(subtract_polygon, hole).size() > 0:
 			var result_polygons = Geometry2D.merge_polygons(subtract_polygon, hole)
 			for result_polygon in result_polygons:
 				if Geometry2D.is_polygon_clockwise(result_polygon):
-					## island inside hole, make a new shape
+					## island inside hole, make a new stroke
 					result_polygon.reverse()
-					shapes.push_back(create_shape(result_polygon))
+					strokes.push_back(create_stroke(result_polygon))
 				else:
 					subtract_polygon = result_polygon
 		else:
@@ -109,8 +110,8 @@ func subtract_shape(shape: BrushShape2D) -> Array:
 		## hole added
 		subtracted_holes.push_back(subtract_polygon)
 		holes = subtracted_holes
-		shapes.push_back(self)
-		return shapes
+		strokes.push_back(self)
+		return strokes
 	
 	var clipped_polygons = Geometry2D.clip_polygons(polygon, subtract_polygon)
 	if clipped_polygons.size() == 0:
@@ -120,18 +121,18 @@ func subtract_shape(shape: BrushShape2D) -> Array:
 		## polygon altered
 		polygon = clipped_polygons[0]
 		holes = subtracted_holes
-		shapes.push_back(self)
+		strokes.push_back(self)
 	else:
 		## split into multiple
 		for p in clipped_polygons:
-			var seperated_shape = create_shape(p)
-			## assign holes to shapes they belong to
+			var seperated_stroke = create_stroke(p)
+			## assign holes to strokes they belong to
 			for hole in subtracted_holes:
 				if Geometry2D.intersect_polygons(p, hole).size() > 0:
-					seperated_shape.holes.push_back(hole)
-			shapes.push_back(seperated_shape)
+					seperated_stroke.holes.push_back(hole)
+			strokes.push_back(seperated_stroke)
 	
-	return shapes
+	return strokes
 
 #func subtract_polygon(with_polygon: PackedVector2Array):
 	#var i := 0
@@ -146,7 +147,7 @@ func subtract_shape(shape: BrushShape2D) -> Array:
 			#var merged = Geometry2D.merge_polygons(hole, merged_polygon)
 			#for polygon in merged:
 				#if Geometry2D.is_polygon_clockwise(polygon):
-					#parent.add_shape(create_shape(polygon))
+					#parent.add_stroke(create_stroke(polygon))
 				#else:
 					#hole_merged = true
 					#merged_polygon = polygon
@@ -155,12 +156,12 @@ func subtract_shape(shape: BrushShape2D) -> Array:
 	#if hole_merged:
 		#holes.push_back(merged_polygon)
 	#
-	###💡 Subtract brush from shapes
+	###💡 Subtract brush from strokes
 	#if Geometry2D.intersect_polygons(polygon, merged_polygon).size() > 0:
 		#var clipped_polygons = Geometry2D.clip_polygons(polygon, merged_polygon)
 		#for p in clipped_polygons:
-			#parent.add_shape(create_shape(p))
-		#parent.remove_shape(self)
+			#parent.add_stroke(create_stroke(p))
+		#parent.remove_stroke(self)
 
 
 func translate(offset: Vector2):
@@ -175,13 +176,13 @@ func _translate_polygon(polygon: PackedVector2Array, offset: Vector2) -> PackedV
 	return polygon
 
 
-func create_shape(polygon: PackedVector2Array, holes: Array[PackedVector2Array] = []) -> BrushShape2D:
-	return BrushShape2D.new(polygon, holes, color)
+func create_stroke(polygon: PackedVector2Array, holes: Array[PackedVector2Array] = []) -> BrushStrokeData:
+	return BrushStrokeData.new(polygon, holes, color)
 
 
-func is_shape_overlapping(shape: BrushShape2D) -> bool:
-	if Geometry2D.intersect_polygons(polygon, shape.polygon).size() > 0:
-		if _is_inside_hole(shape) or shape._is_inside_hole(self):
+func is_stroke_overlapping(stroke: BrushStrokeData) -> bool:
+	if Geometry2D.intersect_polygons(polygon, stroke.polygon).size() > 0:
+		if _is_inside_hole(stroke) or stroke._is_inside_hole(self):
 			return false
 		else:
 			return true
@@ -194,15 +195,15 @@ func is_shape_overlapping(shape: BrushShape2D) -> bool:
 	#return false
 
 
-func is_shape_inside(shape: BrushShape2D) -> bool:
-	if Geometry2D.clip_polygons(polygon, shape.polygon).size() == 0:
-		return not _is_inside_hole(shape)
+func is_stroke_inside(stroke: BrushStrokeData) -> bool:
+	if Geometry2D.clip_polygons(polygon, stroke.polygon).size() == 0:
+		return not _is_inside_hole(stroke)
 	else:
 		return false
 
 
-func _is_inside_hole(shape: BrushShape2D) -> bool:
-	return _is_polygon_inside_hole(shape.polygon)
+func _is_inside_hole(stroke: BrushStrokeData) -> bool:
+	return _is_polygon_inside_hole(stroke.polygon)
 
 
 func _is_polygon_inside_hole(checking_polygon: PackedVector2Array) -> bool:

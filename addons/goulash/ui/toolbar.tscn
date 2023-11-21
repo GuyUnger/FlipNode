@@ -7,6 +7,8 @@
 [ext_resource type="Texture2D" uid="uid://cf60f07corl3p" path="res://addons/goulash/icons/ColorPick.svg" id="5_8y7ry"]
 [ext_resource type="Texture2D" uid="uid://bduj3a2iwrk0c" path="res://addons/goulash/icons/Bucket.svg" id="6_83ojh"]
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_774xs"]
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_d636o"]
 bg_color = Color(0.286275, 0.286275, 0.286275, 0)
 border_width_left = 2
@@ -18,8 +20,6 @@ corner_radius_top_left = 4
 corner_radius_top_right = 4
 corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_774xs"]
 
 [node name="Toolbar" type="Control"]
 layout_mode = 3
@@ -67,10 +67,10 @@ theme_override_constants/margin = 0
 theme_override_constants/sv_width = 0
 theme_override_constants/sv_height = 130
 theme_override_constants/h_width = 7
+color = Color(0.803922, 0.521569, 0.247059, 1)
 can_add_swatches = false
 color_modes_visible = false
 sliders_visible = false
-hex_visible = false
 presets_visible = false
 
 [node name="UsedColors" type="HFlowContainer" parent="Colors/MarginContainer/VBoxContainer"]
@@ -110,7 +110,6 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(30, 30)
 layout_mode = 2
 tooltip_text = "Select (Q)"
-theme_override_styles/disabled = SubResource("StyleBoxFlat_d636o")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_774xs")
 toggle_mode = true
 icon = ExtResource("2_7pmde")

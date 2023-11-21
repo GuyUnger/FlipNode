@@ -3,7 +3,6 @@ extends Control
 
 const ButtonUsedColor = preload("res://addons/goulash/ui/button_used_color.tscn")
 
-
 @onready var buttons := [
 	%ButtonSelect,
 	%ButtonBrush,
@@ -19,7 +18,6 @@ const ButtonUsedColor = preload("res://addons/goulash/ui/button_used_color.tscn"
 	%PropertiesBrush,
 	%PropertiesFill,
 ]
-
 
 var _used_colors := []
 
@@ -37,9 +35,9 @@ func _update_used_colors():
 	_used_colors = []
 	for layer in Goulash.editor.editing_brush.layers:
 		for keyframe in layer.keyframes:
-			for shape in keyframe.shapes:
-				if not _used_colors.has(shape.color):
-					_add_used_color(shape.color)
+			for stroke in keyframe.strokes:
+				if not _used_colors.has(stroke.color):
+					_add_used_color(stroke.color)
 
 
 func _add_used_color(color):
@@ -52,20 +50,26 @@ func _add_used_color(color):
 func _on_button_select_pressed():
 	Goulash.editor.set_tool(Goulash.TOOL_SELECT)
 
+
 func _on_button_brush_pressed():
 	Goulash.editor.set_tool(Goulash.TOOL_BRUSH)
+
 
 func _on_button_fill_pressed():
 	Goulash.editor.set_tool(Goulash.TOOL_FILL)
 
+
 func _on_button_oval_pressed():
 	Goulash.editor.set_tool(Goulash.TOOL_OVAL)
+
 
 func _on_button_rect_pressed():
 	Goulash.editor.set_tool(Goulash.TOOL_RECT)
 
+
 func _on_button_pen_pressed():
 	Goulash.editor.set_tool(Goulash.TOOL_PEN)
+
 
 func _on_button_eyedropper_pressed():
 	Goulash.editor.set_tool(Goulash.TOOL_EYEDROPPER)
@@ -113,7 +117,7 @@ func show_properties(properties = null):
 		properties.visible = true
 
 
-func set_pressed(button):
+func set_pressed(button: Button):
 	for b: Button in buttons:
-		b.disabled = false
-	button.disabled = true
+		b.button_pressed = false
+	button.button_pressed = true
