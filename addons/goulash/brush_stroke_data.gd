@@ -2,8 +2,6 @@
 class_name BrushStrokeData
 extends Resource
 
-@export var container: Resource
-
 @export var color: Color
 @export var polygon: PackedVector2Array
 @export var polygon_curve: Curve2D

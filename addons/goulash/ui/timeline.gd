@@ -1,6 +1,8 @@
 @tool
 extends Control
 
+var brushclip: BrushClip2D
+
 func _ready():
 	%FrameIndicator.modulate = EditorInterface.get_editor_settings().get_setting("interface/theme/accent_color")
 	
@@ -8,6 +10,10 @@ func _ready():
 		load_brush_clip(null)
 
 func load_brush_clip(brush_clip: BrushClip2D):
+	if self.brushclip == brushclip:
+		return
+	
+	self.brushclip = brushclip
 	_clear_layers()
 	if brush_clip == null:
 		%LabelNoBrushClip.visible = true

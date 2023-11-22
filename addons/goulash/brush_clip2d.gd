@@ -9,14 +9,18 @@ signal frame_changed
 	get:
 		return current_frame
 	set(value):
-		current_frame = value % (_frame_count)
+		value %= _frame_count
+		if current_frame == value:
+			return
+		current_frame = value
+		draw()
 		frame_changed.emit()
 
 @export var _frame_count := 1:
 	get:
 		return _frame_count
 
-var total_frames: int:
+var total_frames: int: 
 	get:
 		return _frame_count
 
@@ -25,25 +29,28 @@ var total_frames: int:
 @export var auto_play := true
 @export var is_playing := false
 
-@export var layers_data: Array
-@export var labels: Dictionary
+var labels: Dictionary
+var layers: Array
 
 @export var expose_frames_in_tree := false
-
-## DISPLAY
-var layers: Node2D
 
 var next_frame_delay := 0.0
 
 func _ready():
-	if layers_data.size() == 0:
-		_create_layer_data()
+	_find_layers()
+	_update_frame_count()
+	if layers.size() == 0:
+		_create_layer()
 	
 	if auto_play and not Engine.is_editor_hint():
 		play()
 	else:
 		stop()
-	draw()
+
+
+func draw():
+	for layer: BrushLayer2D in layers:
+		layer.display_frame(current_frame)
 
 
 func _process(delta):
@@ -100,32 +107,31 @@ func goto(frame_or_label):
 		push_error("goto_and_stop only takes ints (frame number) or strings (label names).")
 
 
-func draw():
-	var layer_count = layers_data.size()
-	for i in layer_count:
-		var layer_data = layers_data[i]
-		var layer = BrushLayer2D.new()
-		layer.name = layer_data.name
-		layer.layer_data = layer_data
-		add_child(layer)
-		layer.draw()
-		layer.owner = owner
-
-
 func _draw():
 	if Goulash.editor:
 		Goulash.editor.forward_draw(self)
 
 
-func _create_layer_data():
-	var layer = BrushLayerData.new()
-	layers_data.push_back(layer)
+func _create_layer():
+	var layer = BrushLayer2D.new()
+	add_child(layer)
+	layer.name = "Layer %s" % (layers.size() + 1)
+	layer.owner = owner
+	layers.push_back(layer)
+	layer.set_keyframe(BrushKeyframe2D.new(), 0)
+
+
+func _find_layers():
+	layers = []
+	for child in get_children():
+		if child is BrushLayer2D:
+			layers.push_back(child)
 
 
 func _update_frame_count():
 	_frame_count = 1
-	for layer_data in layers_data:
-		_frame_count = max(_frame_count, layer_data.frame_count)
+	for layer in layers:
+		_frame_count = max(_frame_count, layer.frame_count)
 
 
 func _get_fps():

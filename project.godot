@@ -17,4 +17,15 @@ config/icon="res://icon.svg"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/goulash/plugin.cfg")
+enabled=PackedStringArray("res://addons/goulash/plugin.cfg", "res://addons/insta_complete/plugin.cfg")
+
+[shader_globals]
+
+goulash_boil_noise={
+"type": "sampler2D",
+"value": ""
+}
+goulash_frame={
+"type": "float",
+"value": 0.0
+}

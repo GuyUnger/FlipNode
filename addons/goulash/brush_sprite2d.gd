@@ -1,25 +1,34 @@
 @tool
-class_name BrushSprite2D extends Node2D
+@icon("res://addons/goulash/icons/BrushSprite2D.svg")
+class_name BrushSprite2D
+extends Node2D
 
 const BrushStroke2D = preload("res://addons/goulash/brush_stroke2d.tscn")
 
-var data: BrushSpriteData
-var strokes := []
+@export var stroke_data: Array
+var strokes: Array
+
+func _ready():
+	draw()
+	show_behind_parent = true
+
+
+func add_stroke(stroke: BrushStrokeData):
+	stroke_data.push_back(stroke)
+
 
 func draw():
-	var strokes_data := []
-	
-	var stroke_count = data.strokes.size()
+	var stroke_count = stroke_data.size()
 	
 	while strokes.size() > stroke_count:
 		remove_child(strokes[strokes.size() - 1])
 		strokes.pop_back()
 	
-	while data.strokes.size() < stroke_count:
+	while strokes.size() < stroke_count:
 		var stroke = BrushStroke2D.instantiate()
 		add_child(stroke)
 		strokes.push_back(stroke)
 	
-	for i in strokes_data.size():
-		strokes[i].draw(strokes_data[i])
+	for i in stroke_data.size():
+		strokes[i].draw(stroke_data[i])
 

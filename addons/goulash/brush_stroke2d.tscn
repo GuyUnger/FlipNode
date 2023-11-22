@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://cavcwjpdd1cqx"]
 
-[ext_resource type="Material" uid="uid://8hs3p3kogtk3" path="res://addons/goulash/brush_shape_material.tres" id="1_sk1y3"]
+[ext_resource type="Material" uid="uid://8hs3p3kogtk3" path="res://addons/goulash/brush_stroke_material.tres" id="1_sk1y3"]
 [ext_resource type="Script" path="res://addons/goulash/brush_stroke2d.gd" id="2_akkcy"]
 
 [node name="Brush2D" type="CanvasGroup"]

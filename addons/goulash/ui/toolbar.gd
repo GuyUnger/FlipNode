@@ -35,7 +35,7 @@ func _update_used_colors():
 	_used_colors = []
 	for layer in Goulash.editor.editing_brush.layers:
 		for keyframe in layer.keyframes:
-			for stroke in keyframe.strokes:
+			for stroke in keyframe.stroke_data:
 				if not _used_colors.has(stroke.color):
 					_add_used_color(stroke.color)
 
@@ -52,7 +52,7 @@ func _on_button_select_pressed():
 
 
 func _on_button_brush_pressed():
-	Goulash.editor.set_tool(Goulash.TOOL_BRUSH)
+	Goulash.editor.set_tool(Goulash.TOOL_PAINT)
 
 
 func _on_button_fill_pressed():
@@ -80,7 +80,7 @@ func select_tool(tool):
 		Goulash.TOOL_SELECT:
 			set_pressed(%ButtonSelect)
 			show_properties(%PropertiesSelect)
-		Goulash.TOOL_BRUSH:
+		Goulash.TOOL_PAINT:
 			set_pressed(%ButtonBrush)
 			show_properties(%PropertiesBrush)
 		Goulash.TOOL_PEN:

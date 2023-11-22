@@ -7,6 +7,9 @@ render_mode unshaded;
 uniform sampler2D screen_texture : hint_screen_texture, repeat_disable, filter_nearest;
 varying vec4 modulate;
 
+global uniform sampler2D goulash_boil_noise : repeat_enable;
+global uniform float goulash_frame;
+
 void vertex() {
 	modulate = COLOR;
 }
@@ -15,22 +18,24 @@ void fragment() {
 	COLOR.rgb = modulate.rgb;
 	float a = 0.0;
 	
+	vec2 uv = SCREEN_UV;
+	
+	vec2 noise_uv = UV;
+	
+	noise_uv += vec2(goulash_frame * 0.1, goulash_frame * PI);
+	uv += (texture(goulash_boil_noise, noise_uv).rg - 0.5) * 0.01;
+	
 	// some kind of anti-alias, but expensive 💸
 	a += texture(screen_texture, SCREEN_UV).r * 2.0;
 	for (float i = 0.0; i < 1.0; i += 1.0 / 5.0) {
-		a += texture(screen_texture, SCREEN_UV + vec2(sin(i * TAU), cos(i * TAU)) * 2.0 * SCREEN_PIXEL_SIZE).r;
-		a += texture(screen_texture, SCREEN_UV + vec2(sin(i * TAU), cos(i * TAU)) * 1.0 * SCREEN_PIXEL_SIZE).r;
+		a += texture(screen_texture, uv + vec2(sin(i * TAU), cos(i * TAU)) * 2.0 * SCREEN_PIXEL_SIZE).r;
+		a += texture(screen_texture, uv + vec2(sin(i * TAU), cos(i * TAU)) * 1.0 * SCREEN_PIXEL_SIZE).r;
 	}
 	a = smoothstep(0.2, 0.6, a / 12.0);
 	
 	COLOR.a = a * modulate.a;
-	
-	//COLOR.a = texture(screen_texture, SCREEN_UV).r * modulate.a;
-	
-	//a = textureLod(screen_texture, SCREEN_UV, 2.0).r;
-	//COLOR.a = smoothstep(0.45, 0.55, a);
 }"
-metadata/_edit_res_path = "res://addons/glash/brush_shape_material.tres::Shader_cmcne"
+metadata/_edit_res_path = "res://addons/goulash/brush_stroke_material.tres::Shader_cmcne"
 
 [resource]
 shader = SubResource("Shader_cmcne")
