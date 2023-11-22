@@ -118,9 +118,11 @@ func _create_layer():
 
 func _find_layers():
 	layers = []
-	for child in get_children():
+	for i in get_child_count():
+		var child = get_child(i)
 		if child is BrushLayer2D:
 			child.modulate = Color.WHITE
+			child.layer_num = i
 			layers.push_back(child)
 
 

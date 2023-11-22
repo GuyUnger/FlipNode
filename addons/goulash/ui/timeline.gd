@@ -6,6 +6,8 @@ const TimelineLayerInfo = preload("res://addons/goulash/ui/timeline_layer_info.t
 
 var brush_clip: BrushClip2D
 
+var scrubbing := false
+
 func _ready():
 	%FrameIndicator.modulate = EditorInterface.get_editor_settings().get_setting("interface/theme/accent_color")
 	
@@ -19,7 +21,7 @@ func _ready():
 func load_brush_clip(brush_clip: BrushClip2D):
 	if self.brush_clip == brush_clip:
 		return
-	if self.brush_clip:
+	if is_instance_valid(self.brush_clip):
 		self.brush_clip.frame_changed.disconnect(_on_frame_changed)
 	self.brush_clip = brush_clip
 	_clear_layers()
@@ -39,10 +41,12 @@ func load_brush_clip(brush_clip: BrushClip2D):
 		%LineEditFPS.text = str(brush_clip.fps_override)
 	_load_layers()
 	brush_clip.frame_changed.connect(_on_frame_changed)
+	
+	custom_minimum_size.y = 60.0 + brush_clip.layers.size() * 32.0
 
 
 func _on_frame_changed():
-	%FrameIndicator.position.x = GoulashEditor.editor.editing_brush.current_frame * 12
+	%FrameIndicator.position.x = GoulashEditor.editor.editing_brush.current_frame * 12 + 3
 
 
 func _on_button_previous_frame_pressed():
@@ -89,7 +93,9 @@ func _add_layer(layer):
 func _on_button_add_layer_pressed():
 	brush_clip._create_layer()
 	GoulashEditor.editor._selected_layer_id = brush_clip.layers.size() - 1
+	_clear_layers()
 	_load_layers()
+	custom_minimum_size.y = 60.0 + brush_clip.layers.size() * 32.0
 
 
 func _on_line_edit_fps_text_submitted(input: String):
@@ -130,3 +136,25 @@ func _on_line_edit_onion_frames_text_submitted(new_text):
 func _on_line_edit_onion_frames_focus_exited():
 	GoulashEditor.onion_skin_enabled = max(int(%LineEditOnionFrames.text), 1)
 	brush_clip.draw()
+
+
+func _input(event) -> void:
+	if not visible or not is_instance_valid(brush_clip):
+		return
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+		if event.is_pressed():
+			var tl_node = %FrameCounts
+			var rect = Rect2(tl_node.position, get_rect().size - tl_node.position)
+			rect.size.y = tl_node.get_rect().size.y
+			if rect.has_point(get_local_mouse_position()):
+				scrubbing = true
+		else:
+			scrubbing = false
+
+
+func _process(delta):
+	if scrubbing:
+		var tl_node = %FrameCounts
+		var to_frame = int((get_local_mouse_position().x - tl_node.position.x - 5.0) / 10.0)
+		to_frame = clamp(to_frame, 0, brush_clip.total_frames - 1)
+		brush_clip.goto(to_frame)

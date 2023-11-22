@@ -1,8 +1,10 @@
 @tool
 class_name GoulashEditor extends EditorPlugin
 
+signal selection_changed
+
 enum {TOOL_SELECT, TOOL_PAINT, TOOL_FILL, TOOL_EYEDROPPER, TOOL_OVAL, TOOL_RECT, TOOL_SHAPE}
-enum {ACTION_NONE, ACTION_WARP, ACTION_PAINT, ACTION_OVAL, ACTION_RECT, ACTION_MOVE}
+enum {ACTION_NONE, ACTION_WARP, ACTION_PAINT, ACTION_OVAL, ACTION_RECT, ACTION_MOVE, ACTION_SELECT_RECT}
 
 static var editor: GoulashEditor
 
@@ -19,13 +21,18 @@ var key_frame_previous = KEY_A
 var key_decrease = KEY_BRACKETLEFT
 var key_increase = KEY_BRACKETRIGHT
 
-static var toolbar
+static var hud
 static var timeline
 
 var _current_action: int
 var _action_position_previous: Vector2
 var _action_alt := false
-var _selected_layer_id: int
+var _selected_layer_id: int: 
+	get:
+		return _selected_layer_id
+	set(value):
+		_selected_layer_id = value
+		selection_changed.emit()
 var _action_paint_stroke: BrushStrokeData
 
 var current_tool := -1
@@ -45,6 +52,8 @@ var canvas_transform_previous
 static var allow_custom_cursor := true
 var allow_hide_cursor := false
 
+@onready var toolbar = get_editor_interface().get_editor_main_screen().get_child(0).get_child(0).get_child(0).get_child(0)
+@onready var button_select_mode = toolbar.get_child(0)
 
 func _enter_tree():
 	editor = self
@@ -59,10 +68,10 @@ func _enter_tree():
 	EditorInterface.get_selection().selection_changed.connect(_on_selection_changed)
 	
 	
-	toolbar = load("res://addons/goulash/ui/toolbar.tscn").instantiate()
-	toolbar.visible = false
-	toolbar.theme = EditorInterface.get_editor_theme()
-	EditorInterface.get_editor_viewport_2d().get_parent().get_parent().add_child(toolbar)
+	hud = load("res://addons/goulash/ui/hud.tscn").instantiate()
+	hud.visible = false
+	hud.theme = EditorInterface.get_editor_theme()
+	EditorInterface.get_editor_viewport_2d().get_parent().get_parent().add_child(hud)
 	
 	timeline = load("res://addons/goulash/ui/timeline.tscn").instantiate()
 	add_control_to_bottom_panel(timeline, "Timeline")
@@ -104,8 +113,8 @@ func _exit_tree() -> void:
 	if is_instance_valid(timeline):
 		timeline.queue_free()
 	
-	if is_instance_valid(toolbar):
-		toolbar.queue_free()
+	if is_instance_valid(hud):
+		hud.queue_free()
 
 
 func _handles(object) -> bool:
@@ -143,15 +152,17 @@ func select_sprite(sprite):
 func select_clip(clip):
 	_edit_brush_start(clip)
 	timeline.load_brush_clip(clip)
-	toolbar._update_used_colors()
+	hud._update_used_colors()
+	make_bottom_panel_item_visible(timeline)
 	clip.draw()
+	_selected_layer_id = 0
 	return
 
 
 func _edit_brush_start(brush):
 	editing_brush = brush
 	
-	toolbar.visible = true
+	hud.visible = true
 	set_process(true)
 
 
@@ -160,7 +171,7 @@ func _edit_brush_complete():
 	queue_redraw()
 	editing_brush = null
 	brush.draw()
-	toolbar.visible = false
+	hud.visible = false
 	set_process(false)
 
 
@@ -269,6 +280,7 @@ func _on_input_key_alt_released():
 #endregion
 
 func _process(delta):
+	printt(button_select_mode.button_pressed)
 	if not is_instance_valid(editing_brush):
 		set_process(false)
 		return
@@ -278,7 +290,7 @@ func _process(delta):
 	
 	allow_hide_cursor = (
 			EditorInterface.get_editor_main_screen().get_child(0).visible and
-			toolbar.get_rect().has_point(toolbar.get_local_mouse_position()) and
+			hud.get_rect().has_point(hud.get_local_mouse_position()) and
 			allow_custom_cursor
 	)
 	if current_tool == TOOL_PAINT and allow_hide_cursor:
@@ -329,7 +341,7 @@ func _convert_keyframe_blank():
 
 static func set_tool(tool):
 	editor.current_tool = tool
-	toolbar.select_tool(tool)
+	hud.select_tool(tool)
 
 
 func _input_mouse(event: InputEventMouse) -> bool:
@@ -399,7 +411,7 @@ func _action_start(mouse_position, alt):
 			for stroke: BrushStrokeData in _get_editing_sprite().stroke_data:
 				if stroke.is_point_inside(mouse_position):
 					current_color = stroke.color
-					toolbar._update_color_picker_color()
+					hud._update_color_picker_color()
 		TOOL_OVAL:
 			action_oval_start(mouse_position)
 
@@ -410,7 +422,7 @@ func current_action_complete():
 			action_warp_complete()
 		ACTION_PAINT:
 			action_paint_complete()
-			toolbar._update_used_colors()
+			hud._update_used_colors()
 		ACTION_MOVE:
 			action_move_complete()
 	_current_action = ACTION_NONE
@@ -749,8 +761,17 @@ func action_oval_start(action_position):
 	
 	_action_position_previous = action_position
 
-#func action_oval_complete():
-	#
+func action_oval_complete(action_position):
+	var polygon = []
+	var center = (action_position + _action_position_previous) * 0.5
+	var size = action_position - _action_position_previous
+	var brush := BrushStrokeData.new(create_oval_polygon(center, size))
+
+func create_oval_polygon(center: Vector2, size: Vector2) -> PackedVector2Array:
+	var polygon := []
+	for i in 60.0:
+		polygon.push_back(center + Vector2.from_angle(i / 60.0 * TAU) * size)
+	return PackedVector2Array(polygon)
 
 #func _draw_action_oval():
 	#
@@ -778,5 +799,5 @@ func _get_current_tool() -> int:
 
 
 func queue_redraw():
-	toolbar.queue_redraw()
+	hud.queue_redraw()
 

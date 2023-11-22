@@ -12,6 +12,7 @@
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_jl8sy"]
 
 [node name="Timeline" type="Control"]
+custom_minimum_size = Vector2(0, 50)
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -22,7 +23,6 @@ script = ExtResource("1_x5p0l")
 
 [node name="Timeline" type="VBoxContainer" parent="."]
 unique_name_in_owner = true
-visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -127,6 +127,7 @@ layout_mode = 2
 theme_override_constants/separation = 1
 
 [node name="FrameCounts" type="Control" parent="Timeline/HBoxContainer"]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 25)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -134,10 +135,11 @@ size_flags_horizontal = 3
 [node name="FrameIndicator" type="Control" parent="Timeline/HBoxContainer/FrameCounts"]
 unique_name_in_owner = true
 modulate = Color(0.278431, 0.584314, 0.960784, 1)
-custom_minimum_size = Vector2(12, 100)
+z_index = 1
+custom_minimum_size = Vector2(10, 100)
 layout_mode = 1
 anchors_preset = 0
-offset_right = 12.0
+offset_right = 10.0
 offset_bottom = 100.0
 size_flags_horizontal = 0
 
@@ -146,16 +148,17 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 5.0
-offset_right = -5.0
+offset_left = 4.0
+offset_right = -4.0
 grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Polygon2D" type="Polygon2D" parent="Timeline/HBoxContainer/FrameCounts/FrameIndicator"]
-position = Vector2(0, 25)
-polygon = PackedVector2Array(2, 0, 2, -25, 10, -25, 10, 0, 6, 4)
+position = Vector2(5, 25)
+polygon = PackedVector2Array(-5, 0, -5, -25, 5, -25, 5, 0, 0, 4)
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Timeline/HBoxContainer/FrameCounts"]
+z_index = 1
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -165,7 +168,7 @@ grow_vertical = 2
 theme_override_constants/separation = 0
 
 [node name="Control" type="Control" parent="Timeline/HBoxContainer/FrameCounts/HBoxContainer"]
-custom_minimum_size = Vector2(60, 0)
+custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 
 [node name="Label" type="Label" parent="Timeline/HBoxContainer/FrameCounts/HBoxContainer/Control"]
@@ -180,7 +183,7 @@ text = "0"
 vertical_alignment = 2
 
 [node name="Control2" type="Control" parent="Timeline/HBoxContainer/FrameCounts/HBoxContainer"]
-custom_minimum_size = Vector2(60, 0)
+custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 
 [node name="Label" type="Label" parent="Timeline/HBoxContainer/FrameCounts/HBoxContainer/Control2"]
@@ -191,7 +194,22 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_font_sizes/font_size = 14
-text = "5"
+text = "4"
+vertical_alignment = 2
+
+[node name="Control3" type="Control" parent="Timeline/HBoxContainer/FrameCounts/HBoxContainer"]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Timeline/HBoxContainer/FrameCounts/HBoxContainer/Control3"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 14
+text = "10"
 vertical_alignment = 2
 
 [node name="ScrollContainer" type="ScrollContainer" parent="Timeline"]

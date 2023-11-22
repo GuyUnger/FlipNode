@@ -4,6 +4,7 @@ class_name BrushKeyframe2D
 extends BrushSprite2D
 
 @export var frame_num: int
+@export var frame_end_num: int
 @export var label: String:
 	get:
 		return label
@@ -28,6 +29,11 @@ func _ready():
 func get_clip() -> BrushClip2D:
 	return get_parent().get_parent()
 
+
+func get_layer() -> BrushLayer2D:
+	return get_parent()
+
+
 func _enter_frame():
 	pass
 
@@ -36,5 +42,8 @@ func update_name():
 		name = "Frame %s" % label.capitalize()
 		return
 	name = "Frame %s" % frame_num
-	if stroke_data.size() == 0:
+	if is_blank():
 		name += " (Empty)"
+
+func is_blank() -> bool:
+	return stroke_data.size() == 0

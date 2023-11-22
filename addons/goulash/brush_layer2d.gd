@@ -10,6 +10,8 @@ var keyframes: Array
 
 var current_visible_frame
 
+@export var layer_num := 0
+
 func _ready():
 	show_behind_parent = true
 	find_keyframes()
@@ -22,6 +24,8 @@ func find_keyframes():
 	keyframes = []
 	for child in get_children():
 		if child is BrushKeyframe2D:
+			child.modulate = Color.WHITE
+			child.z_index = 0
 			keyframes.push_back(child)
 
 
@@ -35,12 +39,14 @@ func display_frame(frame_num):
 				frame.visible = true
 				frame.modulate = Color.WHITE
 				current_visible_frame = frame
+				frame.z_index = 0
 			elif onion_skin_frames > 0:
 				var distance: float = abs(frame.frame_num - frame_num)
 				frame.visible = distance <= onion_skin_frames
 				if frame.visible:
 					var alpha = (1.0 - ((distance - 1) / onion_skin_frames)) * 0.4 + 0.1
 					frame.modulate = Color(1.0, 1.0, 1.0, alpha)
+					frame.z_index = -1
 			else:
 				frame.visible = false
 		return

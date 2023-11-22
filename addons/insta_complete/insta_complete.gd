@@ -71,6 +71,14 @@ func try_complete(caret_index) -> void:
 				complete(caret_index, "@export|")
 			"@export ":
 				complete(caret_index, "@export var |")
+		
+		if line.ends_with(":():"):
+			complete_end_replace(caret_index, ":():", ":")
+			script_editor.set_caret_line(line_num + 1, caret_index == 0, true, 0, caret_index)
+		elif line.ends_with(")-:"):
+			complete_end_replace(caret_index, ")-:", ") -> |:")
+		elif line.ends_with(") -:"):
+			complete_end_replace(caret_index, ") -:", ") -> |:")
 
 
 func complete(caret_index: int, line: String, replace := true):
@@ -94,9 +102,13 @@ func complete_end_add(caret_index: int, replace: String, with: String):
 
 func complete_end_replace(caret_index: int, replace: String, with: String):
 	var line_num = script_editor.get_caret_line(caret_index)
-	var new_line: String = script_editor.get_line(line_num).trim_suffix(replace) + with
+	var new_line: String = script_editor.get_line(line_num).trim_suffix(replace) + with.replace("|", "")
 	script_editor.set_line(line_num, new_line)
-	script_editor.set_caret_column(new_line.length(), true, caret_index)
+	var caret_column = with.find("|")
+	if caret_column != -1:
+		script_editor.set_caret_column(new_line.length() - with.length() + caret_column + 1, true, caret_index)
+	else:
+		script_editor.set_caret_column(new_line.length(), true, caret_index)
 	play_complete()
 
 
