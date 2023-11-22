@@ -36,5 +36,5 @@ func draw():
 
 
 func _draw():
-	if GoulashEditor.editor:
+	if is_instance_valid(GoulashEditor.editor) and GoulashEditor.editor._get_editing_sprite() == self:
 		GoulashEditor.editor.forward_draw(self)
