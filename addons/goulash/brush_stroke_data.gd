@@ -300,6 +300,7 @@ func _douglas_peucker(points: PackedVector2Array, tolerance := 1.0) -> PackedVec
 	else:
 		return PackedVector2Array([points[0], points[points.size() - 1]])
 
+
 func is_polygon_valid(polygon):
 	if polygon.size() > 16:
 		return true

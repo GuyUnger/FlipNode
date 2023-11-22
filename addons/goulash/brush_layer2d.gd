@@ -30,8 +30,6 @@ func display_frame(frame_num):
 		var onion_skin_frames := 0
 		if GoulashEditor.onion_skin_enabled and not get_clip().is_playing and GoulashEditor.editor.editing_brush == get_clip():
 			onion_skin_frames = GoulashEditor.onion_skin_frames
-		if current_visible_frame:
-			current_visible_frame.queue_redraw()
 		for frame in keyframes:
 			if frame.frame_num == frame_num:
 				frame.visible = true

@@ -121,3 +121,15 @@ func set_pressed(button: Button):
 	for b: Button in buttons:
 		b.button_pressed = false
 	button.button_pressed = true
+
+
+func _draw():
+	GoulashEditor.editor.forward_draw(self)
+
+func _input(event):
+	if event is InputEventMouseMotion:
+		GoulashEditor.allow_custom_cursor = true
+		if %Tools.get_rect().has_point(get_local_mouse_position()):
+			GoulashEditor.allow_custom_cursor = false
+		if %Colors.get_rect().has_point(get_local_mouse_position()):
+			GoulashEditor.allow_custom_cursor = false

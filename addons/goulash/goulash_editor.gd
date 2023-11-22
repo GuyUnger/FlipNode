@@ -42,6 +42,10 @@ var editing_brush
 
 var canvas_transform_previous
 
+static var allow_custom_cursor := true
+var allow_hide_cursor := false
+
+
 func _enter_tree():
 	editor = self
 	
@@ -153,7 +157,7 @@ func _edit_brush_start(brush):
 
 func _edit_brush_complete():
 	var brush = editing_brush
-	editing_brush.queue_redraw()
+	queue_redraw()
 	editing_brush = null
 	brush.draw()
 	toolbar.visible = false
@@ -254,16 +258,15 @@ func _on_key_released(event: InputEventKey) -> bool:
 func _on_input_key_alt_pressed() -> bool:
 	if current_tool == TOOL_PAINT or current_tool == TOOL_FILL:
 		current_tool_override = TOOL_EYEDROPPER
-		editing_brush.queue_redraw()
+		queue_redraw()
 	return false
 
 
 func _on_input_key_alt_released():
 	current_tool_override = -1
-	editing_brush.queue_redraw()
+	queue_redraw()
 	return true
 #endregion
-
 
 func _process(delta):
 	if not is_instance_valid(editing_brush):
@@ -271,9 +274,14 @@ func _process(delta):
 		return
 	if get_viewport().canvas_transform != canvas_transform_previous:
 		canvas_transform_previous = editing_brush.get_viewport().get_screen_transform()
-		editing_brush.queue_redraw()
+		queue_redraw()
 	
-	if current_tool == TOOL_PAINT and toolbar.get_rect().has_point(toolbar.get_local_mouse_position()):
+	allow_hide_cursor = (
+			EditorInterface.get_editor_main_screen().get_child(0).visible and
+			toolbar.get_rect().has_point(toolbar.get_local_mouse_position()) and
+			allow_custom_cursor
+	)
+	if current_tool == TOOL_PAINT and allow_hide_cursor:
 		##todo: this needs more checks
 		Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
 	else:
@@ -344,7 +352,7 @@ func _input_mouse(event: InputEventMouse) -> bool:
 
 
 func _on_mouse_motion(mouse_position):
-	editing_brush.queue_redraw()
+	queue_redraw()
 	match _current_action:
 		ACTION_WARP:
 			action_warp_process(mouse_position)
@@ -418,6 +426,10 @@ func current_action_complete():
 
 
 func forward_draw(target):
+	if allow_custom_cursor and allow_hide_cursor:
+		draw_custom_cursor(target)
+
+func draw_custom_cursor(target):
 	var zoom = target.get_viewport().get_screen_transform().get_scale().x
 	var mouse_position = target.get_local_mouse_position()
 	match _get_current_tool():
@@ -754,6 +766,7 @@ func _get_editing_sprite() -> BrushSprite2D:
 	else:
 		return editing_brush.layers[_selected_layer_id].get_frame(editing_brush.current_frame)
 
+
 func _get_current_layer():
 	return editing_brush.layers[_selected_layer_id]
 
@@ -762,3 +775,8 @@ func _get_current_tool() -> int:
 	if current_tool_override != -1:
 		return current_tool_override
 	return current_tool
+
+
+func queue_redraw():
+	toolbar.queue_redraw()
+

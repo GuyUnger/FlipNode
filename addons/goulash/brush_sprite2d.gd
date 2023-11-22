@@ -33,8 +33,3 @@ func draw():
 	
 	for i in stroke_data.size():
 		strokes[i].draw(stroke_data[i])
-
-
-func _draw():
-	if is_instance_valid(GoulashEditor.editor) and GoulashEditor.editor._get_editing_sprite() == self:
-		GoulashEditor.editor.forward_draw(self)

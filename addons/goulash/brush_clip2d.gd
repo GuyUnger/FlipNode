@@ -107,11 +107,6 @@ func goto(frame_or_label):
 		push_error("goto_and_stop only takes ints (frame number) or strings (label names).")
 
 
-func _draw():
-	if GoulashEditor.editor:
-		GoulashEditor.editor.forward_draw(self)
-
-
 func _create_layer():
 	var layer = BrushLayer2D.new()
 	add_child(layer)
@@ -125,6 +120,7 @@ func _find_layers():
 	layers = []
 	for child in get_children():
 		if child is BrushLayer2D:
+			child.modulate = Color.WHITE
 			layers.push_back(child)
 
 
