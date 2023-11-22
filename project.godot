@@ -15,17 +15,25 @@ run/main_scene="res://demo/animation/demo_animation.tscn"
 config/features=PackedStringArray("4.2", "Forward Plus")
 config/icon="res://icon.svg"
 
+[autoload]
+
+Goulash="*res://addons/goulash/goulash.gd"
+
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/goulash/plugin.cfg", "res://addons/insta_complete/plugin.cfg")
 
+[goulash]
+
+animation/default_fps=12
+
 [shader_globals]
 
-goulash_boil_noise={
-"type": "sampler2D",
-"value": ""
-}
 goulash_frame={
 "type": "float",
 "value": 0.0
+}
+goulash_boil_noise={
+"type": "sampler2D",
+"value": "res://addons/goulash/goulash_boile_noise_texture.png"
 }

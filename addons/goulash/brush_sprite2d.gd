@@ -5,6 +5,8 @@ extends Node2D
 
 const BrushStroke2D = preload("res://addons/goulash/brush_stroke2d.tscn")
 
+signal edited
+
 @export var stroke_data: Array
 var strokes: Array
 
@@ -32,3 +34,7 @@ func draw():
 	for i in stroke_data.size():
 		strokes[i].draw(stroke_data[i])
 
+
+func _draw():
+	if GoulashEditor.editor:
+		GoulashEditor.editor.forward_draw(self)

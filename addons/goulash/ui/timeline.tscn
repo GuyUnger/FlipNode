@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://83afmn7xmr1c"]
+[gd_scene load_steps=9 format=3 uid="uid://83afmn7xmr1c"]
 
 [ext_resource type="Texture2D" uid="uid://ba2hxmxea6m1a" path="res://addons/goulash/icons/PagePrevious.svg" id="1_mqbbs"]
 [ext_resource type="Texture2D" uid="uid://cy0je6d77bnw2" path="res://addons/goulash/icons/Play.svg" id="1_vtfin"]
@@ -8,6 +8,8 @@
 [ext_resource type="Texture2D" uid="uid://djjrjid7ltt80" path="res://addons/goulash/icons/Onion.svg" id="6_d6fgv"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_h5x24"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_jl8sy"]
 
 [node name="Timeline" type="Control"]
 layout_mode = 3
@@ -101,11 +103,22 @@ icon_alignment = 1
 layout_mode = 2
 
 [node name="ButtonOnion" type="Button" parent="Timeline/HBoxContainer/Control2/LayerOptions"]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(25, 25)
 layout_mode = 2
+toggle_mode = true
 icon = ExtResource("6_d6fgv")
 flat = true
 icon_alignment = 1
+
+[node name="LineEditOnionFrames" type="LineEdit" parent="Timeline/HBoxContainer/Control2/LayerOptions"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/minimum_character_width = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_jl8sy")
+text = "3"
+max_length = 2
+select_all_on_focus = true
 
 [node name="VSeparator3" type="VSeparator" parent="Timeline/HBoxContainer"]
 layout_mode = 2
@@ -209,7 +222,7 @@ theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 
-[node name="Button" type="Button" parent="Timeline/ScrollContainer/HBoxContainer/VBoxContainer/MarginContainer"]
+[node name="ButtonAddLayer" type="Button" parent="Timeline/ScrollContainer/HBoxContainer/VBoxContainer/MarginContainer"]
 custom_minimum_size = Vector2(32, 16)
 layout_mode = 2
 theme_override_font_sizes/font_size = 8
@@ -255,3 +268,7 @@ vertical_alignment = 1
 [connection signal="pressed" from="Timeline/HBoxContainer/Control2/LayerOptions/ButtonNextFrame" to="." method="_on_button_next_frame_pressed"]
 [connection signal="focus_exited" from="Timeline/HBoxContainer/Control2/LayerOptions/LineEditFPS" to="." method="_on_line_edit_fps_focus_exited"]
 [connection signal="text_submitted" from="Timeline/HBoxContainer/Control2/LayerOptions/LineEditFPS" to="." method="_on_line_edit_fps_text_submitted"]
+[connection signal="toggled" from="Timeline/HBoxContainer/Control2/LayerOptions/ButtonOnion" to="." method="_on_button_onion_toggled"]
+[connection signal="focus_exited" from="Timeline/HBoxContainer/Control2/LayerOptions/LineEditOnionFrames" to="." method="_on_line_edit_onion_frames_focus_exited"]
+[connection signal="text_submitted" from="Timeline/HBoxContainer/Control2/LayerOptions/LineEditOnionFrames" to="." method="_on_line_edit_onion_frames_text_submitted"]
+[connection signal="pressed" from="Timeline/ScrollContainer/HBoxContainer/VBoxContainer/MarginContainer/ButtonAddLayer" to="." method="_on_button_add_layer_pressed"]

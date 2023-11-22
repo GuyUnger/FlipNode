@@ -4,6 +4,12 @@ class_name BrushKeyframe2D
 extends BrushSprite2D
 
 @export var frame_num: int
+@export var label: String:
+	get:
+		return label
+	set(value):
+		label = value
+		update_name()
 
 @export var tweening := false
 @export var key_transform: Transform2D
@@ -26,6 +32,9 @@ func _enter_frame():
 	pass
 
 func update_name():
+	if label != "":
+		name = "Frame %s" % label.capitalize()
+		return
 	name = "Frame %s" % frame_num
 	if stroke_data.size() == 0:
 		name += " (Empty)"

@@ -119,10 +119,14 @@ func subtract_stroke(stroke: BrushStrokeData) -> Array:
 		## polygon altered
 		polygon = clipped_polygons[0]
 		holes = subtracted_holes
-		strokes.push_back(self)
+		
+		if is_polygon_valid(polygon):
+			strokes.push_back(self)
 	else:
 		## split into multiple
 		for p in clipped_polygons:
+			if not is_polygon_valid(p):
+				continue
 			var seperated_stroke = create_stroke(p)
 			## assign holes to strokes they belong to
 			for hole in subtracted_holes:
@@ -295,3 +299,23 @@ func _douglas_peucker(points: PackedVector2Array, tolerance := 1.0) -> PackedVec
 		return results1 + results2.slice(1)
 	else:
 		return PackedVector2Array([points[0], points[points.size() - 1]])
+
+func is_polygon_valid(polygon):
+	if polygon.size() > 16:
+		return true
+	var bounds_min := Vector2.ONE * 999999
+	var bounds_max := Vector2.ONE * -999999
+	
+	var area := 0.0
+	var triangles = Geometry2D.triangulate_delaunay(polygon)
+	
+	for i in range(0, triangles.size(), 3):
+		var a = polygon[triangles[i]].distance_to(polygon[triangles[i+1]])
+		var b = polygon[triangles[i+1]].distance_to(polygon[triangles[i+2]])
+		var c = polygon[triangles[i+2]].distance_to(polygon[triangles[i]])
+		var s = (a + b + c) / 2.0
+		var ar = sqrt(s * (s - a) * (s - b) * (s - c))
+		if not is_nan(ar):
+			area += ar
+	
+	return area > 64.0

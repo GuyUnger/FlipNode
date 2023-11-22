@@ -1,12 +1,14 @@
 @tool
 extends Control
 
-func draw(keyframe, i: int):
-	if keyframe:
-		var blank = keyframe.shapes.size() == 0
-		$Back.modulate.a = 0.15 if blank else 0.3
-		$Keyframe.visible = true
-		$Keyframe.text = "O" if blank else "⚪"
-	else:
-		$Keyframe.visible = false
-		$Back.modulate.a = 0.05 if i % 5 == 0 else 0.1
+var keyframe: BrushKeyframe2D
+
+func draw(keyframe: BrushKeyframe2D, i: int):
+	self.keyframe = keyframe
+	var blank = keyframe.stroke_data.size() == 0
+	%Keyframe.text = "O" if blank else "⚪"
+	%Label.text = keyframe.label
+
+
+func _on_pressed():
+	keyframe.get_clip().goto(keyframe.frame_num)

@@ -26,21 +26,23 @@ func find_keyframes():
 
 
 func display_frame(frame_num):
-	if Engine.is_editor_hint() and Goulash.editor.onion_skin_frames > 0:
-		var onion_skin_frames =  Goulash.editor.onion_skin_frames
-		if get_clip().is_playing or Goulash.editor.editing_brush != get_clip():
-			onion_skin_frames = 0
+	if Engine.is_editor_hint():
+		var onion_skin_frames := 0
+		if GoulashEditor.onion_skin_enabled and not get_clip().is_playing and GoulashEditor.editor.editing_brush == get_clip():
+			onion_skin_frames = GoulashEditor.onion_skin_frames
 		for frame in keyframes:
 			if frame.frame_num == frame_num:
 				frame.visible = true
 				frame.modulate = Color.WHITE
 				current_visible_frame = frame
-			else:
+			elif onion_skin_frames > 0:
 				var distance: float = abs(frame.frame_num - frame_num)
 				frame.visible = distance <= onion_skin_frames
 				if frame.visible:
 					var alpha = (1.0 - ((distance - 1) / onion_skin_frames)) * 0.4 + 0.1
 					frame.modulate = Color(1.0, 1.0, 1.0, alpha)
+			else:
+				frame.visible = false
 		return
 	
 	if current_visible_frame:

@@ -3,15 +3,16 @@ extends HBoxContainer
 
 const TimelineFrame = preload("res://addons/goulash/ui/timeline_frame.tscn")
 
-var layer: BrushClipLayer
+var layer: BrushLayer2D
 
 func _clear():
 	for child in get_children():
 		child.queue_free()
 
-func draw(layer: BrushClipLayer):
+func draw(layer: BrushLayer2D):
+	self.layer = layer
 	redraw()
-	layer.changed.connect(redraw)
+	#layer.changed.connect(redraw)
 
 func redraw():
 	_clear()

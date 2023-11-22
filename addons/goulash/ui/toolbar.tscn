@@ -1,9 +1,11 @@
-[gd_scene load_steps=9 format=3 uid="uid://chuytojhypqte"]
+[gd_scene load_steps=11 format=3 uid="uid://chuytojhypqte"]
 
 [ext_resource type="Script" path="res://addons/goulash/ui/toolbar.gd" id="1_72a5i"]
 [ext_resource type="Texture2D" uid="uid://jnmhbl8m5hy2" path="res://addons/goulash/icons/ToolSelect.svg" id="2_7pmde"]
 [ext_resource type="Texture2D" uid="uid://da1imqfk7aeg5" path="res://addons/goulash/icons/Paint.svg" id="3_eks0u"]
-[ext_resource type="Texture2D" uid="uid://dodqbpb1r3722" path="res://addons/goulash/icons/Rectangle.svg" id="4_s08xu"]
+[ext_resource type="Texture2D" uid="uid://dpumbmfv451m4" path="res://addons/goulash/icons/ToolShape.svg" id="4_lemf8"]
+[ext_resource type="Texture2D" uid="uid://bi6b3ska6mcpo" path="res://addons/goulash/icons/ToolOval.svg" id="4_osrit"]
+[ext_resource type="Texture2D" uid="uid://bfv15hq42cpvg" path="res://addons/goulash/icons/ToolRectangle.svg" id="5_3fhbx"]
 [ext_resource type="Texture2D" uid="uid://cf60f07corl3p" path="res://addons/goulash/icons/ColorPick.svg" id="5_8y7ry"]
 [ext_resource type="Texture2D" uid="uid://bduj3a2iwrk0c" path="res://addons/goulash/icons/Bucket.svg" id="6_83ojh"]
 
@@ -82,8 +84,8 @@ self_modulate = Color(1, 1, 1, 0.823529)
 layout_mode = 1
 offset_left = 7.0
 offset_top = 32.0
-offset_right = 81.0
-offset_bottom = 286.0
+offset_right = 52.0
+offset_bottom = 442.0
 scale = Vector2(1.00068, 1)
 
 [node name="MarginContainer" type="MarginContainer" parent="Tools"]
@@ -101,9 +103,8 @@ theme_override_constants/margin_bottom = 5
 [node name="VBoxContainer" type="VBoxContainer" parent="Tools/MarginContainer"]
 layout_mode = 2
 
-[node name="GridContainer" type="GridContainer" parent="Tools/MarginContainer/VBoxContainer"]
+[node name="GridContainer" type="VBoxContainer" parent="Tools/MarginContainer/VBoxContainer"]
 layout_mode = 2
-columns = 2
 
 [node name="ButtonSelect" type="Button" parent="Tools/MarginContainer/VBoxContainer/GridContainer"]
 unique_name_in_owner = true
@@ -128,18 +129,6 @@ icon = ExtResource("3_eks0u")
 flat = true
 icon_alignment = 1
 
-[node name="ButtonPen" type="Button" parent="Tools/MarginContainer/VBoxContainer/GridContainer"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(30, 30)
-layout_mode = 2
-tooltip_text = "Outline Shape (Y)"
-theme_override_styles/disabled = SubResource("StyleBoxFlat_d636o")
-theme_override_styles/focus = SubResource("StyleBoxEmpty_774xs")
-toggle_mode = true
-text = "☁️"
-flat = true
-icon_alignment = 1
-
 [node name="ButtonOval" type="Button" parent="Tools/MarginContainer/VBoxContainer/GridContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(30, 30)
@@ -148,7 +137,7 @@ tooltip_text = "Circle Shape (O)"
 theme_override_styles/disabled = SubResource("StyleBoxFlat_d636o")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_774xs")
 toggle_mode = true
-text = "⚪"
+icon = ExtResource("4_osrit")
 flat = true
 icon_alignment = 1
 
@@ -160,7 +149,19 @@ tooltip_text = "Rect Shape (R)"
 theme_override_styles/disabled = SubResource("StyleBoxFlat_d636o")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_774xs")
 toggle_mode = true
-icon = ExtResource("4_s08xu")
+icon = ExtResource("5_3fhbx")
+flat = true
+icon_alignment = 1
+
+[node name="ButtonShape" type="Button" parent="Tools/MarginContainer/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+tooltip_text = "Outline Shape (Y)"
+theme_override_styles/disabled = SubResource("StyleBoxFlat_d636o")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_774xs")
+toggle_mode = true
+icon = ExtResource("4_lemf8")
 flat = true
 icon_alignment = 1
 
@@ -198,7 +199,7 @@ layout_mode = 2
 [node name="MenuBar" type="MenuBar" parent="Tools/MarginContainer/VBoxContainer/PropertiesSelect"]
 layout_mode = 2
 
-[node name="Fall Off" type="PopupMenu" parent="Tools/MarginContainer/VBoxContainer/PropertiesSelect/MenuBar"]
+[node name="Fall" type="PopupMenu" parent="Tools/MarginContainer/VBoxContainer/PropertiesSelect/MenuBar"]
 item_count = 2
 item_0/text = "Smooth"
 item_0/id = 0
@@ -234,8 +235,8 @@ layout_mode = 2
 [connection signal="color_changed" from="Colors/MarginContainer/VBoxContainer/ColorPicker" to="." method="_on_color_picker_color_changed"]
 [connection signal="pressed" from="Tools/MarginContainer/VBoxContainer/GridContainer/ButtonSelect" to="." method="_on_button_select_pressed"]
 [connection signal="pressed" from="Tools/MarginContainer/VBoxContainer/GridContainer/ButtonBrush" to="." method="_on_button_brush_pressed"]
-[connection signal="pressed" from="Tools/MarginContainer/VBoxContainer/GridContainer/ButtonPen" to="." method="_on_button_pen_pressed"]
 [connection signal="pressed" from="Tools/MarginContainer/VBoxContainer/GridContainer/ButtonOval" to="." method="_on_button_oval_pressed"]
 [connection signal="pressed" from="Tools/MarginContainer/VBoxContainer/GridContainer/ButtonRect" to="." method="_on_button_rect_pressed"]
+[connection signal="pressed" from="Tools/MarginContainer/VBoxContainer/GridContainer/ButtonShape" to="." method="_on_button_pen_pressed"]
 [connection signal="pressed" from="Tools/MarginContainer/VBoxContainer/GridContainer/ButtonEyedropper" to="." method="_on_button_eyedropper_pressed"]
 [connection signal="pressed" from="Tools/MarginContainer/VBoxContainer/GridContainer/ButtonFill" to="." method="_on_button_fill_pressed"]

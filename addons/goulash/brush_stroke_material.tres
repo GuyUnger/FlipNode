@@ -20,10 +20,11 @@ void fragment() {
 	
 	vec2 uv = SCREEN_UV;
 	
-	vec2 noise_uv = UV;
+	vec2 noise_uv = UV / 6.0;
 	
-	noise_uv += vec2(goulash_frame * 0.1, goulash_frame * PI);
-	uv += (texture(goulash_boil_noise, noise_uv).rg - 0.5) * 0.01;
+	float frame = floor(goulash_frame / 4.0);
+	noise_uv += vec2(frame * 0.1, frame * PI);
+	uv += (texture(goulash_boil_noise, noise_uv).rg - 0.5) * 0.004;
 	
 	// some kind of anti-alias, but expensive 💸
 	a += texture(screen_texture, SCREEN_UV).r * 2.0;

@@ -108,8 +108,8 @@ func goto(frame_or_label):
 
 
 func _draw():
-	if Goulash.editor:
-		Goulash.editor.forward_draw(self)
+	if GoulashEditor.editor:
+		GoulashEditor.editor.forward_draw(self)
 
 
 func _create_layer():
@@ -117,8 +117,8 @@ func _create_layer():
 	add_child(layer)
 	layer.name = "Layer %s" % (layers.size() + 1)
 	layer.owner = owner
-	layers.push_back(layer)
 	layer.set_keyframe(BrushKeyframe2D.new(), 0)
+	_find_layers()
 
 
 func _find_layers():
