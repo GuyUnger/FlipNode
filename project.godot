@@ -17,7 +17,7 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-Goulash="*res://addons/goulash/goulash.gd"
+Goulash="*res://addons/goulash/goolash.gd"
 
 [editor_plugins]
 
