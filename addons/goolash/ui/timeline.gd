@@ -17,8 +17,8 @@ func _ready():
 	%LabelNoBrushClip.visible = true
 	%Timeline.visible = false
 	
-	%ButtonOnion.button_pressed = GoulashEditor.onion_skin_enabled
-	%LineEditOnionFrames.text = str(GoulashEditor.onion_skin_frames)
+	%ButtonOnion.button_pressed = GoolashEditor.onion_skin_enabled
+	%LineEditOnionFrames.text = str(GoolashEditor.onion_skin_frames)
 
 
 func load_brush_clip(brush_clip: BrushClip2D):
@@ -36,7 +36,7 @@ func load_brush_clip(brush_clip: BrushClip2D):
 		return
 	
 	## FPS
-	%LineEditFPS.placeholder_text = str(Goulash.default_fps)
+	%LineEditFPS.placeholder_text = str(Goolash.default_fps)
 	if brush_clip.fps_override == 0:
 		%LineEditFPS.text = ""
 	else:
@@ -45,7 +45,7 @@ func load_brush_clip(brush_clip: BrushClip2D):
 	%ButtonAutoPlay.button_pressed = brush_clip.auto_play
 	
 	_clear_layers()
-	var is_editable = GoulashEditor.is_editable(brush_clip)
+	var is_editable = GoolashEditor.is_editable(brush_clip)
 	if is_editable:
 		_load_layers()
 		custom_minimum_size.y = 60.0 + brush_clip.layers.size() * 32.0
@@ -61,7 +61,7 @@ func load_brush_clip(brush_clip: BrushClip2D):
 
 
 func _on_frame_changed():
-	%FrameIndicator.position.x = GoulashEditor.editor.editing_brush.current_frame * FRAME_WIDTH + FRAME_WIDTH * 0.5
+	%FrameIndicator.position.x = GoolashEditor.editor.editing_brush.current_frame * FRAME_WIDTH + FRAME_WIDTH * 0.5
 	var end_pos = brush_clip.total_frames * FRAME_WIDTH
 	%AreaActive.size.x = end_pos
 	%AreaInactive.position.x = end_pos
@@ -69,21 +69,21 @@ func _on_frame_changed():
 
 
 func _on_button_previous_frame_pressed():
-	if GoulashEditor.editor.editing_brush:
-		GoulashEditor.editor.editing_brush.previous_frame()
+	if GoolashEditor.editor.editing_brush:
+		GoolashEditor.editor.editing_brush.previous_frame()
 
 
 func _on_button_play_pressed():
-	if GoulashEditor.editor.editing_brush:
-		if GoulashEditor.editor.editing_brush.is_playing:
-			GoulashEditor.editor.editing_brush.stop()
+	if GoolashEditor.editor.editing_brush:
+		if GoolashEditor.editor.editing_brush.is_playing:
+			GoolashEditor.editor.editing_brush.stop()
 		else:
-			GoulashEditor.editor.editing_brush.play()
+			GoolashEditor.editor.editing_brush.play()
 
 
 func _on_button_next_frame_pressed():
-	if GoulashEditor.editor.editing_brush:
-		GoulashEditor.editor.editing_brush.next_frame()
+	if GoolashEditor.editor.editing_brush:
+		GoolashEditor.editor.editing_brush.next_frame()
 
 
 
@@ -96,7 +96,7 @@ func _clear_layers():
 
 
 func _load_layers():
-	for layer in GoulashEditor.editor.editing_brush.layers:
+	for layer in GoolashEditor.editor.editing_brush.layers:
 		_add_layer(layer)
 
 
@@ -111,7 +111,7 @@ func _add_layer(layer):
 
 func _on_button_add_layer_pressed():
 	brush_clip._create_layer()
-	GoulashEditor.editor._editing_layer_num = brush_clip.layers.size() - 1
+	GoolashEditor.editor._editing_layer_num = brush_clip.layers.size() - 1
 	_clear_layers()
 	_load_layers()
 	custom_minimum_size.y = 60.0 + brush_clip.layers.size() * 32.0
@@ -138,12 +138,12 @@ func _parse_fps(input: String):
 			_set_fps(int(result))
 
 func _set_fps(value: int):
-	GoulashEditor.editor.editing_brush.fps_override = value
+	GoolashEditor.editor.editing_brush.fps_override = value
 	%LineEditFPS.text = str(value)
 
 
 func _on_button_onion_toggled(toggled_on):
-	GoulashEditor.onion_skin_enabled = toggled_on
+	GoolashEditor.onion_skin_enabled = toggled_on
 	if is_instance_valid(brush_clip):
 		brush_clip.draw()
 
@@ -153,7 +153,7 @@ func _on_line_edit_onion_frames_text_submitted(new_text):
 
 
 func _on_line_edit_onion_frames_focus_exited():
-	GoulashEditor.onion_skin_enabled = max(int(%LineEditOnionFrames.text), 1)
+	GoolashEditor.onion_skin_enabled = max(int(%LineEditOnionFrames.text), 1)
 	brush_clip.draw()
 
 

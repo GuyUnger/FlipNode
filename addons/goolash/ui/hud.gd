@@ -27,13 +27,13 @@ func _ready():
 
 
 func _update_used_colors():
-	if GoulashEditor.editor.editing_brush == null:
+	if GoolashEditor.editor.editing_brush == null:
 		return
 	
 	for button in %UsedColors.get_children():
 		button.queue_free()
 	_used_colors = []
-	for layer in GoulashEditor.editor.editing_brush.layers:
+	for layer in GoolashEditor.editor.editing_brush.layers:
 		for keyframe in layer.keyframes:
 			for stroke in keyframe.stroke_data:
 				if not _used_colors.has(stroke.color):
@@ -48,66 +48,66 @@ func _add_used_color(color):
 
 
 func _on_button_select_pressed():
-	GoulashEditor.set_tool(GoulashEditor.TOOL_SELECT)
+	GoolashEditor.set_tool(GoolashEditor.TOOL_SELECT)
 
 
 func _on_button_paint_pressed():
-	GoulashEditor.set_tool(GoulashEditor.TOOL_PAINT)
+	GoolashEditor.set_tool(GoolashEditor.TOOL_PAINT)
 
 
 func _on_button_fill_pressed():
-	GoulashEditor.set_tool(GoulashEditor.TOOL_FILL)
+	GoolashEditor.set_tool(GoolashEditor.TOOL_FILL)
 
 
 func _on_button_oval_pressed():
-	GoulashEditor.set_tool(GoulashEditor.TOOL_OVAL)
+	GoolashEditor.set_tool(GoolashEditor.TOOL_OVAL)
 
 
 func _on_button_rect_pressed():
-	GoulashEditor.set_tool(GoulashEditor.TOOL_RECT)
+	GoolashEditor.set_tool(GoolashEditor.TOOL_RECT)
 
 
 func _on_button_pen_pressed():
-	GoulashEditor.set_tool(GoulashEditor.TOOL_SHAPE)
+	GoolashEditor.set_tool(GoolashEditor.TOOL_SHAPE)
 
 
 func _on_button_eyedropper_pressed():
-	GoulashEditor.set_tool(GoulashEditor.TOOL_EYEDROPPER)
+	GoolashEditor.set_tool(GoolashEditor.TOOL_EYEDROPPER)
 
 
 func select_tool(tool):
 	match tool:
-		GoulashEditor.TOOL_SELECT:
+		GoolashEditor.TOOL_SELECT:
 			set_pressed(%ButtonSelect)
 			show_properties(%PropertiesSelect)
-		GoulashEditor.TOOL_PAINT:
+		GoolashEditor.TOOL_PAINT:
 			set_pressed(%ButtonPaint)
 			show_properties(%PropertiesPaint)
-		GoulashEditor.TOOL_SHAPE:
+		GoolashEditor.TOOL_SHAPE:
 			set_pressed(%ButtonPen)
 			show_properties()
-		GoulashEditor.TOOL_OVAL:
+		GoolashEditor.TOOL_OVAL:
 			set_pressed(%ButtonOval)
 			show_properties()
-		GoulashEditor.TOOL_RECT:
+		GoolashEditor.TOOL_RECT:
 			set_pressed(%ButtonRect)
 			show_properties()
-		GoulashEditor.TOOL_EYEDROPPER:
+		GoolashEditor.TOOL_EYEDROPPER:
 			set_pressed(%ButtoEyedropper)
 			show_properties()
-		GoulashEditor.TOOL_FILL:
+		GoolashEditor.TOOL_FILL:
 			set_pressed(%ButtonFill)
 			show_properties(%PropertiesFill)
 
 
 func _on_color_picker_color_changed(color):
-	if GoulashEditor.editor.current_color == color:
+	if GoolashEditor.editor.current_color == color:
 		return
-	GoulashEditor.editor.current_color = color
+	GoolashEditor.editor.current_color = color
 
 
 func _update_color_picker_color():
-	%ColorPicker.color = GoulashEditor.editor.current_color
+	%ColorPicker.color = GoolashEditor.editor.current_color
 
 
 func show_properties(properties = null):
@@ -124,12 +124,12 @@ func set_pressed(button: Button):
 
 
 func _draw():
-	GoulashEditor.editor.forward_draw(self)
+	GoolashEditor.editor.forward_draw(self)
 
 func _input(event):
 	if event is InputEventMouseMotion:
-		GoulashEditor.allow_custom_cursor = true
+		GoolashEditor.allow_custom_cursor = true
 		if %Tools.get_rect().has_point(get_local_mouse_position()):
-			GoulashEditor.allow_custom_cursor = false
+			GoolashEditor.allow_custom_cursor = false
 		if %Colors.get_rect().has_point(get_local_mouse_position()):
-			GoulashEditor.allow_custom_cursor = false
+			GoolashEditor.allow_custom_cursor = false

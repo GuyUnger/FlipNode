@@ -3,7 +3,7 @@
 class_name BrushSprite2D
 extends Node2D
 
-const BrushStroke2D = preload("res://addons/goulash/brush_stroke2d.tscn")
+const BrushStroke2D = preload("res://addons/goolash/brush_stroke2d.tscn")
 
 signal edited
 

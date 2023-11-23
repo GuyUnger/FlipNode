@@ -17,23 +17,23 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-Goulash="*res://addons/goulash/goolash.gd"
+Goolash="*res://addons/goolash/goolash.gd"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/goulash/plugin.cfg", "res://addons/insta_complete/plugin.cfg")
+enabled=PackedStringArray("res://addons/goolash/plugin.cfg", "res://addons/insta_complete/plugin.cfg")
 
-[goulash]
+[goolash]
 
 animation/default_fps=12
 
 [shader_globals]
 
-goulash_frame={
+goolash_frame={
 "type": "float",
 "value": 0.0
 }
-goulash_boil_noise={
+goolash_boil_noise={
 "type": "sampler2D",
-"value": "res://addons/goulash/goulash_boile_noise_texture.png"
+"value": "res://addons/goolash/goolash_boile_noise_texture.png"
 }

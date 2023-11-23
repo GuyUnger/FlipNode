@@ -1,12 +1,12 @@
 @tool
-class_name GoulashEditor extends EditorPlugin
+class_name GoolashEditor extends EditorPlugin
 
 signal selection_changed
 
 enum {TOOL_SELECT, TOOL_PAINT, TOOL_FILL, TOOL_EYEDROPPER, TOOL_OVAL, TOOL_RECT, TOOL_SHAPE}
 enum {ACTION_NONE, ACTION_WARP, ACTION_PAINT, ACTION_OVAL, ACTION_RECT, ACTION_MOVE, ACTION_SELECT_RECT}
 
-static var editor: GoulashEditor
+static var editor: GoolashEditor
 
 const TextureEyedropper = preload("res://addons/goolash/icons/ColorPick.svg")
 const TextureFill = preload("res://addons/goolash/icons/Bucket.svg")
@@ -66,7 +66,7 @@ func _enter_tree():
 	_init_project_settings()
 	_load_project_settings()
 	
-	add_custom_type("BrushClip2D", "Node2D", load("res://addons/goulash/brush_clip2d.gd"), null)
+	add_custom_type("BrushClip2D", "Node2D", load("res://addons/goolash/brush_clip2d.gd"), null)
 	
 	EditorInterface.get_selection().selection_changed.connect(_on_selection_changed)
 	
@@ -81,7 +81,7 @@ func _enter_tree():
 	
 	ProjectSettings.settings_changed.connect(_on_settings_changed)
 	
-	add_autoload_singleton("Goulash", "res://addons/goulash/goulash.gd")
+	add_autoload_singleton("Goolash", "res://addons/goolash/goolash.gd")
 	
 	var toolbar = get_editor_interface().get_editor_main_screen().get_child(0).get_child(0).get_child(0).get_child(0)
 	button_select_mode = toolbar.get_child(0)
@@ -104,10 +104,10 @@ func _on_mode_changed():
 
 
 func _init_project_settings():
-	add_project_setting("goulash/animation/default_fps", 12)
-	add_project_setting("goulash/animation/onion_skin_enabled", true)
-	add_project_setting("goulash/animation/onion_skin_frames", 2)
-	add_project_setting("goulash/painting/default_color", Color.PERU)
+	add_project_setting("goolash/animation/default_fps", 12)
+	add_project_setting("goolash/animation/onion_skin_enabled", true)
+	add_project_setting("goolash/animation/onion_skin_frames", 2)
+	add_project_setting("goolash/painting/default_color", Color.PERU)
 
 
 func add_project_setting(name: String, default_value) -> void:
@@ -118,10 +118,10 @@ func add_project_setting(name: String, default_value) -> void:
 
 
 func _load_project_settings():
-	Goulash.default_fps = ProjectSettings.get_setting_with_override("goulash/animation/default_fps")
-	onion_skin_enabled = ProjectSettings.get_setting_with_override("goulash/animation/onion_skin_enabled")
-	onion_skin_frames = ProjectSettings.get_setting_with_override("goulash/animation/onion_skin_frames")
-	current_color = ProjectSettings.get_setting_with_override("goulash/painting/default_color")
+	Goolash.default_fps = ProjectSettings.get_setting_with_override("goolash/animation/default_fps")
+	onion_skin_enabled = ProjectSettings.get_setting_with_override("goolash/animation/onion_skin_enabled")
+	onion_skin_frames = ProjectSettings.get_setting_with_override("goolash/animation/onion_skin_frames")
+	current_color = ProjectSettings.get_setting_with_override("goolash/painting/default_color")
 
 
 func _on_settings_changed():
@@ -252,22 +252,22 @@ func _on_key_pressed(event: InputEventKey) -> bool:
 				if editing_brush.next_frame():
 					return true
 		KEY_Q:
-			set_tool(GoulashEditor.TOOL_SELECT)
+			set_tool(GoolashEditor.TOOL_SELECT)
 			return true
 		key_paint:
-			set_tool(GoulashEditor.TOOL_PAINT)
+			set_tool(GoolashEditor.TOOL_PAINT)
 			return true
 		KEY_R:
-			set_tool(GoulashEditor.TOOL_RECT)
+			set_tool(GoolashEditor.TOOL_RECT)
 			return true
 		KEY_G:
-			set_tool(GoulashEditor.TOOL_FILL)
+			set_tool(GoolashEditor.TOOL_FILL)
 			return true
 		KEY_O:
-			set_tool(GoulashEditor.TOOL_OVAL)
+			set_tool(GoolashEditor.TOOL_OVAL)
 			return true
 		KEY_P:
-			set_tool(GoulashEditor.TOOL_SHAPE)
+			set_tool(GoolashEditor.TOOL_SHAPE)
 			return true
 		key_add_frame:
 			if Input.is_key_pressed(KEY_SHIFT):

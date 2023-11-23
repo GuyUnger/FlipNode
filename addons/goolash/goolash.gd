@@ -7,4 +7,4 @@ var frame := 0.0
 func _process(delta):
 	frame += delta * default_fps
 	
-	RenderingServer.global_shader_parameter_set("goulash_frame", floor(frame) )
+	RenderingServer.global_shader_parameter_set("goolash_frame", floor(frame) )

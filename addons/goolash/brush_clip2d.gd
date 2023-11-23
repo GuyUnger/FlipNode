@@ -141,4 +141,4 @@ func _get_fps():
 	if fps_override > 0:
 		return fps_override
 	else:
-		return Goulash.default_fps
+		return Goolash.default_fps

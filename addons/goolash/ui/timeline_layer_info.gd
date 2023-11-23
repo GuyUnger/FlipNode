@@ -11,17 +11,17 @@ var layer: BrushLayer2D
 
 func _ready():
 	style_active.bg_color = EditorInterface.get_editor_settings().get_setting("interface/theme/accent_color")
-	GoulashEditor.editor.selection_changed.connect(_on_goulash_selection_changed)
+	GoolashEditor.editor.selection_changed.connect(_on_goolash_selection_changed)
 	await get_tree().process_frame
 	update_style()
 
 
-func _on_goulash_selection_changed():
+func _on_goolash_selection_changed():
 	update_style()
 
 
 func update_style():
-	add_theme_stylebox_override("panel", style_active if GoulashEditor.editor._editing_layer_num == layer.layer_num else style_normal)
+	add_theme_stylebox_override("panel", style_active if GoolashEditor.editor._editing_layer_num == layer.layer_num else style_normal)
 
 
 func init(layer):

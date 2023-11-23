@@ -46,12 +46,12 @@ func display_frame(frame_num):
 	if Engine.is_editor_hint():
 		var onion_skin_frames := 0
 		if (
-				GoulashEditor.onion_skin_enabled and
+				GoolashEditor.onion_skin_enabled and
 				not get_clip().is_playing and
-				GoulashEditor.editor.editing_brush == get_clip() and
+				GoolashEditor.editor.editing_brush == get_clip() and
 				get_clip().scene_file_path == ""
 		):
-			onion_skin_frames = GoulashEditor.onion_skin_frames
+			onion_skin_frames = GoolashEditor.onion_skin_frames
 		for frame in keyframes:
 			if frame_num >= frame.frame_num and frame_num <= frame.frame_end_num:
 				frame.visible = true

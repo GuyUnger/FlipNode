@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dk2shd72pwipw"
-path="res://.godot/imported/goulash_boile_noise_texture.png-9bd966bc7f8be8a0986808a02945bca8.ctex"
+path="res://.godot/imported/goolash_boil_noise_texture.png-8e1e0fb93a8041f92e8c2f0f18676e95.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/goulash/goulash_boile_noise_texture.png"
-dest_files=["res://.godot/imported/goulash_boile_noise_texture.png-9bd966bc7f8be8a0986808a02945bca8.ctex"]
+source_file="res://addons/goolash/goolash_boil_noise_texture.png"
+dest_files=["res://.godot/imported/goolash_boil_noise_texture.png-8e1e0fb93a8041f92e8c2f0f18676e95.ctex"]
 
 [params]
 

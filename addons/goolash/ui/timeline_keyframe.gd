@@ -35,4 +35,4 @@ func _on_pressed():
 	EditorInterface.inspect_object(null)
 	EditorInterface.inspect_object(keyframe)
 	keyframe.get_clip().goto(keyframe.frame_num)
-	GoulashEditor.editor._editing_layer_num = keyframe.get_layer().layer_num
+	GoolashEditor.editor._editing_layer_num = keyframe.get_layer().layer_num
