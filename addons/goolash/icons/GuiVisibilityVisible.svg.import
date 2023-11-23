@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bx6580m4kytvp"
-path="res://.godot/imported/Lock.svg-7afa0e2912f48547316e1a4407f8e57a.ctex"
+uid="uid://bky2ewaclarto"
+path="res://.godot/imported/GuiVisibilityVisible.svg-6ffc321e43a80eae3524b9242611d371.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/goulash/icons/Lock.svg"
-dest_files=["res://.godot/imported/Lock.svg-7afa0e2912f48547316e1a4407f8e57a.ctex"]
+source_file="res://addons/goolash/icons/GuiVisibilityVisible.svg"
+dest_files=["res://.godot/imported/GuiVisibilityVisible.svg-6ffc321e43a80eae3524b9242611d371.ctex"]
 
 [params]
 

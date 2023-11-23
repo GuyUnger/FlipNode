@@ -1,5 +1,5 @@
 @tool
-@icon("res://addons/goulash/icons/BrushLayer2D.svg")
+@icon("res://addons/goolash/icons/BrushLayer2D.svg")
 class_name BrushLayer2D
 extends Node2D
 

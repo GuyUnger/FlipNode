@@ -1,5 +1,5 @@
 @tool
-@icon("res://addons/goulash/icons/BrushClip2D.svg")
+@icon("res://addons/goolash/icons/BrushClip2D.svg")
 class_name BrushClip2D
 extends Node2D
 

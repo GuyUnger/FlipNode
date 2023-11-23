@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bi6b3ska6mcpo"
-path="res://.godot/imported/ToolOval.svg-78d8dfa1b9153c6bb7c971b722afead7.ctex"
+uid="uid://bx6580m4kytvp"
+path="res://.godot/imported/Lock.svg-07e0a61f025255b0289036fe96484edc.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/goulash/icons/ToolOval.svg"
-dest_files=["res://.godot/imported/ToolOval.svg-78d8dfa1b9153c6bb7c971b722afead7.ctex"]
+source_file="res://addons/goolash/icons/Lock.svg"
+dest_files=["res://.godot/imported/Lock.svg-07e0a61f025255b0289036fe96484edc.ctex"]
 
 [params]
 

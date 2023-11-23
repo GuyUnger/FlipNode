@@ -1,5 +1,5 @@
 @tool
-@icon("res://addons/goulash/icons/BrushKeyframe2D.svg")
+@icon("res://addons/goolash/icons/BrushKeyframe2D.svg")
 class_name BrushKeyframe2D
 extends BrushSprite2D
 

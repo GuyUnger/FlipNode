@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b52vlufbobpah"
-path="res://.godot/imported/Remove.svg-4e0937decd6baae3d4d9ad9e491d0b82.ctex"
+uid="uid://c40dtlehg5ppd"
+path="res://.godot/imported/BrushClip2D.svg-688ab16f3e78f4b1e7e87200e75c2450.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/goulash/icons/Remove.svg"
-dest_files=["res://.godot/imported/Remove.svg-4e0937decd6baae3d4d9ad9e491d0b82.ctex"]
+source_file="res://addons/goolash/icons/BrushClip2D.svg"
+dest_files=["res://.godot/imported/BrushClip2D.svg-688ab16f3e78f4b1e7e87200e75c2450.ctex"]
 
 [params]
 

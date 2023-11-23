@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ex1veqp4dhhw"
-path="res://.godot/imported/BrushKeyframe2D.svg-a7e96bd2d7551a38f516edecab951b46.ctex"
+uid="uid://dpumbmfv451m4"
+path="res://.godot/imported/ToolShape.svg-1fb31d77bc9f4d99d25a8cfa25d07aa8.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/goulash/icons/BrushKeyframe2D.svg"
-dest_files=["res://.godot/imported/BrushKeyframe2D.svg-a7e96bd2d7551a38f516edecab951b46.ctex"]
+source_file="res://addons/goolash/icons/ToolShape.svg"
+dest_files=["res://.godot/imported/ToolShape.svg-1fb31d77bc9f4d99d25a8cfa25d07aa8.ctex"]
 
 [params]
 

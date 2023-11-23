@@ -1,5 +1,5 @@
 @tool
-@icon("res://addons/goulash/icons/BrushSprite2D.svg")
+@icon("res://addons/goolash/icons/BrushSprite2D.svg")
 class_name BrushSprite2D
 extends Node2D
 

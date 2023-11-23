@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://m5wq1j1x5deq"
-path="res://.godot/imported/AutoPlay.svg-bbbf846d8b2f830cc2e90177563be84e.ctex"
+uid="uid://bfv15hq42cpvg"
+path="res://.godot/imported/ToolRectangle.svg-ee4aae13b559264158da5a345982bc83.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/goulash/icons/AutoPlay.svg"
-dest_files=["res://.godot/imported/AutoPlay.svg-bbbf846d8b2f830cc2e90177563be84e.ctex"]
+source_file="res://addons/goolash/icons/ToolRectangle.svg"
+dest_files=["res://.godot/imported/ToolRectangle.svg-ee4aae13b559264158da5a345982bc83.ctex"]
 
 [params]
 

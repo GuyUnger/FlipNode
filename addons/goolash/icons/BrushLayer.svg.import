@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dodqbpb1r3722"
-path="res://.godot/imported/Rectangle.svg-180dccc3859574f2035eee0e0ce8de23.ctex"
+uid="uid://c3t4omflc1jco"
+path="res://.godot/imported/BrushLayer.svg-eecce41d138f371485231fcd34c1361a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/goulash/icons/Rectangle.svg"
-dest_files=["res://.godot/imported/Rectangle.svg-180dccc3859574f2035eee0e0ce8de23.ctex"]
+source_file="res://addons/goolash/icons/BrushLayer.svg"
+dest_files=["res://.godot/imported/BrushLayer.svg-eecce41d138f371485231fcd34c1361a.ctex"]
 
 [params]
 

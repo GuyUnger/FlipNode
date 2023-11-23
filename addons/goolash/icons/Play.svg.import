@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bufitfyvg3owr"
-path="res://.godot/imported/BrushLayer2D.svg-a99d9f7247d8f606202c7f1b23f475c6.ctex"
+uid="uid://cy0je6d77bnw2"
+path="res://.godot/imported/Play.svg-7b4c01eca8f0d456bc646f80a7bbd17b.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/goulash/icons/BrushLayer2D.svg"
-dest_files=["res://.godot/imported/BrushLayer2D.svg-a99d9f7247d8f606202c7f1b23f475c6.ctex"]
+source_file="res://addons/goolash/icons/Play.svg"
+dest_files=["res://.godot/imported/Play.svg-7b4c01eca8f0d456bc646f80a7bbd17b.ctex"]
 
 [params]
 

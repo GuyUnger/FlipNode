@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cf60f07corl3p"
-path="res://.godot/imported/ColorPick.svg-6b2191f3676c3370ad6d427d37b642b9.ctex"
+uid="uid://da1imqfk7aeg5"
+path="res://.godot/imported/Paint.svg-8318013a7e75428f4da017a1e9a17b80.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/goulash/icons/ColorPick.svg"
-dest_files=["res://.godot/imported/ColorPick.svg-6b2191f3676c3370ad6d427d37b642b9.ctex"]
+source_file="res://addons/goolash/icons/Paint.svg"
+dest_files=["res://.godot/imported/Paint.svg-8318013a7e75428f4da017a1e9a17b80.ctex"]
 
 [params]
 

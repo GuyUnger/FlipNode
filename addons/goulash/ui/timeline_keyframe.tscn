@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=3 uid="uid://cptiejb5rrike"]
 
 [ext_resource type="Script" path="res://addons/goulash/ui/timeline_keyframe.gd" id="1_1gijj"]
-[ext_resource type="Texture2D" uid="uid://mcjhqjbfv7k" path="res://addons/goulash/icons/keyframe.svg" id="2_sgwnp"]
+[ext_resource type="Texture2D" uid="uid://mcjhqjbfv7k" path="res://addons/goolash/icons/keyframe.svg" id="2_sgwnp"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8tbbb"]
 bg_color = Color(0.388235, 0.388235, 0.388235, 0.694118)

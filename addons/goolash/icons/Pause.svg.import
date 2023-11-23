@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://da1imqfk7aeg5"
-path="res://.godot/imported/Paint.svg-3f3a1677bbaed1f1efcc97fbf24684ee.ctex"
+uid="uid://npdfsa80grnn"
+path="res://.godot/imported/Pause.svg-4282ad803ebaeeb212c03f4f5cd201d7.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/goulash/icons/Paint.svg"
-dest_files=["res://.godot/imported/Paint.svg-3f3a1677bbaed1f1efcc97fbf24684ee.ctex"]
+source_file="res://addons/goolash/icons/Pause.svg"
+dest_files=["res://.godot/imported/Pause.svg-4282ad803ebaeeb212c03f4f5cd201d7.ctex"]
 
 [params]
 

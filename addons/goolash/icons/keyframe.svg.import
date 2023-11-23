@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://jnmhbl8m5hy2"
-path="res://.godot/imported/ToolSelect.svg-3d76483a759056eba98384a886adf7ad.ctex"
+uid="uid://mcjhqjbfv7k"
+path="res://.godot/imported/keyframe.svg-86f43acdfcd6f597e6be7585de06e779.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/goulash/icons/ToolSelect.svg"
-dest_files=["res://.godot/imported/ToolSelect.svg-3d76483a759056eba98384a886adf7ad.ctex"]
+source_file="res://addons/goolash/icons/keyframe.svg"
+dest_files=["res://.godot/imported/keyframe.svg-86f43acdfcd6f597e6be7585de06e779.ctex"]
 
 [params]
 

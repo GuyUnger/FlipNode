@@ -1,9 +1,9 @@
 [gd_scene load_steps=9 format=3 uid="uid://bqny06828bj8j"]
 
 [ext_resource type="Script" path="res://addons/goulash/ui/timeline_layer_info.gd" id="1_a1h0g"]
-[ext_resource type="Texture2D" uid="uid://bky2ewaclarto" path="res://addons/goulash/icons/GuiVisibilityVisible.svg" id="2_nqcyt"]
-[ext_resource type="Texture2D" uid="uid://b52vlufbobpah" path="res://addons/goulash/icons/Remove.svg" id="2_p6o14"]
-[ext_resource type="Texture2D" uid="uid://bx6580m4kytvp" path="res://addons/goulash/icons/Lock.svg" id="3_17d7r"]
+[ext_resource type="Texture2D" uid="uid://bky2ewaclarto" path="res://addons/goolash/icons/GuiVisibilityVisible.svg" id="2_nqcyt"]
+[ext_resource type="Texture2D" uid="uid://b52vlufbobpah" path="res://addons/goolash/icons/Remove.svg" id="2_p6o14"]
+[ext_resource type="Texture2D" uid="uid://bx6580m4kytvp" path="res://addons/goolash/icons/Lock.svg" id="3_17d7r"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_dbos8"]
 

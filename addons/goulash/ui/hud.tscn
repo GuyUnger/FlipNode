@@ -1,13 +1,13 @@
 [gd_scene load_steps=12 format=3 uid="uid://chuytojhypqte"]
 
 [ext_resource type="Script" path="res://addons/goulash/ui/hud.gd" id="1_72a5i"]
-[ext_resource type="Texture2D" uid="uid://jnmhbl8m5hy2" path="res://addons/goulash/icons/ToolSelect.svg" id="2_7pmde"]
-[ext_resource type="Texture2D" uid="uid://da1imqfk7aeg5" path="res://addons/goulash/icons/Paint.svg" id="3_eks0u"]
-[ext_resource type="Texture2D" uid="uid://dpumbmfv451m4" path="res://addons/goulash/icons/ToolShape.svg" id="4_lemf8"]
-[ext_resource type="Texture2D" uid="uid://bi6b3ska6mcpo" path="res://addons/goulash/icons/ToolOval.svg" id="4_osrit"]
-[ext_resource type="Texture2D" uid="uid://bfv15hq42cpvg" path="res://addons/goulash/icons/ToolRectangle.svg" id="5_3fhbx"]
-[ext_resource type="Texture2D" uid="uid://cf60f07corl3p" path="res://addons/goulash/icons/ColorPick.svg" id="5_8y7ry"]
-[ext_resource type="Texture2D" uid="uid://bduj3a2iwrk0c" path="res://addons/goulash/icons/Bucket.svg" id="6_83ojh"]
+[ext_resource type="Texture2D" uid="uid://jnmhbl8m5hy2" path="res://addons/goolash/icons/ToolSelect.svg" id="2_7pmde"]
+[ext_resource type="Texture2D" uid="uid://da1imqfk7aeg5" path="res://addons/goolash/icons/Paint.svg" id="3_eks0u"]
+[ext_resource type="Texture2D" uid="uid://dpumbmfv451m4" path="res://addons/goolash/icons/ToolShape.svg" id="4_lemf8"]
+[ext_resource type="Texture2D" uid="uid://bi6b3ska6mcpo" path="res://addons/goolash/icons/ToolOval.svg" id="4_osrit"]
+[ext_resource type="Texture2D" uid="uid://bfv15hq42cpvg" path="res://addons/goolash/icons/ToolRectangle.svg" id="5_3fhbx"]
+[ext_resource type="Texture2D" uid="uid://cf60f07corl3p" path="res://addons/goolash/icons/ColorPick.svg" id="5_8y7ry"]
+[ext_resource type="Texture2D" uid="uid://bduj3a2iwrk0c" path="res://addons/goolash/icons/Bucket.svg" id="6_83ojh"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_774xs"]
 

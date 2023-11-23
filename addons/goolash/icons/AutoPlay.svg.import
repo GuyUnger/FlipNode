@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c4t0mpwkude8o"
-path="res://.godot/imported/CanvasLayer.svg-1db093bc396f4e5743ca045f9439431f.ctex"
+uid="uid://m5wq1j1x5deq"
+path="res://.godot/imported/AutoPlay.svg-ec797b31ba435921ef901d528c5246d3.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/goulash/icons/CanvasLayer.svg"
-dest_files=["res://.godot/imported/CanvasLayer.svg-1db093bc396f4e5743ca045f9439431f.ctex"]
+source_file="res://addons/goolash/icons/AutoPlay.svg"
+dest_files=["res://.godot/imported/AutoPlay.svg-ec797b31ba435921ef901d528c5246d3.ctex"]
 
 [params]
 

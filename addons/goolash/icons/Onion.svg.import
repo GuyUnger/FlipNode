@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://mcjhqjbfv7k"
-path="res://.godot/imported/keyframe.svg-fb3c8ca32d9b876ce2a7760ce5238528.ctex"
+uid="uid://djjrjid7ltt80"
+path="res://.godot/imported/Onion.svg-17a398e557cb800201ecf665dfcd2cc4.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/goulash/icons/keyframe.svg"
-dest_files=["res://.godot/imported/keyframe.svg-fb3c8ca32d9b876ce2a7760ce5238528.ctex"]
+source_file="res://addons/goolash/icons/Onion.svg"
+dest_files=["res://.godot/imported/Onion.svg-17a398e557cb800201ecf665dfcd2cc4.ctex"]
 
 [params]
 

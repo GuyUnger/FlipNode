@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ba2hxmxea6m1a"
-path="res://.godot/imported/PagePrevious.svg-d5ea1139c487b01d727619467942b119.ctex"
+uid="uid://dkkug45xe100q"
+path="res://.godot/imported/BrushSprite2D.svg-7f07a35c1feadf5461112f4654c7d8f1.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/goulash/icons/PagePrevious.svg"
-dest_files=["res://.godot/imported/PagePrevious.svg-d5ea1139c487b01d727619467942b119.ctex"]
+source_file="res://addons/goolash/icons/BrushSprite2D.svg"
+dest_files=["res://.godot/imported/BrushSprite2D.svg-7f07a35c1feadf5461112f4654c7d8f1.ctex"]
 
 [params]
 
@@ -32,6 +32,6 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=1
-svg/scale=1.0
+svg/scale=0.05
 editor/scale_with_editor_scale=false
 editor/convert_colors_with_editor_theme=false

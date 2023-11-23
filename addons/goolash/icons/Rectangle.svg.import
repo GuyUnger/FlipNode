@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bfv15hq42cpvg"
-path="res://.godot/imported/ToolRectangle.svg-31c8f395b8844b0c1898e52c2112fe7c.ctex"
+uid="uid://dodqbpb1r3722"
+path="res://.godot/imported/Rectangle.svg-450e9bb81a8303b173cc435e6d81d395.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/goulash/icons/ToolRectangle.svg"
-dest_files=["res://.godot/imported/ToolRectangle.svg-31c8f395b8844b0c1898e52c2112fe7c.ctex"]
+source_file="res://addons/goolash/icons/Rectangle.svg"
+dest_files=["res://.godot/imported/Rectangle.svg-450e9bb81a8303b173cc435e6d81d395.ctex"]
 
 [params]
 
