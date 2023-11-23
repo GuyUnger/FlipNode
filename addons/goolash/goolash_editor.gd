@@ -506,18 +506,19 @@ func draw_custom_cursor(target):
 	if not _get_editing_sprite():
 		return
 	var zoom = _get_editing_sprite().get_viewport().get_screen_transform().get_scale().x
+	
 	var mouse_position = target.get_local_mouse_position()
 	match _get_current_tool():
 		TOOL_PAINT:
 			if not (_current_action == ACTION_PAINT and _action_alt):
-				_draw_circle_outline(target, mouse_position, _action_paint_size, Color.BLACK, 1.0 / zoom)
-				_draw_circle_outline(target, mouse_position, _action_paint_size + 2.0 / zoom, Color.WHITE, 1.0 / zoom)
+				_draw_circle_outline(target, mouse_position, _action_paint_size * zoom, Color.BLACK, 1.0)
+				_draw_circle_outline(target, mouse_position, _action_paint_size * zoom + 2.0, Color.WHITE, 1.0)
 			else:
-				_draw_circle_outline(target, mouse_position, _action_paint_erase_size, Color.BLACK, 1.0 / zoom, true)
+				_draw_circle_outline(target, mouse_position, _action_paint_erase_size * zoom, Color.BLACK, 1.0, true)
 			if not (_current_action == ACTION_PAINT and not _action_alt):
-				_draw_circle_outline(target, mouse_position, _action_paint_erase_size, Color(1.0, 1.0, 1.0, 0.2), 1.0 / zoom, true)
+				_draw_circle_outline(target, mouse_position, _action_paint_erase_size * zoom, Color(1.0, 1.0, 1.0, 0.2), 1.0, true)
 			
-			target.draw_circle(mouse_position, 2.0 / zoom, Color.WHITE)
+			target.draw_circle(mouse_position, 2.0, Color.WHITE)
 		TOOL_SELECT:
 			for stroke: BrushStrokeData in _get_editing_sprite().stroke_data:
 				if _is_hovering_edge(stroke, mouse_position):
@@ -865,4 +866,4 @@ func queue_redraw():
 	hud.queue_redraw()
 
 static func is_editable(node):
-	return node.scene_file_path != "" or node.get_tree().edited_scene_root == node
+	return node.scene_file_path == "" or node.get_tree().edited_scene_root == node
