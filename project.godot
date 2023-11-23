@@ -10,7 +10,7 @@ config_version=5
 
 [application]
 
-config/name="Goulash"
+config/name="Goolash"
 run/main_scene="res://demo/animation/demo_animation.tscn"
 config/features=PackedStringArray("4.2", "Forward Plus")
 config/icon="res://icon.svg"
