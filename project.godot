@@ -35,5 +35,5 @@ goolash_frame={
 }
 goolash_boil_noise={
 "type": "sampler2D",
-"value": "res://addons/goolash/goolash_boile_noise_texture.png"
+"value": "res://addons/goolash/goolash_boil_noise_texture.png"
 }

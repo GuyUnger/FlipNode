@@ -33,11 +33,16 @@ func _update_used_colors():
 	for button in %UsedColors.get_children():
 		button.queue_free()
 	_used_colors = []
-	for layer in GoolashEditor.editor.editing_brush.layers:
-		for keyframe in layer.keyframes:
-			for stroke in keyframe.stroke_data:
-				if not _used_colors.has(stroke.color):
-					_add_used_color(stroke.color)
+	if GoolashEditor.editor.editing_brush is BrushClip2D:
+		for layer in GoolashEditor.editor.editing_brush.layers:
+			for keyframe in layer.keyframes:
+				for stroke in keyframe.stroke_data:
+					if not _used_colors.has(stroke.color):
+						_add_used_color(stroke.color)
+	else:
+		for stroke in GoolashEditor.editor.editing_brush.stroke_data:
+			if not _used_colors.has(stroke.color):
+				_add_used_color(stroke.color)
 
 
 func _add_used_color(color):
