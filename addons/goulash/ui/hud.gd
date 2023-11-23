@@ -5,7 +5,7 @@ const ButtonUsedColor = preload("res://addons/goulash/ui/button_used_color.tscn"
 
 @onready var buttons := [
 	%ButtonSelect,
-	%ButtonBrush,
+	%ButtonPaint,
 	%ButtonOval,
 	%ButtonRect,
 	%ButtonEyedropper,
@@ -15,7 +15,7 @@ const ButtonUsedColor = preload("res://addons/goulash/ui/button_used_color.tscn"
 
 @onready var properties_containers := [
 	%PropertiesSelect,
-	%PropertiesBrush,
+	%PropertiesPaint,
 	%PropertiesFill,
 ]
 
@@ -51,7 +51,7 @@ func _on_button_select_pressed():
 	GoulashEditor.set_tool(GoulashEditor.TOOL_SELECT)
 
 
-func _on_button_brush_pressed():
+func _on_button_paint_pressed():
 	GoulashEditor.set_tool(GoulashEditor.TOOL_PAINT)
 
 
@@ -81,8 +81,8 @@ func select_tool(tool):
 			set_pressed(%ButtonSelect)
 			show_properties(%PropertiesSelect)
 		GoulashEditor.TOOL_PAINT:
-			set_pressed(%ButtonBrush)
-			show_properties(%PropertiesBrush)
+			set_pressed(%ButtonPaint)
+			show_properties(%PropertiesPaint)
 		GoulashEditor.TOOL_SHAPE:
 			set_pressed(%ButtonPen)
 			show_properties()

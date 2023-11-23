@@ -1,0 +1,76 @@
+[gd_scene load_steps=7 format=3 uid="uid://cptiejb5rrike"]
+
+[ext_resource type="Script" path="res://addons/goulash/ui/timeline_keyframe.gd" id="1_1gijj"]
+[ext_resource type="Texture2D" uid="uid://mcjhqjbfv7k" path="res://addons/goulash/icons/keyframe.svg" id="2_sgwnp"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8tbbb"]
+bg_color = Color(0.388235, 0.388235, 0.388235, 0.694118)
+border_width_left = 1
+border_width_right = 1
+border_color = Color(0.180392, 0.180392, 0.180392, 0.552941)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+corner_detail = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_x8fol"]
+content_margin_left = 1.0
+content_margin_right = 1.0
+bg_color = Color(1, 1, 1, 0.517647)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_y78mn"]
+bg_color = Color(0.192157, 0.192157, 0.192157, 0.517647)
+border_width_left = 1
+border_color = Color(0.152941, 0.152941, 0.152941, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="SystemFont" id="SystemFont_nfcst"]
+subpixel_positioning = 0
+
+[node name="Frame" type="Button"]
+custom_minimum_size = Vector2(12, 32)
+offset_right = 12.0
+offset_bottom = 32.0
+theme_override_styles/normal = SubResource("StyleBoxFlat_8tbbb")
+theme_override_styles/hover = SubResource("StyleBoxFlat_x8fol")
+script = ExtResource("1_1gijj")
+style_filled = SubResource("StyleBoxFlat_8tbbb")
+style_blank = SubResource("StyleBoxFlat_y78mn")
+
+[node name="Label" type="Label" parent="."]
+unique_name_in_owner = true
+visible = false
+z_index = 1
+layout_mode = 1
+offset_top = -3.0
+offset_right = 65.0
+offset_bottom = 20.0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.584314)
+theme_override_constants/shadow_offset_x = 0
+theme_override_constants/shadow_offset_y = 1
+theme_override_fonts/font = SubResource("SystemFont_nfcst")
+theme_override_font_sizes/font_size = 12
+
+[node name="Symbol" type="TextureRect" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 1.0
+offset_top = -11.0
+offset_right = 11.0
+offset_bottom = -1.0
+grow_vertical = 0
+mouse_filter = 2
+texture = ExtResource("2_sgwnp")
+
+[connection signal="pressed" from="." to="." method="_on_pressed"]

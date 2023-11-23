@@ -1,8 +1,8 @@
 [gd_scene load_steps=9 format=3 uid="uid://bqny06828bj8j"]
 
 [ext_resource type="Script" path="res://addons/goulash/ui/timeline_layer_info.gd" id="1_a1h0g"]
-[ext_resource type="Texture2D" uid="uid://c3t4omflc1jco" path="res://addons/goulash/icons/BrushLayer.svg" id="2_0l481"]
 [ext_resource type="Texture2D" uid="uid://bky2ewaclarto" path="res://addons/goulash/icons/GuiVisibilityVisible.svg" id="2_nqcyt"]
+[ext_resource type="Texture2D" uid="uid://b52vlufbobpah" path="res://addons/goulash/icons/Remove.svg" id="2_p6o14"]
 [ext_resource type="Texture2D" uid="uid://bx6580m4kytvp" path="res://addons/goulash/icons/Lock.svg" id="3_17d7r"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_dbos8"]
@@ -10,7 +10,7 @@
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_vc5fc"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2d8xa"]
-bg_color = Color(0.278431, 0.584314, 0.960784, 1)
+bg_color = Color(1, 0.2, 0.2, 1)
 corner_radius_top_left = 6
 corner_radius_top_right = 3
 corner_radius_bottom_right = 3
@@ -42,7 +42,7 @@ size_flags_vertical = 3
 unique_name_in_owner = true
 custom_minimum_size = Vector2(25, 25)
 layout_mode = 2
-icon = ExtResource("2_0l481")
+icon = ExtResource("2_p6o14")
 flat = true
 icon_alignment = 1
 

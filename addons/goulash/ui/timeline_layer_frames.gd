@@ -1,7 +1,7 @@
 @tool
-extends HBoxContainer
+extends Control
 
-const TimelineFrame = preload("res://addons/goulash/ui/timeline_frame.tscn")
+const TimelineKeyframe = preload("res://addons/goulash/ui/timeline_keyframe.tscn")
 
 var layer: BrushLayer2D
 
@@ -9,16 +9,15 @@ func _clear():
 	for child in get_children():
 		child.queue_free()
 
-func draw(layer: BrushLayer2D):
+func init(layer: BrushLayer2D):
 	self.layer = layer
-	redraw()
-	#layer.changed.connect(redraw)
+	draw()
+	layer.edited.connect(draw)
 
-func redraw():
+func draw():
 	_clear()
-	for i in layer.frame_count:
-		var keyframe = layer.get_keyframe(i)
-		var timeline_frame = TimelineFrame.instantiate()
-		timeline_frame.draw(keyframe, i)
+	for keyframe in layer.keyframes:
+		var timeline_frame = TimelineKeyframe.instantiate()
 		add_child(timeline_frame)
-	
+		timeline_frame.position.x = keyframe.frame_num * Timeline.FRAME_WIDTH
+		timeline_frame.init(keyframe)

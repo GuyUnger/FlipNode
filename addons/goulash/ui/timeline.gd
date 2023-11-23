@@ -1,5 +1,8 @@
 @tool
+class_name Timeline
 extends Control
+
+const FRAME_WIDTH = 12
 
 const TimelineLayerFrames = preload("res://addons/goulash/ui/timeline_layer_frames.tscn")
 const TimelineLayerInfo = preload("res://addons/goulash/ui/timeline_layer_info.tscn")
@@ -24,29 +27,45 @@ func load_brush_clip(brush_clip: BrushClip2D):
 	if is_instance_valid(self.brush_clip):
 		self.brush_clip.frame_changed.disconnect(_on_frame_changed)
 	self.brush_clip = brush_clip
-	_clear_layers()
-	if brush_clip == null:
-		%LabelNoBrushClip.visible = true
-		%Timeline.visible = false
+	
+	## Handle if a BrushClip or null is loaded
+	var brush_clip_selected := brush_clip != null
+	%Timeline.visible = brush_clip_selected
+	%LabelNoBrushClip.visible = not brush_clip_selected
+	if not brush_clip_selected:
 		return
 	
-	%LabelNoBrushClip.visible = false
-	%Timeline.visible = true
-	
+	## FPS
 	%LineEditFPS.placeholder_text = str(Goulash.default_fps)
-	
 	if brush_clip.fps_override == 0:
 		%LineEditFPS.text = ""
 	else:
 		%LineEditFPS.text = str(brush_clip.fps_override)
-	_load_layers()
-	brush_clip.frame_changed.connect(_on_frame_changed)
 	
-	custom_minimum_size.y = 60.0 + brush_clip.layers.size() * 32.0
+	%ButtonAutoPlay.button_pressed = brush_clip.auto_play
+	
+	_clear_layers()
+	var is_editable = GoulashEditor.is_editable(brush_clip)
+	if is_editable:
+		_load_layers()
+		custom_minimum_size.y = 60.0 + brush_clip.layers.size() * 32.0
+	else:
+		custom_minimum_size.y = 30.0
+		size.y = 30.0
+	%LayersContainer.visible = is_editable
+	%EditorOptions.visible = is_editable
+	
+	brush_clip.frame_changed.connect(_on_frame_changed)
+	_on_frame_changed()
+	
 
 
 func _on_frame_changed():
-	%FrameIndicator.position.x = GoulashEditor.editor.editing_brush.current_frame * 12 + 3
+	%FrameIndicator.position.x = GoulashEditor.editor.editing_brush.current_frame * FRAME_WIDTH + FRAME_WIDTH * 0.5
+	var end_pos = brush_clip.total_frames * FRAME_WIDTH
+	%AreaActive.size.x = end_pos
+	%AreaInactive.position.x = end_pos
+	%AreaInactive.size.x = %FrameCounts.size.x - end_pos
 
 
 func _on_button_previous_frame_pressed():
@@ -82,17 +101,17 @@ func _load_layers():
 
 
 func _add_layer(layer):
-	var info = TimelineLayerInfo.instantiate()
-	var frames = TimelineLayerFrames.instantiate()
-	%LayersInfo.add_child(info)
-	info.init(layer)
-	%LayersFrames.add_child(frames)
-	frames.draw(layer)
+	var layer_info = TimelineLayerInfo.instantiate()
+	var layer_frames = TimelineLayerFrames.instantiate()
+	%LayersInfo.add_child(layer_info)
+	layer_info.init(layer)
+	%LayersFrames.add_child(layer_frames)
+	layer_frames.init(layer)
 
 
 func _on_button_add_layer_pressed():
 	brush_clip._create_layer()
-	GoulashEditor.editor._selected_layer_id = brush_clip.layers.size() - 1
+	GoulashEditor.editor._editing_layer_num = brush_clip.layers.size() - 1
 	_clear_layers()
 	_load_layers()
 	custom_minimum_size.y = 60.0 + brush_clip.layers.size() * 32.0
@@ -145,7 +164,7 @@ func _input(event) -> void:
 		if event.is_pressed():
 			var tl_node = %FrameCounts
 			var rect = Rect2(tl_node.position, get_rect().size - tl_node.position)
-			rect.size.y = tl_node.get_rect().size.y
+			rect.size.y = tl_node.get_rect().size.y + %LayersInfo.get_child_count() * 32.0
 			if rect.has_point(get_local_mouse_position()):
 				scrubbing = true
 		else:
@@ -155,6 +174,6 @@ func _input(event) -> void:
 func _process(delta):
 	if scrubbing:
 		var tl_node = %FrameCounts
-		var to_frame = int((get_local_mouse_position().x - tl_node.position.x - 5.0) / 10.0)
+		var to_frame = int(floor((get_local_mouse_position().x - tl_node.position.x + 1) / FRAME_WIDTH))
 		to_frame = clamp(to_frame, 0, brush_clip.total_frames - 1)
 		brush_clip.goto(to_frame)

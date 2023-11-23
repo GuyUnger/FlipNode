@@ -1,4 +1,4 @@
-[gd_scene load_steps=33 format=3 uid="uid://bgirhyd6vj5my"]
+[gd_scene load_steps=35 format=3 uid="uid://bgirhyd6vj5my"]
 
 [ext_resource type="Script" path="res://addons/goulash/brush_sprite2d.gd" id="1_0vmbk"]
 [ext_resource type="Script" path="res://addons/goulash/brush_stroke_data.gd" id="2_key3t"]
@@ -144,6 +144,21 @@ polygon_curve = SubResource("Curve2D_hybv6")
 holes = Array[PackedVector2Array]([])
 hole_curves = Array[Curve2D]([])
 
+[sub_resource type="Curve2D" id="Curve2D_ha4q7"]
+bake_interval = 20.0
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 375.206, 407.851, 0, 0, 0, 0, 409.214, 418.66, 0, 0, 0, 0, 413.466, 425.024, 0, 0, 0, 0, 411.973, 432.53, 0, 0, 0, 0, 408.13, 435.919, 0, 0, 0, 0, 402.407, 436.896, 0, 0, 0, 0, 368.606, 426.086, 0, 0, 0, 0, 364.923, 421.599, 0, 0, 0, 0, 364.923, 413.945, 0, 0, 0, 0, 368.606, 409.457, 0, 0, 0, 0, 374.398, 407.772)
+}
+point_count = 11
+
+[sub_resource type="Resource" id="Resource_2sc8r"]
+script = ExtResource("2_key3t")
+color = Color(0.803922, 0.521569, 0.247059, 1)
+polygon = PackedVector2Array(61.092, 234.744, 70.1793, 239.331, 84.784, 252.187, 91.0833, 258.91, 97.54, 265.8, 104.942, 273.7, 112.343, 281.599, 118.8, 288.49, 125.099, 295.213, 133.499, 301.549, 141.898, 307.885, 152.944, 312.915, 163.989, 317.945, 177.827, 320.814, 187.379, 324.835, 196.932, 328.857, 200.866, 333.058, 217.013, 342.714, 226.37, 350.37, 242.383, 357.63, 251.169, 364.965, 264.191, 370.719, 277.212, 376.473, 282.131, 380.008, 292.562, 383.02, 302.993, 386.031, 320.479, 386.333, 334.556, 391.031, 339.561, 392.701, 344.194, 390.782, 346.145, 390.974, 353.499, 396.416, 366.438, 398.525, 371.558, 401.262, 374.187, 407.608, 374.648, 407.796, 375.206, 407.851, 390.318, 412.654, 394.209, 413.536, 406.581, 416.339, 408.358, 418.388, 409.214, 418.66, 411.296, 421.776, 411.595, 422.121, 411.588, 422.214, 413.466, 425.024, 411.973, 432.53, 408.13, 435.919, 402.407, 436.896, 393.808, 434.146, 392.42, 433.992, 374.252, 429.158, 369.492, 427.054, 363.498, 427.417, 354.986, 423.752, 354.843, 423.766, 351.514, 422.257, 351.246, 422.142, 351.225, 422.126, 348.241, 420.774, 343.232, 416.814, 328.963, 412.4, 326.169, 408.995, 325.954, 408.912, 321.19, 408.62, 315.611, 405.948, 299.405, 405.786, 289.866, 402.142, 275.055, 399.224, 267.944, 394.249, 254.205, 388.067, 240.465, 381.885, 231.245, 374.387, 214.892, 366.835, 204.784, 358.473, 185.854, 346.995, 169.861, 340.042, 155.18, 336.291, 139.639, 328.526, 124.098, 320.761, 110.014, 307.65, 95.9292, 294.54, 83.2678, 280.405, 70.6064, 266.269, 61.213, 258.241, 51.8197, 250.214, 50.3207, 246.6, 50.8897, 240.822, 54.5728, 236.334, 60.1285, 234.649)
+polygon_curve = SubResource("Curve2D_ha4q7")
+holes = Array[PackedVector2Array]([])
+hole_curves = Array[Curve2D]([])
+
 [sub_resource type="Curve2D" id="Curve2D_eb6ug"]
 bake_interval = 20.0
 _data = {
@@ -159,18 +174,18 @@ polygon_curve = SubResource("Curve2D_eb6ug")
 holes = Array[PackedVector2Array]([PackedVector2Array(682.389, 203.767, 675.892, 206.793, 666.151, 215.57, 663.594, 219.471, 663.68, 219.659, 668.772, 230.877, 672.624, 244.823, 676.476, 258.769, 682.196, 271.179, 685.593, 283.317, 689.075, 295.758, 692.598, 308.349, 697.453, 301.434, 710.215, 291.183, 717.098, 288.265, 731.743, 287.333, 746.389, 286.401, 758.195, 291.044, 770.003, 295.688, 780.142, 296.727, 792.465, 296.652, 809.207, 292.675, 825.949, 288.697, 837.235, 280.645, 841.795, 269.767, 843.135, 266.57, 838.498, 244.16, 833.345, 230.738, 828.193, 217.316, 827.974, 202.394, 815.174, 216.909, 794.711, 224.379, 758.267, 223.585, 747.259, 221.041, 738.909, 218.107, 702.171, 205.196, 693.821, 202.262)])
 hole_curves = Array[Curve2D]([])
 
-[sub_resource type="Curve2D" id="Curve2D_yvu0d"]
+[sub_resource type="Curve2D" id="Curve2D_1qtx0"]
 bake_interval = 20.0
 _data = {
-"points": PackedVector2Array(0, 0, 0, 0, 837.571, 195.239, 0, 0, 0, 0, 841.175, 196.732, 0, 0, 0, 0, 844.859, 201.22, 0, 0, 0, 0, 856.596, 261.354, 0, 0, 0, 0, 859.551, 268.283, 0, 0, 0, 0, 861.862, 280.903, 0, 0, 0, 0, 867.651, 294.372, 0, 0, 0, 0, 866.158, 301.878, 0, 0, 0, 0, 859.794, 306.13, 0, 0, 0, 0, 852.288, 304.637, 0, 0, 0, 0, 845.43, 294.593, 0, 0, 0, 0, 841.686, 284.78, 0, 0, 0, 0, 833.855, 251.919, 0, 0, 0, 0, 825.62, 205.047, 0, 0, 0, 0, 828.549, 197.976, 0, 0, 0, 0, 835.62, 195.047)
+"points": PackedVector2Array(0, 0, 0, 0, 665.54, 314.586, 0, 0, 0, 0, 670.841, 316.953, 0, 0, 0, 0, 674.264, 323.799, 0, 0, 0, 0, 671.844, 331.06, 0, 0, 0, 0, 665.249, 334.993, 0, 0, 0, 0, 650.263, 339.361, 0, 0, 0, 0, 626.718, 339.505, 0, 0, 0, 0, 600.65, 344.406, 0, 0, 0, 0, 581.717, 346.218, 0, 0, 0, 0, 583.073, 361.872, 0, 0, 0, 0, 585.105, 368.405, 0, 0, 0, 0, 591.965, 378.712, 0, 0, 0, 0, 593.371, 388.685, 0, 0, 0, 0, 590.634, 393.805, 0, 0, 0, 0, 585.514, 396.542, 0, 0, 0, 0, 581.612, 396.542, 0, 0, 0, 0, 576.492, 393.805, 0, 0, 0, 0, 565.916, 374.584, 0, 0, 0, 0, 561.983, 359.254, 0, 0, 0, 0, 561.791, 336.28, 0, 0, 0, 0, 564.72, 329.209, 0, 0, 0, 0, 569.84, 326.472, 0, 0, 0, 0, 598.299, 324.611, 0, 0, 0, 0, 625.122, 319.565, 0, 0, 0, 0, 647.464, 319.576, 0, 0, 0, 0, 663.58, 314.533)
 }
-point_count = 16
+point_count = 26
 
-[sub_resource type="Resource" id="Resource_4snr1"]
+[sub_resource type="Resource" id="Resource_mj5bw"]
 script = ExtResource("2_key3t")
 color = Color(0.803922, 0.521569, 0.247059, 1)
-polygon = PackedVector2Array(755.286, 172.885, 781.506, 179.934, 794.63, 185.111, 807.753, 190.289, 816.517, 191.945, 826.791, 191.495, 837.065, 191.046, 842.477, 196.458, 842.477, 198.319, 844.859, 201.22, 846.693, 210.616, 848.572, 220.247, 850.727, 231.287, 852.882, 242.327, 854.762, 251.958, 856.596, 261.354, 859.551, 268.283, 861.862, 280.903, 862.193, 281.673, 862.849, 281.729, 869.264, 285.904, 870.849, 293.391, 866.587, 302.513, 858.495, 307.942, 849.906, 309.497, 836.853, 309.485, 823.799, 309.472, 813.257, 308.595, 802.715, 307.718, 792.021, 303.869, 770.413, 306.31, 762.719, 309.213, 745.793, 315.6, 728.867, 321.987, 721.173, 324.89, 711.897, 331.997, 701.594, 344.916, 702.956, 349.648, 706.86, 363.217, 708.635, 369.384, 717.87, 390.13, 720.304, 398.449, 725.659, 416.749, 731.013, 435.049, 733.447, 443.367, 739.544, 458.25, 739.002, 465.884, 733.22, 470.899, 728.107, 471.22, 722.986, 468.483, 717.145, 456.36, 713.948, 446.088, 710.672, 435.56, 706.917, 423.491, 703.161, 411.422, 699.885, 400.893, 696.689, 390.622, 689.458, 375.159, 687.714, 369.05, 683.876, 355.611, 681.203, 346.254, 681.134, 346.184, 681.066, 345.771, 680.038, 342.171, 678.293, 336.062, 675.512, 329.953, 669.393, 316.513, 663.275, 303.074, 660.494, 296.965, 656.324, 285.265, 652.154, 273.565, 650.826, 262.949, 649.497, 252.332, 649.554, 240.413, 649.564, 238.155, 646.341, 236.001, 644.848, 226.113, 650.276, 217.544, 660.512, 208.933, 670.748, 200.322, 680.561, 194.162, 690.373, 188.001, 701.555, 182.38, 712.738, 176.759, 720.17, 174.603, 733.54, 172.835, 744.101, 172.829, 754.662, 172.823)
-polygon_curve = SubResource("Curve2D_yvu0d")
+polygon = PackedVector2Array(755.286, 172.885, 781.506, 179.934, 794.63, 185.111, 807.753, 190.289, 816.517, 191.945, 826.791, 191.495, 837.065, 191.046, 842.477, 196.458, 842.477, 198.319, 844.859, 201.22, 846.693, 210.616, 848.572, 220.247, 850.727, 231.287, 852.882, 242.327, 854.762, 251.958, 856.596, 261.354, 859.551, 268.283, 861.862, 280.903, 862.193, 281.673, 862.849, 281.729, 869.264, 285.904, 870.849, 293.391, 866.587, 302.513, 858.495, 307.942, 849.906, 309.497, 836.853, 309.485, 823.799, 309.472, 813.257, 308.595, 802.715, 307.718, 792.021, 303.869, 770.413, 306.31, 762.719, 309.213, 745.793, 315.6, 728.867, 321.987, 721.173, 324.89, 711.897, 331.997, 701.594, 344.916, 702.956, 349.648, 706.86, 363.217, 708.635, 369.384, 717.87, 390.13, 720.304, 398.449, 725.659, 416.749, 731.013, 435.049, 733.447, 443.367, 739.544, 458.25, 739.002, 465.884, 733.22, 470.899, 728.107, 471.22, 722.986, 468.483, 717.145, 456.36, 713.948, 446.088, 710.672, 435.56, 706.917, 423.491, 703.161, 411.422, 699.885, 400.893, 696.689, 390.622, 689.458, 375.159, 687.714, 369.05, 683.876, 355.611, 681.203, 346.254, 681.134, 346.184, 681.066, 345.771, 680.038, 342.171, 678.293, 336.062, 676.422, 331.953, 676.616, 331.19, 676.232, 321.623, 670.758, 311.383, 665.867, 308.769, 663.275, 303.074, 660.494, 296.965, 656.324, 285.265, 652.154, 273.565, 650.826, 262.949, 649.497, 252.332, 649.554, 240.413, 649.564, 238.155, 646.341, 236.001, 644.848, 226.113, 650.276, 217.544, 660.512, 208.933, 670.748, 200.322, 680.561, 194.162, 690.373, 188.001, 701.555, 182.38, 712.738, 176.759, 720.17, 174.603, 733.54, 172.835, 744.101, 172.829, 754.662, 172.823)
+polygon_curve = SubResource("Curve2D_1qtx0")
 holes = Array[PackedVector2Array]([PackedVector2Array(738.801, 193.564, 724.445, 194.343, 702.447, 204.146, 692.594, 210.287, 682.741, 216.428, 674.122, 223.828, 669.056, 228.177, 669.226, 228.494, 669.288, 238.941, 669.35, 249.388, 671.334, 261.674, 673.317, 273.959, 677.06, 282.701, 680.898, 291.663, 685.297, 301.936, 689.695, 312.208, 693.533, 321.17, 694.261, 322.87, 704.878, 311.44, 718.294, 303.751, 734.961, 297.402, 751.629, 291.052, 766.204, 286.515, 777.101, 285.228, 787.998, 283.941, 798.679, 284.133, 808, 287.944, 814.116, 288.708, 830.061, 289.106, 843.464, 289.44, 841.686, 284.78, 837.771, 268.35, 833.855, 251.919, 832.569, 244.596, 826.906, 212.371, 826.795, 211.738, 823.542, 211.763, 812.687, 211.847, 793.695, 207.142, 780.516, 201.364, 753.158, 192.784)])
 hole_curves = Array[Curve2D]([])
 
@@ -227,35 +242,50 @@ stroke_data = [SubResource("Resource_hgv4w"), SubResource("Resource_g614x")]
 [node name="BrushSprite2D" type="Node2D" parent="."]
 show_behind_parent = true
 script = ExtResource("1_0vmbk")
+stroke_data = [SubResource("Resource_2sc8r")]
 
 [node name="BrushClip2D" type="Node2D" parent="."]
 script = ExtResource("4_c6xt3")
+current_frame = 2
 _frame_count = 4
+layers = [Object(Node2D,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","visible":true,"modulate":Color(1, 1, 1, 1),"self_modulate":Color(1, 1, 1, 1),"show_behind_parent":true,"top_level":false,"clip_children":0,"light_mask":1,"visibility_layer":1,"z_index":0,"z_as_relative":true,"y_sort_enabled":false,"texture_filter":0,"texture_repeat":0,"material":null,"use_parent_material":false,"position":Vector2(0, 0),"rotation":0.0,"scale":Vector2(1, 1),"skew":0.0,"script":ExtResource("5_mf04m"),"frame_count":4,"locked":false,"keyframes":[Object(Node2D,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","visible":false,"modulate":Color(1, 1, 1, 1),"self_modulate":Color(1, 1, 1, 1),"show_behind_parent":true,"top_level":false,"clip_children":0,"light_mask":1,"visibility_layer":1,"z_index":0,"z_as_relative":true,"y_sort_enabled":false,"texture_filter":0,"texture_repeat":0,"material":null,"use_parent_material":false,"position":Vector2(0, 0),"rotation":0.0,"scale":Vector2(1, 1),"skew":0.0,"script":ExtResource("6_72xxr"),"frame_num":0,"frame_end_num":0,"label":"wapp","tweening":false,"key_transform":Transform2D(1, 0, 0, 1, 0, 0),"stroke_data":[SubResource("Resource_uiv8w")],"strokes":[Object(CanvasGroup,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","visible":true,"modulate":Color(1, 1, 1, 1),"self_modulate":Color(0.803922, 0.521569, 0.247059, 1),"show_behind_parent":true,"top_level":false,"clip_children":0,"light_mask":1,"visibility_layer":1,"z_index":0,"z_as_relative":true,"y_sort_enabled":false,"texture_filter":0,"texture_repeat":0,"material":Resource("res://addons/goulash/brush_stroke_material.tres"),"use_parent_material":false,"position":Vector2(0, 0),"rotation":0.0,"scale":Vector2(1, 1),"skew":0.0,"fit_margin":10.0,"clear_margin":10.0,"use_mipmaps":false,"script":Resource("res://addons/goulash/brush_stroke2d.gd"))
+])
+, Object(Node2D,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","visible":false,"modulate":Color(1, 1, 1, 1),"self_modulate":Color(1, 1, 1, 1),"show_behind_parent":true,"top_level":false,"clip_children":0,"light_mask":1,"visibility_layer":1,"z_index":0,"z_as_relative":true,"y_sort_enabled":false,"texture_filter":0,"texture_repeat":0,"material":null,"use_parent_material":false,"position":Vector2(0, 0),"rotation":0.0,"scale":Vector2(1, 1),"skew":0.0,"script":ExtResource("6_72xxr"),"frame_num":1,"frame_end_num":1,"label":"","tweening":false,"key_transform":Transform2D(1, 0, 0, 1, 0, 0),"stroke_data":[SubResource("Resource_mj5bw")],"strokes":[Object(CanvasGroup,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","visible":true,"modulate":Color(1, 1, 1, 1),"self_modulate":Color(0.803922, 0.521569, 0.247059, 1),"show_behind_parent":true,"top_level":false,"clip_children":0,"light_mask":1,"visibility_layer":1,"z_index":0,"z_as_relative":true,"y_sort_enabled":false,"texture_filter":0,"texture_repeat":0,"material":Resource("res://addons/goulash/brush_stroke_material.tres"),"use_parent_material":false,"position":Vector2(0, 0),"rotation":0.0,"scale":Vector2(1, 1),"skew":0.0,"fit_margin":10.0,"clear_margin":10.0,"use_mipmaps":false,"script":Resource("res://addons/goulash/brush_stroke2d.gd"))
+])
+, Object(Node2D,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","visible":true,"modulate":Color(1, 1, 1, 1),"self_modulate":Color(1, 1, 1, 1),"show_behind_parent":true,"top_level":false,"clip_children":0,"light_mask":1,"visibility_layer":1,"z_index":0,"z_as_relative":true,"y_sort_enabled":false,"texture_filter":0,"texture_repeat":0,"material":null,"use_parent_material":false,"position":Vector2(0, 0),"rotation":0.0,"scale":Vector2(1, 1),"skew":0.0,"script":ExtResource("6_72xxr"),"frame_num":2,"frame_end_num":2,"label":"","tweening":false,"key_transform":Transform2D(1, 0, 0, 1, 0, 0),"stroke_data":[SubResource("Resource_mc2b8")],"strokes":[Object(CanvasGroup,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","visible":true,"modulate":Color(1, 1, 1, 1),"self_modulate":Color(0.803922, 0.521569, 0.247059, 1),"show_behind_parent":true,"top_level":false,"clip_children":0,"light_mask":1,"visibility_layer":1,"z_index":0,"z_as_relative":true,"y_sort_enabled":false,"texture_filter":0,"texture_repeat":0,"material":Resource("res://addons/goulash/brush_stroke_material.tres"),"use_parent_material":false,"position":Vector2(0, 0),"rotation":0.0,"scale":Vector2(1, 1),"skew":0.0,"fit_margin":10.0,"clear_margin":10.0,"use_mipmaps":false,"script":Resource("res://addons/goulash/brush_stroke2d.gd"))
+])
+, Object(Node2D,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","visible":false,"modulate":Color(1, 1, 1, 1),"self_modulate":Color(1, 1, 1, 1),"show_behind_parent":true,"top_level":false,"clip_children":0,"light_mask":1,"visibility_layer":1,"z_index":0,"z_as_relative":true,"y_sort_enabled":false,"texture_filter":0,"texture_repeat":0,"material":null,"use_parent_material":false,"position":Vector2(0, 0),"rotation":0.0,"scale":Vector2(1, 1),"skew":0.0,"script":ExtResource("6_72xxr"),"frame_num":3,"frame_end_num":3,"label":"","tweening":false,"key_transform":Transform2D(1, 0, 0, 1, 0, 0),"stroke_data":[SubResource("Resource_4popq")],"strokes":[Object(CanvasGroup,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","visible":true,"modulate":Color(1, 1, 1, 1),"self_modulate":Color(0.803922, 0.521569, 0.247059, 1),"show_behind_parent":true,"top_level":false,"clip_children":0,"light_mask":1,"visibility_layer":1,"z_index":0,"z_as_relative":true,"y_sort_enabled":false,"texture_filter":0,"texture_repeat":0,"material":Resource("res://addons/goulash/brush_stroke_material.tres"),"use_parent_material":false,"position":Vector2(0, 0),"rotation":0.0,"scale":Vector2(1, 1),"skew":0.0,"fit_margin":10.0,"clear_margin":10.0,"use_mipmaps":false,"script":Resource("res://addons/goulash/brush_stroke2d.gd"))
+])
+],"current_visible_frame":Object(Node2D,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","visible":true,"modulate":Color(1, 1, 1, 1),"self_modulate":Color(1, 1, 1, 1),"show_behind_parent":true,"top_level":false,"clip_children":0,"light_mask":1,"visibility_layer":1,"z_index":0,"z_as_relative":true,"y_sort_enabled":false,"texture_filter":0,"texture_repeat":0,"material":null,"use_parent_material":false,"position":Vector2(0, 0),"rotation":0.0,"scale":Vector2(1, 1),"skew":0.0,"script":ExtResource("6_72xxr"),"frame_num":2,"frame_end_num":2,"label":"","tweening":false,"key_transform":Transform2D(1, 0, 0, 1, 0, 0),"stroke_data":[SubResource("Resource_mc2b8")],"strokes":[Object(CanvasGroup,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","visible":true,"modulate":Color(1, 1, 1, 1),"self_modulate":Color(0.803922, 0.521569, 0.247059, 1),"show_behind_parent":true,"top_level":false,"clip_children":0,"light_mask":1,"visibility_layer":1,"z_index":0,"z_as_relative":true,"y_sort_enabled":false,"texture_filter":0,"texture_repeat":0,"material":Resource("res://addons/goulash/brush_stroke_material.tres"),"use_parent_material":false,"position":Vector2(0, 0),"rotation":0.0,"scale":Vector2(1, 1),"skew":0.0,"fit_margin":10.0,"clear_margin":10.0,"use_mipmaps":false,"script":Resource("res://addons/goulash/brush_stroke2d.gd"))
+])
+,"layer_num":0)
+]
 
 [node name="Layer 1" type="Node2D" parent="BrushClip2D"]
 show_behind_parent = true
 script = ExtResource("5_mf04m")
 frame_count = 4
 
-[node name="Frame 0" type="Node2D" parent="BrushClip2D/Layer 1"]
+[node name="Frame Wapp" type="Node2D" parent="BrushClip2D/Layer 1"]
+visible = false
 show_behind_parent = true
 script = ExtResource("6_72xxr")
+label = "wapp"
 stroke_data = [SubResource("Resource_uiv8w")]
 
 [node name="Frame 1" type="Node2D" parent="BrushClip2D/Layer 1"]
 visible = false
-modulate = Color(1, 1, 1, 0.5)
 show_behind_parent = true
 script = ExtResource("6_72xxr")
 frame_num = 1
-stroke_data = [SubResource("Resource_4snr1")]
+frame_end_num = 1
+stroke_data = [SubResource("Resource_mj5bw")]
 
 [node name="Frame 2" type="Node2D" parent="BrushClip2D/Layer 1"]
-visible = false
-modulate = Color(1, 1, 1, 0.3)
 show_behind_parent = true
 script = ExtResource("6_72xxr")
 frame_num = 2
+frame_end_num = 2
 stroke_data = [SubResource("Resource_mc2b8")]
 
 [node name="Frame 3" type="Node2D" parent="BrushClip2D/Layer 1"]
@@ -263,6 +293,7 @@ visible = false
 show_behind_parent = true
 script = ExtResource("6_72xxr")
 frame_num = 3
+frame_end_num = 3
 stroke_data = [SubResource("Resource_4popq")]
 
 [node name="StaticBody2D" type="StaticBody2D" parent="."]

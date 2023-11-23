@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dkkug45xe100q"
-path="res://.godot/imported/brush_clip.svg-d7dd71e52cb5053c83f6319b3bff3121.ctex"
+uid="uid://c40dtlehg5ppd"
+path="res://.godot/imported/BrushClip2D.svg-ebf8a454904aefbd4c86eb8edcc51b11.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/goulash/brush_clip.svg"
-dest_files=["res://.godot/imported/brush_clip.svg-d7dd71e52cb5053c83f6319b3bff3121.ctex"]
+source_file="res://addons/goulash/icons/BrushClip2D.svg"
+dest_files=["res://.godot/imported/BrushClip2D.svg-ebf8a454904aefbd4c86eb8edcc51b11.ctex"]
 
 [params]
 
@@ -32,6 +32,6 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=1
-svg/scale=0.05
+svg/scale=1.0
 editor/scale_with_editor_scale=false
 editor/convert_colors_with_editor_theme=false

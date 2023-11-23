@@ -27,12 +27,15 @@ static var timeline
 var _current_action: int
 var _action_position_previous: Vector2
 var _action_alt := false
-var _selected_layer_id: int: 
+var _editing_layer_num: int: 
 	get:
-		return _selected_layer_id
+		if editing_brush:
+			return editing_brush._editing_layer_num
+		return 0
 	set(value):
-		_selected_layer_id = value
-		selection_changed.emit()
+		if editing_brush:
+			editing_brush._editing_layer_num = value
+			selection_changed.emit()
 var _action_paint_stroke: BrushStrokeData
 
 var current_tool := -1
@@ -46,14 +49,14 @@ static var onion_skin_enabled := true
 static var onion_skin_frames := 1
 
 var editing_brush
+var is_editing := false
 
 var canvas_transform_previous
 
 static var allow_custom_cursor := true
 var allow_hide_cursor := false
 
-@onready var toolbar = get_editor_interface().get_editor_main_screen().get_child(0).get_child(0).get_child(0).get_child(0)
-@onready var button_select_mode = toolbar.get_child(0)
+var button_select_mode: Button
 
 func _enter_tree():
 	editor = self
@@ -79,6 +82,25 @@ func _enter_tree():
 	ProjectSettings.settings_changed.connect(_on_settings_changed)
 	
 	add_autoload_singleton("Goulash", "res://addons/goulash/goulash.gd")
+	
+	var toolbar = get_editor_interface().get_editor_main_screen().get_child(0).get_child(0).get_child(0).get_child(0)
+	button_select_mode = toolbar.get_child(0)
+	var button_move_mode: Button = toolbar.get_child(2)
+	var button_rotate_mode: Button = toolbar.get_child(4)
+	var button_scale_mode: Button = toolbar.get_child(6)
+	
+	button_select_mode.pressed.connect(_on_mode_changed)
+	button_move_mode.pressed.connect(_on_mode_changed)
+	button_rotate_mode.pressed.connect(_on_mode_changed)
+	button_scale_mode.pressed.connect(_on_mode_changed)
+
+
+func _on_mode_changed():
+	is_editing = button_select_mode.button_pressed
+	
+	hud.visible = is_editing
+	EditorInterface.inspect_object(editing_brush)
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
 
 func _init_project_settings():
@@ -115,9 +137,22 @@ func _exit_tree() -> void:
 	
 	if is_instance_valid(hud):
 		hud.queue_free()
+	
+	
+	var toolbar = get_editor_interface().get_editor_main_screen().get_child(0).get_child(0).get_child(0).get_child(0)
+	var button_move_mode: Button = toolbar.get_child(2)
+	var button_rotate_mode: Button = toolbar.get_child(4)
+	var button_scale_mode: Button = toolbar.get_child(6)
+	
+	button_select_mode.pressed.disconnect(_on_mode_changed)
+	button_move_mode.pressed.disconnect(_on_mode_changed)
+	button_rotate_mode.pressed.disconnect(_on_mode_changed)
+	button_scale_mode.pressed.disconnect(_on_mode_changed)
 
 
 func _handles(object) -> bool:
+	if not button_select_mode.button_pressed:
+		return false
 	if object is BrushClip2D or object is BrushKeyframe2D or object is BrushSprite2D:
 		return true
 	return false
@@ -127,6 +162,7 @@ func _on_selection_changed():
 	var selection := get_editor_interface().get_selection()
 	var selected_nodes = selection.get_selected_nodes()
 	if selected_nodes.size() == 1:
+		
 		if selected_nodes[0] is BrushClip2D:
 			select_clip(selected_nodes[0])
 			return
@@ -147,6 +183,7 @@ func _on_selection_changed():
 
 func select_sprite(sprite):
 	_edit_brush_start(sprite)
+	is_editing = button_select_mode.button_pressed
 
 
 func select_clip(clip):
@@ -155,7 +192,7 @@ func select_clip(clip):
 	hud._update_used_colors()
 	make_bottom_panel_item_visible(timeline)
 	clip.draw()
-	_selected_layer_id = 0
+	is_editing = button_select_mode.button_pressed
 	return
 
 
@@ -163,7 +200,7 @@ func _edit_brush_start(brush):
 	editing_brush = brush
 	
 	hud.visible = true
-	set_process(true)
+	set_process(is_editable(editing_brush))
 
 
 func _edit_brush_complete():
@@ -203,12 +240,15 @@ func _on_key_pressed(event: InputEventKey) -> bool:
 					editing_brush.stop()
 				else:
 					editing_brush.play()
+				return true
 		key_frame_previous:
 			if editing_brush is BrushClip2D:
+				editing_brush.stop()
 				if editing_brush.previous_frame():
 					return true
 		key_frame_next:
 			if editing_brush is BrushClip2D:
+				editing_brush.stop()
 				if editing_brush.next_frame():
 					return true
 		KEY_Q:
@@ -231,9 +271,9 @@ func _on_key_pressed(event: InputEventKey) -> bool:
 			return true
 		key_add_frame:
 			if Input.is_key_pressed(KEY_SHIFT):
-				pass
+				_remove_frame()
 			else:
-				_add_frame()
+				_insert_frame()
 			return true
 		key_add_keyframe:
 			if Input.is_key_pressed(KEY_SHIFT):
@@ -280,9 +320,10 @@ func _on_input_key_alt_released():
 #endregion
 
 func _process(delta):
-	printt(button_select_mode.button_pressed)
 	if not is_instance_valid(editing_brush):
 		set_process(false)
+		return
+	if not is_editing:
 		return
 	if get_viewport().canvas_transform != canvas_transform_previous:
 		canvas_transform_previous = editing_brush.get_viewport().get_screen_transform()
@@ -300,21 +341,28 @@ func _process(delta):
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
 
-func _add_frame():
+func _insert_frame():
 	for layer in editing_brush.layers:
-		layer.add_frame(editing_brush.current_frame)
+		layer.insert_frame(editing_brush.current_frame)
 	editing_brush.next_frame()
+	editing_brush._update_frame_count()
+
+
+func _remove_frame():
+	for layer in editing_brush.layers:
+		layer.remove_frame(editing_brush.current_frame)
+	editing_brush.prev_frame()
 	editing_brush._update_frame_count()
 
 
 func _convert_keyframe():
 	var layer = _get_current_layer()
-	if layer.is_frame_empty(editing_brush.current_frame):
+	if not layer.is_keyframe(editing_brush.current_frame):
 		var copy = layer.get_frame(editing_brush.current_frame).duplicate()
 		layer.set_keyframe(copy, editing_brush.current_frame)
 		editing_brush._update_frame_count()
 		return true
-	elif layer.is_frame_empty(editing_brush.current_frame + 1):
+	elif not layer.is_keyframe(editing_brush.current_frame + 1):
 		var copy = layer.get_frame(editing_brush.current_frame).duplicate()
 		layer.set_keyframe(copy, editing_brush.current_frame + 1)
 		editing_brush._update_frame_count()
@@ -326,11 +374,11 @@ func _convert_keyframe():
 
 func _convert_keyframe_blank():
 	var layer = _get_current_layer()
-	if layer.is_frame_empty(editing_brush.current_frame):
+	if not layer.is_keyframe(editing_brush.current_frame):
 		layer.set_keyframe(BrushKeyframe2D.new(), editing_brush.current_frame)
 		editing_brush._update_frame_count()
 		return true
-	elif layer.is_frame_empty(editing_brush.current_frame + 1):
+	elif not layer.is_keyframe(editing_brush.current_frame + 1):
 		layer.set_keyframe(BrushKeyframe2D.new(), editing_brush.current_frame + 1)
 		editing_brush._update_frame_count()
 		editing_brush.next_frame()
@@ -340,8 +388,14 @@ func _convert_keyframe_blank():
 
 
 static func set_tool(tool):
-	editor.current_tool = tool
+	editor._set_tool(tool)
 	hud.select_tool(tool)
+
+
+func _set_tool(tool):
+	current_tool = tool
+	if not button_select_mode.button_pressed:
+		button_select_mode.emit_signal("pressed")
 
 
 func _input_mouse(event: InputEventMouse) -> bool:
@@ -437,12 +491,21 @@ func current_action_complete():
 	#editing_brush.goto_frame(frame.frame_num)
 
 
-func forward_draw(target):
+func forward_draw(target: Control):
 	if allow_custom_cursor and allow_hide_cursor:
 		draw_custom_cursor(target)
+	
+	match _current_action:
+		ACTION_OVAL:
+			var action_position = target.get_local_mouse_position()
+			var center = (_action_position_previous + action_position) * 0.5
+			var size = action_position - _action_position_previous
+			target.draw_polygon(create_oval_polygon(center, size), [current_color])
 
 func draw_custom_cursor(target):
-	var zoom = target.get_viewport().get_screen_transform().get_scale().x
+	if not _get_editing_sprite():
+		return
+	var zoom = _get_editing_sprite().get_viewport().get_screen_transform().get_scale().x
 	var mouse_position = target.get_local_mouse_position()
 	match _get_current_tool():
 		TOOL_PAINT:
@@ -785,11 +848,11 @@ func _get_editing_sprite() -> BrushSprite2D:
 	if editing_brush is BrushSprite2D:
 		return editing_brush
 	else:
-		return editing_brush.layers[_selected_layer_id].get_frame(editing_brush.current_frame)
+		return editing_brush.layers[_editing_layer_num].get_frame(editing_brush.current_frame)
 
 
 func _get_current_layer():
-	return editing_brush.layers[_selected_layer_id]
+	return editing_brush.layers[_editing_layer_num]
 
 
 func _get_current_tool() -> int:
@@ -801,3 +864,5 @@ func _get_current_tool() -> int:
 func queue_redraw():
 	hud.queue_redraw()
 
+static func is_editable(node):
+	return node.scene_file_path != "" or node.get_tree().edited_scene_root == node

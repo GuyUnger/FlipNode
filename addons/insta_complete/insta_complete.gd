@@ -42,13 +42,19 @@ func try_complete(caret_index) -> void:
 			complete_end_replace(caret_index, ": f", ": float")
 		elif line.ends_with(": i"):
 			complete_end_replace(caret_index, ": i", ": int")
-		elif line.ends_with("="):
-			complete_end_replace(caret_index, "=", "= ")
+		elif line.count("=") == 1 and line.ends_with("="):
+			if line.ends_with(" ="):
+				complete_end_replace(caret_index, "=", "= ")
+			else:
+				complete_end_replace(caret_index, "=", " = ")
+		elif line.ends_with("  "):
+			complete_end_replace(caret_index, "  ", " ")
 		return
 	
 	
 	if line.begins_with("\t"):
-		pass
+		if line.ends_with("  "):
+			complete_end_replace(caret_index, "  ", " ")
 	else:
 		match line:
 			"f":

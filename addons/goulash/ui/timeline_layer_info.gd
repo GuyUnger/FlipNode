@@ -21,7 +21,7 @@ func _on_goulash_selection_changed():
 
 
 func update_style():
-	add_theme_stylebox_override("panel", style_active if GoulashEditor.editor._selected_layer_id == layer.layer_num else style_normal)
+	add_theme_stylebox_override("panel", style_active if GoulashEditor.editor._editing_layer_num == layer.layer_num else style_normal)
 
 
 func init(layer):

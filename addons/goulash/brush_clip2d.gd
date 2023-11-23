@@ -1,5 +1,5 @@
 @tool
-@icon("res://addons/goulash/brush_clip.svg")
+@icon("res://addons/goulash/icons/BrushClip2D.svg")
 class_name BrushClip2D
 extends Node2D
 
@@ -29,23 +29,28 @@ var total_frames: int:
 @export var auto_play := true
 @export var is_playing := false
 
-var labels: Dictionary
-var layers: Array
-
-@export var expose_frames_in_tree := false
+@export var labels: Dictionary
+@export var layers: Array
 
 var next_frame_delay := 0.0
 
+var _editing_layer_num := 0 #Stored here so it can be remembered during the session 
+
+func _validate_property(property):
+	var hidden = ["labels", "layers", "_frame_count"]
+	if hidden.has(property.name):
+		property.usage = PROPERTY_USAGE_STORAGE
+
 func _ready():
-	_find_layers()
-	_update_frame_count()
-	if layers.size() == 0:
-		_create_layer()
-	
-	if auto_play and not Engine.is_editor_hint():
-		play()
-	else:
+	if Engine.is_editor_hint():
+		_find_layers()
+		_update_frame_count()
+		if layers.size() == 0:
+			_create_layer()
 		stop()
+	else:
+		if auto_play:
+			play()
 
 
 func draw():

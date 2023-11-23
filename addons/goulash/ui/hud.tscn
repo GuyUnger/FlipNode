@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://chuytojhypqte"]
+[gd_scene load_steps=12 format=3 uid="uid://chuytojhypqte"]
 
 [ext_resource type="Script" path="res://addons/goulash/ui/hud.gd" id="1_72a5i"]
 [ext_resource type="Texture2D" uid="uid://jnmhbl8m5hy2" path="res://addons/goulash/icons/ToolSelect.svg" id="2_7pmde"]
@@ -22,6 +22,8 @@ corner_radius_top_left = 4
 corner_radius_top_right = 4
 corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_qkkh3"]
 
 [node name="Toolbar" type="Control"]
 layout_mode = 3
@@ -122,7 +124,7 @@ icon = ExtResource("2_7pmde")
 flat = true
 icon_alignment = 1
 
-[node name="ButtonBrush" type="Button" parent="Tools/MarginContainer/VBoxContainer/GridContainer"]
+[node name="ButtonPaint" type="Button" parent="Tools/MarginContainer/VBoxContainer/GridContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(30, 30)
 layout_mode = 2
@@ -172,6 +174,7 @@ icon_alignment = 1
 
 [node name="ButtonEyedropper" type="Button" parent="Tools/MarginContainer/VBoxContainer/GridContainer"]
 unique_name_in_owner = true
+visible = false
 custom_minimum_size = Vector2(30, 30)
 layout_mode = 2
 tooltip_text = "Eyedropper (I)
@@ -199,6 +202,7 @@ layout_mode = 2
 
 [node name="PropertiesSelect" type="VBoxContainer" parent="Tools/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 
 [node name="MenuBar" type="MenuBar" parent="Tools/MarginContainer/VBoxContainer/PropertiesSelect"]
@@ -211,18 +215,27 @@ item_0/id = 0
 item_1/text = "Linear"
 item_1/id = 1
 
-[node name="PropertiesBrush" type="VBoxContainer" parent="Tools/MarginContainer/VBoxContainer"]
+[node name="PropertiesPaint" type="VBoxContainer" parent="Tools/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
-visible = false
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Tools/MarginContainer/VBoxContainer/PropertiesBrush"]
+[node name="Label" type="Label" parent="Tools/MarginContainer/VBoxContainer/PropertiesPaint"]
 layout_mode = 2
 text = "Size"
 horizontal_alignment = 1
 
-[node name="HSlider" type="HSlider" parent="Tools/MarginContainer/VBoxContainer/PropertiesBrush"]
+[node name="LineEdit" type="LineEdit" parent="Tools/MarginContainer/VBoxContainer/PropertiesPaint"]
 layout_mode = 2
+theme_override_constants/minimum_character_width = 3
+theme_override_styles/normal = SubResource("StyleBoxEmpty_qkkh3")
+text = "10"
+alignment = 1
+max_length = 3
+
+[node name="Button" type="Button" parent="Tools/MarginContainer/VBoxContainer/PropertiesPaint"]
+layout_mode = 2
+tooltip_text = "The size of the brush is the same pixel size, independent of view zoom."
+text = "🎥"
 
 [node name="PropertiesFill" type="VBoxContainer" parent="Tools/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
@@ -241,7 +254,7 @@ layout_mode = 2
 [connection signal="mouse_exited" from="Colors" to="." method="_on_colors_mouse_exited"]
 [connection signal="color_changed" from="Colors/MarginContainer/VBoxContainer/ColorPicker" to="." method="_on_color_picker_color_changed"]
 [connection signal="pressed" from="Tools/MarginContainer/VBoxContainer/GridContainer/ButtonSelect" to="." method="_on_button_select_pressed"]
-[connection signal="pressed" from="Tools/MarginContainer/VBoxContainer/GridContainer/ButtonBrush" to="." method="_on_button_brush_pressed"]
+[connection signal="pressed" from="Tools/MarginContainer/VBoxContainer/GridContainer/ButtonPaint" to="." method="_on_button_paint_pressed"]
 [connection signal="pressed" from="Tools/MarginContainer/VBoxContainer/GridContainer/ButtonOval" to="." method="_on_button_oval_pressed"]
 [connection signal="pressed" from="Tools/MarginContainer/VBoxContainer/GridContainer/ButtonRect" to="." method="_on_button_rect_pressed"]
 [connection signal="pressed" from="Tools/MarginContainer/VBoxContainer/GridContainer/ButtonShape" to="." method="_on_button_pen_pressed"]

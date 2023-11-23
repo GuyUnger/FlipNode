@@ -2,6 +2,8 @@
 
 [ext_resource type="Script" path="res://addons/goulash/ui/timeline_layer_frames.gd" id="1_jjljs"]
 
-[node name="TimelineLayerFrames" type="HBoxContainer"]
-theme_override_constants/separation = 2
+[node name="TimelineLayerFrames" type="Control"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 3
+anchors_preset = 0
 script = ExtResource("1_jjljs")

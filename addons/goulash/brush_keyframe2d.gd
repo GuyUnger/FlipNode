@@ -22,6 +22,8 @@ extends BrushSprite2D
 	#return frame
 
 func _ready():
+	if not Engine.is_editor_hint():
+		set_process(false)
 	update_name()
 	super()
 
@@ -37,13 +39,25 @@ func get_layer() -> BrushLayer2D:
 func _enter_frame():
 	pass
 
+
+func clear():
+	stroke_data.clear()
+	draw()
+
+
 func update_name():
 	if label != "":
 		name = "Frame %s" % label.capitalize()
 		return
 	name = "Frame %s" % frame_num
 	if is_blank():
-		name += " (Empty)"
+		name += " (Blank)"
+
 
 func is_blank() -> bool:
 	return stroke_data.size() == 0
+
+
+func _process(delta):
+	if get_clip().current_frame == frame_num:
+		key_transform = transform
