@@ -4,8 +4,8 @@ extends Control
 
 const FRAME_WIDTH = 12
 
-const TimelineLayerFrames = preload("res://addons/goulash/ui/timeline_layer_frames.tscn")
-const TimelineLayerInfo = preload("res://addons/goulash/ui/timeline_layer_info.tscn")
+const TimelineLayerFrames = preload("res://addons/goolash/ui/timeline_layer_frames.tscn")
+const TimelineLayerInfo = preload("res://addons/goolash/ui/timeline_layer_info.tscn")
 
 var brush_clip: BrushClip2D
 

@@ -1,8 +1,8 @@
 @tool
 extends Control
 
-const KeyframeSymbol = preload("res://addons/goulash/icons/keyframe.svg")
-const KeyframeBlankSymbol = preload("res://addons/goulash/icons/keyframe_blank.svg")
+const KeyframeSymbol = preload("res://addons/goolash/icons/keyframe.svg")
+const KeyframeBlankSymbol = preload("res://addons/goolash/icons/keyframe_blank.svg")
 
 var keyframe: BrushKeyframe2D
 

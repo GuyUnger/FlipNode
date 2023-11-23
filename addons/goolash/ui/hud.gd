@@ -1,7 +1,7 @@
 @tool
 extends Control
 
-const ButtonUsedColor = preload("res://addons/goulash/ui/button_used_color.tscn")
+const ButtonUsedColor = preload("res://addons/goolash/ui/button_used_color.tscn")
 
 @onready var buttons := [
 	%ButtonSelect,

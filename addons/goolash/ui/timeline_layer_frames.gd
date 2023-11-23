@@ -1,7 +1,7 @@
 @tool
 extends Control
 
-const TimelineKeyframe = preload("res://addons/goulash/ui/timeline_keyframe.tscn")
+const TimelineKeyframe = preload("res://addons/goolash/ui/timeline_keyframe.tscn")
 
 var layer: BrushLayer2D
 

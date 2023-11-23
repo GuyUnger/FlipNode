@@ -2,7 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://ba2hxmxea6m1a" path="res://addons/goolash/icons/PagePrevious.svg" id="1_mqbbs"]
 [ext_resource type="Texture2D" uid="uid://cy0je6d77bnw2" path="res://addons/goolash/icons/Play.svg" id="1_vtfin"]
-[ext_resource type="Script" path="res://addons/goulash/ui/timeline.gd" id="1_x5p0l"]
+[ext_resource type="Script" path="res://addons/goolash/ui/timeline.gd" id="1_x5p0l"]
 [ext_resource type="Texture2D" uid="uid://ntomq1ouceco" path="res://addons/goolash/icons/PageNext.svg" id="3_w0qs8"]
 [ext_resource type="Texture2D" uid="uid://m5wq1j1x5deq" path="res://addons/goolash/icons/AutoPlay.svg" id="4_qdy44"]
 [ext_resource type="Texture2D" uid="uid://djjrjid7ltt80" path="res://addons/goolash/icons/Onion.svg" id="6_d6fgv"]

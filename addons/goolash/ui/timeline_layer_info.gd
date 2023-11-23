@@ -1,8 +1,8 @@
 @tool
 extends Panel
 
-const IconVisibilityVisible = preload("res://addons/goulash/icons/GuiVisibilityVisible.svg")
-const IconVisibilityHidden = preload("res://addons/goulash/icons/GuiVisibilityHidden.svg")
+const IconVisibilityVisible = preload("res://addons/goolash/icons/GuiVisibilityVisible.svg")
+const IconVisibilityHidden = preload("res://addons/goolash/icons/GuiVisibilityHidden.svg")
 
 var layer: BrushLayer2D
 

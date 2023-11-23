@@ -8,8 +8,8 @@ enum {ACTION_NONE, ACTION_WARP, ACTION_PAINT, ACTION_OVAL, ACTION_RECT, ACTION_M
 
 static var editor: GoulashEditor
 
-const TextureEyedropper = preload("res://addons/goulash/icons/ColorPick.svg")
-const TextureFill = preload("res://addons/goulash/icons/Bucket.svg")
+const TextureEyedropper = preload("res://addons/goolash/icons/ColorPick.svg")
+const TextureFill = preload("res://addons/goolash/icons/Bucket.svg")
 
 var key_add_frame = KEY_5
 var key_add_keyframe = KEY_6
@@ -71,12 +71,12 @@ func _enter_tree():
 	EditorInterface.get_selection().selection_changed.connect(_on_selection_changed)
 	
 	
-	hud = load("res://addons/goulash/ui/hud.tscn").instantiate()
+	hud = load("res://addons/goolash/ui/hud.tscn").instantiate()
 	hud.visible = false
 	hud.theme = EditorInterface.get_editor_theme()
 	EditorInterface.get_editor_viewport_2d().get_parent().get_parent().add_child(hud)
 	
-	timeline = load("res://addons/goulash/ui/timeline.tscn").instantiate()
+	timeline = load("res://addons/goolash/ui/timeline.tscn").instantiate()
 	add_control_to_bottom_panel(timeline, "Timeline")
 	
 	ProjectSettings.settings_changed.connect(_on_settings_changed)
