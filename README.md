@@ -51,6 +51,7 @@ Navigating and editing timeline
    - [SHIFT+5] ❌ Erase frame
  - [6] ⚪ Insert keyframe
  - [7] ⚫ Insert blank keyframe
+
 *The [5] and [SHIFT+5] shortcuts conflict with godot shortcuts, but these are so useless i recommend clearing the godot ones*
 
 ## To-do
