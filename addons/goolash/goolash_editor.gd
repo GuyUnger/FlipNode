@@ -96,7 +96,7 @@ func _enter_tree():
 
 
 func _on_mode_changed():
-	is_editing = button_select_mode.button_pressed
+	is_editing = is_instance_valid(editing_brush) and button_select_mode.button_pressed
 	
 	hud.visible = is_editing
 	EditorInterface.inspect_object(editing_brush)
@@ -257,7 +257,7 @@ func _on_key_pressed(event: InputEventKey) -> bool:
 		key_paint:
 			set_tool(GoolashEditor.TOOL_PAINT)
 			return true
-		KEY_R:
+		KEY_M:
 			set_tool(GoolashEditor.TOOL_RECT)
 			return true
 		KEY_G:
