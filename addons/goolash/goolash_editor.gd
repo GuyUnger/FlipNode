@@ -611,6 +611,8 @@ func _warp_stroke_try(stroke: BrushStrokeData, action_postion: Vector2, range: f
 	if closest_vertex_i == -1:
 		return
 	
+	undo_redo_strokes_start()
+	
 	var selection := ActionWarpSelection.new(stroke)
 	action_warp_selections.push_back(selection)
 	
@@ -674,6 +676,7 @@ func action_warp_complete():
 	if editing_brush is BrushClip2D:
 		editing_brush.edited.emit()
 	action_warp_selections = []
+	undo_redo_strokes_complete("Warp Stroke")
 
 
 func action_warp_process(action_position):
@@ -730,6 +733,7 @@ var moving_stroke
 func action_move_try(action_position: Vector2) -> bool:
 	for stroke: BrushStrokeData in _get_editing_brush().stroke_data:
 		if stroke.is_point_inside(action_position):
+			undo_redo_strokes_start()
 			moving_stroke = stroke
 			_action_position_previous = action_position
 			_current_action = ACTION_MOVE
@@ -743,6 +747,7 @@ func action_move_complete():
 	_get_editing_brush().edited.emit()
 	if editing_brush is BrushClip2D:
 		editing_brush.edited.emit()
+	undo_redo_strokes_complete("Move Stroke")
 
 
 func action_move_process(action_position: Vector2):
@@ -977,7 +982,7 @@ func action_rect_complete(action_position):
 		undo_redo_strokes_complete("Rect brush draw")
 
 
-func get_rect_tool_shape(from: Vector2, to: Vector2, centered: bool, equal: bool, noise := 0.03):
+func get_rect_tool_shape(from: Vector2, to: Vector2, centered: bool, equal: bool, noise := 0.01):
 	var center: Vector2
 	var size: Vector2 = (to - from) * 0.5
 	if Input.is_key_pressed(KEY_ALT):
@@ -994,7 +999,7 @@ func get_rect_tool_shape(from: Vector2, to: Vector2, centered: bool, equal: bool
 	return create_rect_polygon(center, size, noise)
 
 
-func create_rect_polygon(center: Vector2, size: Vector2, noise := 0.02) -> PackedVector2Array:
+func create_rect_polygon(center: Vector2, size: Vector2, noise := 0.01) -> PackedVector2Array:
 	var polygon := []
 	var vertices_per_side := 10 if noise > 0.0 else 1
 	var tl = center + size * Vector2(-1, -1)
