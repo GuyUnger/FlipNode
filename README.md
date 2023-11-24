@@ -4,9 +4,10 @@
 
 *This plugin is in a very early state and should not be used for production*
 
-- Fast and easy drawing right inside the scene
-- Frame by frame animation
-- Great for prototyping
+- 🚀 Fast and easy drawing right inside the scene
+- ✍️ Frame by frame animation
+- 🧪 Great for prototyping
+- ⚽ Draw physics objects e.g. for quick level design
 
 
 Not yet implemented/planned features:
