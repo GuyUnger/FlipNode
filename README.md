@@ -6,7 +6,7 @@
 # Goolash
 ### Vector paint and animation addon for Godot 4 
 
-- 🚀 Fast and easy drawing right inside your scene
+- 🚲 Fast and easy drawing right inside your scene
 - ✍️ Frame by frame animation
 - 🧪 Great for prototyping
 - ⚽ Draw physics objects, for e.g. quick level design
