@@ -141,3 +141,6 @@ func get_islands():
 		islands.push_back(merging_polygon)
 	
 	return islands
+
+func _draw():
+	GoolashEditor.editor._forward_draw_brush(self)

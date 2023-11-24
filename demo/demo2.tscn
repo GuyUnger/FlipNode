@@ -1,0 +1,77 @@
+[gd_scene load_steps=11 format=3 uid="uid://d2ikapvprfyl5"]
+
+[ext_resource type="Script" path="res://addons/goolash/brush_clip2d.gd" id="1_hc62x"]
+[ext_resource type="Script" path="res://addons/goolash/brush_layer2d.gd" id="2_h4sv3"]
+[ext_resource type="Script" path="res://addons/goolash/brush_stroke_data.gd" id="2_r3qu0"]
+[ext_resource type="Script" path="res://addons/goolash/brush_keyframe2d.gd" id="3_rk7bc"]
+
+[sub_resource type="Curve2D" id="Curve2D_bjboj"]
+bake_interval = 20.0
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 69.362, 63.245, 0, 0, 0, 0, 75.7258, 67.4971, 0, 0, 0, 0, 80.7747, 83.9845, 0, 0, 0, 0, 77.8458, 91.0555, 0, 0, 0, 0, 69.9338, 93.9845, 0, 0, 0, 0, 62.0339, 90.1156, 0, 0, 0, 0, 57.4363, 78.807, 0, 0, 0, 0, 59.0964, 67.4971, 0, 0, 0, 0, 63.5843, 63.8141, 0, 0, 0, 0, 67.4111, 63.0528)
+}
+point_count = 10
+
+[sub_resource type="Resource" id="Resource_m1sko"]
+script = ExtResource("2_r3qu0")
+color = Color(0.169231, 0.149079, 0.129487, 1)
+polygon = PackedVector2Array(69.362, 63.245, 75.7258, 67.4971, 80.7747, 83.9845, 77.8458, 91.0555, 69.9338, 93.9845, 62.0339, 90.1156, 57.4363, 78.807, 59.0964, 67.4971, 63.5843, 63.8141, 67.4111, 63.0528)
+polygon_curve = SubResource("Curve2D_bjboj")
+holes = Array[PackedVector2Array]([])
+hole_curves = Array[Curve2D]([])
+
+[sub_resource type="Curve2D" id="Curve2D_nq2eu"]
+bake_interval = 20.0
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 174.474, 69.1313, 0, 0, 0, 0, 180.838, 73.3834, 0, 0, 0, 0, 182.523, 80.6209, 0, 0, 0, 0, 179.594, 87.692, 0, 0, 0, 0, 172.523, 90.6209, 0, 0, 0, 0, 165.452, 87.692, 0, 0, 0, 0, 163.284, 84.4477, 0, 0, 0, 0, 162.523, 78.9391, 0, 0, 0, 0, 165.452, 71.868, 0, 0, 0, 0, 172.523, 68.9391)
+}
+point_count = 10
+
+[sub_resource type="Resource" id="Resource_r17rc"]
+script = ExtResource("2_r3qu0")
+color = Color(0.169231, 0.149079, 0.129487, 1)
+polygon = PackedVector2Array(174.474, 69.1313, 180.838, 73.3834, 182.523, 80.6209, 179.594, 87.692, 172.523, 90.6209, 165.452, 87.692, 163.284, 84.4477, 162.523, 78.9391, 165.452, 71.868, 172.523, 68.9391)
+polygon_curve = SubResource("Curve2D_nq2eu")
+holes = Array[PackedVector2Array]([])
+hole_curves = Array[Curve2D]([])
+
+[sub_resource type="Curve2D" id="Curve2D_p6did"]
+bake_interval = 20.0
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 32.1188, 130.327, 0, 0, 0, 0, 42.087, 132.305, 0, 0, 0, 0, 51.2911, 136.232, 0, 0, 0, 0, 100.646, 160.951, 0, 0, 0, 0, 131.126, 169.303, 0, 0, 0, 0, 162.662, 169.923, 0, 0, 0, 0, 172.755, 161.983, 0, 0, 0, 0, 178.065, 153.435, 0, 0, 0, 0, 183.185, 150.698, 0, 0, 0, 0, 187.928, 150.698, 0, 0, 0, 0, 193.048, 153.435, 0, 0, 0, 0, 195.216, 156.679, 0, 0, 0, 0, 195.785, 162.457, 0, 0, 0, 0, 192.61, 169.425, 0, 0, 0, 0, 187.169, 175.978, 0, 0, 0, 0, 169.613, 189.089, 0, 0, 0, 0, 138.887, 189.846, 0, 0, 0, 0, 126.038, 188.618, 0, 0, 0, 0, 92.4903, 179.119, 0, 0, 0, 0, 42.0422, 153.864, 0, 0, 0, 0, 26.5379, 148.639, 0, 0, 0, 0, 22.8508, 144.142, 0, 0, 0, 0, 22.2878, 138.363, 0, 0, 0, 0, 26.5379, 132.01, 0, 0, 0, 0, 32.104, 130.324)
+}
+point_count = 25
+
+[sub_resource type="Resource" id="Resource_gtruv"]
+script = ExtResource("2_r3qu0")
+color = Color(0.169231, 0.149079, 0.129487, 1)
+polygon = PackedVector2Array(32.1188, 130.327, 42.087, 132.305, 51.2911, 136.232, 59.0028, 140.094, 75.9685, 148.591, 92.9343, 157.088, 100.646, 160.951, 115.886, 165.127, 131.126, 169.303, 146.894, 169.613, 162.662, 169.923, 172.755, 161.983, 178.065, 153.435, 183.185, 150.698, 187.928, 150.698, 193.048, 153.435, 195.216, 156.679, 195.785, 162.457, 192.61, 169.425, 187.169, 175.978, 178.391, 182.534, 169.613, 189.089, 154.25, 189.468, 138.887, 189.846, 126.038, 188.618, 109.264, 183.868, 92.4903, 179.119, 84.6078, 175.173, 67.2663, 166.491, 49.9247, 157.81, 42.0422, 153.864, 26.5379, 148.639, 22.8508, 144.142, 22.2878, 138.363, 26.5379, 132.01, 32.104, 130.324)
+polygon_curve = SubResource("Curve2D_p6did")
+holes = Array[PackedVector2Array]([])
+hole_curves = Array[Curve2D]([])
+
+[node name="Node2D" type="Node2D"]
+
+[node name="BrushClip2D" type="Node2D" parent="."]
+script = ExtResource("1_hc62x")
+layers = [Object(Node2D,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","visible":true,"modulate":Color(1, 1, 1, 1),"self_modulate":Color(1, 1, 1, 1),"show_behind_parent":true,"top_level":false,"clip_children":0,"light_mask":1,"visibility_layer":1,"z_index":0,"z_as_relative":true,"y_sort_enabled":false,"texture_filter":0,"texture_repeat":0,"material":null,"use_parent_material":false,"position":Vector2(0, 0),"rotation":0.0,"scale":Vector2(1, 1),"skew":0.0,"script":ExtResource("2_h4sv3"),"frame_count":1,"locked":false,"keyframes":[Object(Node2D,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","visible":true,"modulate":Color(1, 1, 1, 1),"self_modulate":Color(1, 1, 1, 1),"show_behind_parent":true,"top_level":false,"clip_children":0,"light_mask":1,"visibility_layer":1,"z_index":0,"z_as_relative":true,"y_sort_enabled":false,"texture_filter":0,"texture_repeat":0,"material":null,"use_parent_material":false,"position":Vector2(0, 0),"rotation":0.0,"scale":Vector2(1, 1),"skew":0.0,"script":ExtResource("3_rk7bc"),"frame_num":0,"frame_end_num":0,"label":"","stroke_data":[SubResource("Resource_m1sko"), SubResource("Resource_r17rc"), SubResource("Resource_gtruv")],"strokes":[Object(CanvasGroup,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","visible":true,"modulate":Color(1, 1, 1, 1),"self_modulate":Color(0.169231, 0.149079, 0.129487, 1),"show_behind_parent":true,"top_level":false,"clip_children":0,"light_mask":1,"visibility_layer":1,"z_index":0,"z_as_relative":true,"y_sort_enabled":false,"texture_filter":0,"texture_repeat":0,"material":Resource("res://addons/goolash/brush_stroke_material.tres"),"use_parent_material":false,"position":Vector2(0, 0),"rotation":0.0,"scale":Vector2(1, 1),"skew":0.0,"fit_margin":10.0,"clear_margin":10.0,"use_mipmaps":false,"script":Resource("res://addons/goolash/brush_stroke2d.gd"))
+, Object(CanvasGroup,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","visible":true,"modulate":Color(1, 1, 1, 1),"self_modulate":Color(0.169231, 0.149079, 0.129487, 1),"show_behind_parent":true,"top_level":false,"clip_children":0,"light_mask":1,"visibility_layer":1,"z_index":0,"z_as_relative":true,"y_sort_enabled":false,"texture_filter":0,"texture_repeat":0,"material":Resource("res://addons/goolash/brush_stroke_material.tres"),"use_parent_material":false,"position":Vector2(0, 0),"rotation":0.0,"scale":Vector2(1, 1),"skew":0.0,"fit_margin":10.0,"clear_margin":10.0,"use_mipmaps":false,"script":Resource("res://addons/goolash/brush_stroke2d.gd"))
+, Object(CanvasGroup,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","visible":true,"modulate":Color(1, 1, 1, 1),"self_modulate":Color(0.169231, 0.149079, 0.129487, 1),"show_behind_parent":true,"top_level":false,"clip_children":0,"light_mask":1,"visibility_layer":1,"z_index":0,"z_as_relative":true,"y_sort_enabled":false,"texture_filter":0,"texture_repeat":0,"material":Resource("res://addons/goolash/brush_stroke_material.tres"),"use_parent_material":false,"position":Vector2(0, 0),"rotation":0.0,"scale":Vector2(1, 1),"skew":0.0,"fit_margin":10.0,"clear_margin":10.0,"use_mipmaps":false,"script":Resource("res://addons/goolash/brush_stroke2d.gd"))
+],"physics_mode":0,"bounciness":0.0,"collision_layer":1,"collision_mask":1)
+],"current_visible_frame":Object(Node2D,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","visible":true,"modulate":Color(1, 1, 1, 1),"self_modulate":Color(1, 1, 1, 1),"show_behind_parent":true,"top_level":false,"clip_children":0,"light_mask":1,"visibility_layer":1,"z_index":0,"z_as_relative":true,"y_sort_enabled":false,"texture_filter":0,"texture_repeat":0,"material":null,"use_parent_material":false,"position":Vector2(0, 0),"rotation":0.0,"scale":Vector2(1, 1),"skew":0.0,"script":ExtResource("3_rk7bc"),"frame_num":0,"frame_end_num":0,"label":"","stroke_data":[SubResource("Resource_m1sko"), SubResource("Resource_r17rc"), SubResource("Resource_gtruv")],"strokes":[Object(CanvasGroup,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","visible":true,"modulate":Color(1, 1, 1, 1),"self_modulate":Color(0.169231, 0.149079, 0.129487, 1),"show_behind_parent":true,"top_level":false,"clip_children":0,"light_mask":1,"visibility_layer":1,"z_index":0,"z_as_relative":true,"y_sort_enabled":false,"texture_filter":0,"texture_repeat":0,"material":Resource("res://addons/goolash/brush_stroke_material.tres"),"use_parent_material":false,"position":Vector2(0, 0),"rotation":0.0,"scale":Vector2(1, 1),"skew":0.0,"fit_margin":10.0,"clear_margin":10.0,"use_mipmaps":false,"script":Resource("res://addons/goolash/brush_stroke2d.gd"))
+, Object(CanvasGroup,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","visible":true,"modulate":Color(1, 1, 1, 1),"self_modulate":Color(0.169231, 0.149079, 0.129487, 1),"show_behind_parent":true,"top_level":false,"clip_children":0,"light_mask":1,"visibility_layer":1,"z_index":0,"z_as_relative":true,"y_sort_enabled":false,"texture_filter":0,"texture_repeat":0,"material":Resource("res://addons/goolash/brush_stroke_material.tres"),"use_parent_material":false,"position":Vector2(0, 0),"rotation":0.0,"scale":Vector2(1, 1),"skew":0.0,"fit_margin":10.0,"clear_margin":10.0,"use_mipmaps":false,"script":Resource("res://addons/goolash/brush_stroke2d.gd"))
+, Object(CanvasGroup,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","visible":true,"modulate":Color(1, 1, 1, 1),"self_modulate":Color(0.169231, 0.149079, 0.129487, 1),"show_behind_parent":true,"top_level":false,"clip_children":0,"light_mask":1,"visibility_layer":1,"z_index":0,"z_as_relative":true,"y_sort_enabled":false,"texture_filter":0,"texture_repeat":0,"material":Resource("res://addons/goolash/brush_stroke_material.tres"),"use_parent_material":false,"position":Vector2(0, 0),"rotation":0.0,"scale":Vector2(1, 1),"skew":0.0,"fit_margin":10.0,"clear_margin":10.0,"use_mipmaps":false,"script":Resource("res://addons/goolash/brush_stroke2d.gd"))
+],"physics_mode":0,"bounciness":0.0,"collision_layer":1,"collision_mask":1)
+,"layer_num":0)
+]
+
+[node name="Layer 2" type="Node2D" parent="BrushClip2D"]
+show_behind_parent = true
+script = ExtResource("2_h4sv3")
+frame_count = 1
+
+[node name="Frame 0" type="Node2D" parent="BrushClip2D/Layer 2"]
+show_behind_parent = true
+script = ExtResource("3_rk7bc")
+stroke_data = [SubResource("Resource_m1sko"), SubResource("Resource_r17rc"), SubResource("Resource_gtruv")]
+bounciness = 0.0

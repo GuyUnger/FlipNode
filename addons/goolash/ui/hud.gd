@@ -129,7 +129,7 @@ func set_pressed(button: Button):
 
 
 func _draw():
-	GoolashEditor.editor.forward_draw(self)
+	GoolashEditor.editor._forward_draw_hud()
 
 func _input(event):
 	if event is InputEventMouseMotion:
