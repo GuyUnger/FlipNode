@@ -1,32 +1,37 @@
+**⚠️ This plugin is in a very early state and should not be used for production ⚠️**
+
+
 ![GoolashTitle](https://github.com/GuyUnger/Goolash/assets/7023847/0843ade0-ae36-4444-99a1-b96f3c4ae770)
 
-## Vector paint and animation addon for Godot 4 
+# Goolash
+### Vector paint and animation addon for Godot 4 
 
-*This plugin is in a very early state and should not be used for production*
-
-- 🚀 Fast and easy drawing right inside the scene
+- 🚀 Fast and easy drawing right inside your scene
 - ✍️ Frame by frame animation
 - 🧪 Great for prototyping
-- ⚽ Draw physics objects e.g. for quick level design
+- ⚽ Draw physics objects, e.g. quick level design
 
-
-Not yet implemented/planned features:
-- [ ] Shape tool
-- [ ] Allow filling holes between different colored strokes
+## To-do
+### 📝 Not yet implemented/planned features:
 - [ ] Undo/redo
-- [ ] Selecting
-- [ ] Scaling/rotating selection
-- [ ] Layer transform tweening
+- [ ] Selections
+  - [ ] Transform
+  - [ ] Clear
+  - [ ] Copy/paste
+- [ ] Allow filling holes between different colored strokes
+- [ ] Layer tweening
+- [ ] Shape tool
+- [ ] Rigid bodies
 
-Lower priority:
+*Lower priority:*
 - [ ] Scripts on frames
 - [ ] Audio on frames
 - [ ] Rectangle rounding
-- [ ] Rigid bodies
-- [ ] 3D support?
+- [ ] Decouple editor and drawing tools to make in game editing easy to implement
 - [ ] Soft bodies?
+- [ ] 3D support?
 
-Known issues:
+### 🪲 Known issues:
 - [ ] Filling shapes removes parts of strokes inside it
 - [ ] Holes in eraser are still removed if it overlaps a stroke
 - [ ] Sometimes strokes dont properly merge
