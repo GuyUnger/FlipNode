@@ -11,8 +11,6 @@
 
 
 Not yet implemented/planned features:
-- [ ] Rectangle tool
-- [ ] Oval tool
 - [ ] Shape tool
 - [ ] Allow filling holes between different colored strokes
 - [ ] Undo/redo
@@ -23,6 +21,7 @@ Not yet implemented/planned features:
 Lower priority:
 - [ ] Scripts on frames
 - [ ] Audio on frames
+- [ ] Rectangle rounding
 - [ ] Rigid bodies
 - [ ] 3D support?
 - [ ] Soft bodies?
