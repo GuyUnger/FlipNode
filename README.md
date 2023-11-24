@@ -12,7 +12,6 @@
 
 Not yet implemented/planned features:
 - [ ] Rectangle tool
-- [ ] Oval tool
 - [ ] Shape tool
 - [ ] Allow filling holes between different colored strokes
 - [ ] Undo/redo
