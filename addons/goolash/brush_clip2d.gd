@@ -10,7 +10,10 @@ signal edited
 	get:
 		return current_frame
 	set(value):
-		value %= _frame_count
+		if loops:
+			value %= _frame_count
+		else:
+			value = clamp(value, 0, _frame_count)
 		if current_frame == value:
 			return
 		current_frame = value
@@ -28,23 +31,24 @@ var total_frames: int:
 @export_range(0, 120) var fps_override := 0
 
 @export var auto_play := true
+@export var loops := true
 @export var is_playing := false
 
 @export var labels: Dictionary
-@export var layers: Array
+var layers: Array
 
 var next_frame_delay := 0.0
 
 var _editing_layer_num := 0 #Stored here so it can be remembered during the session 
 
 func _validate_property(property):
-	var hidden = ["labels", "layers", "_frame_count"]
+	var hidden = ["labels", "_frame_count"]
 	if hidden.has(property.name):
 		property.usage = PROPERTY_USAGE_STORAGE
 
 func _ready():
+	_find_layers()
 	if Engine.is_editor_hint():
-		_find_layers()
 		_update_frame_count()
 		if layers.size() == 0:
 			_create_layer()

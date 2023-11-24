@@ -26,6 +26,7 @@ func load_brush_clip(brush_clip: BrushClip2D):
 		return
 	if is_instance_valid(self.brush_clip):
 		self.brush_clip.frame_changed.disconnect(_on_frame_changed)
+		self.brush_clip.edited.disconnect(_on_brush_clip_edited)
 	self.brush_clip = brush_clip
 	
 	## Handle if a BrushClip or null is loaded

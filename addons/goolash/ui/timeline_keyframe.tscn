@@ -1,7 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://cptiejb5rrike"]
+[gd_scene load_steps=8 format=3 uid="uid://cptiejb5rrike"]
 
 [ext_resource type="Script" path="res://addons/goolash/ui/timeline_keyframe.gd" id="1_1gijj"]
 [ext_resource type="Texture2D" uid="uid://mcjhqjbfv7k" path="res://addons/goolash/icons/keyframe.svg" id="2_sgwnp"]
+[ext_resource type="Texture2D" uid="uid://box82ok0y61pg" path="res://addons/goolash/icons/Script.svg" id="3_dpiju"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8tbbb"]
 bg_color = Color(0.388235, 0.388235, 0.388235, 0.694118)
@@ -49,9 +50,9 @@ style_blank = SubResource("StyleBoxFlat_y78mn")
 unique_name_in_owner = true
 z_index = 1
 layout_mode = 1
-offset_top = -3.0
+offset_top = 9.0
 offset_right = 65.0
-offset_bottom = 20.0
+offset_bottom = 32.0
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.584314)
 theme_override_constants/shadow_offset_x = 0
 theme_override_constants/shadow_offset_y = 1
@@ -72,5 +73,11 @@ offset_bottom = -1.0
 grow_vertical = 0
 mouse_filter = 2
 texture = ExtResource("2_sgwnp")
+
+[node name="Script" type="Sprite2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(6.5, 7)
+scale = Vector2(0.660382, 0.660382)
+texture = ExtResource("3_dpiju")
 
 [connection signal="pressed" from="." to="." method="_on_pressed"]

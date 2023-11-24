@@ -4,22 +4,26 @@ class_name GoolashEditor extends EditorPlugin
 signal selection_changed
 
 enum {TOOL_SELECT, TOOL_PAINT, TOOL_FILL, TOOL_EYEDROPPER, TOOL_OVAL, TOOL_RECT, TOOL_SHAPE}
-enum {ACTION_NONE, ACTION_WARP, ACTION_PAINT, ACTION_OVAL, ACTION_RECT, ACTION_MOVE, ACTION_SELECT_RECT}
+enum {ACTION_NONE, ACTION_WARP, ACTION_PAINT, ACTION_OVAL, ACTION_RECT, ACTION_SHAPE, ACTION_MOVE, ACTION_SELECT_RECT}
 
 static var editor: GoolashEditor
 
 const TextureEyedropper = preload("res://addons/goolash/icons/ColorPick.svg")
 const TextureFill = preload("res://addons/goolash/icons/CursorBucket.svg")
 
-var key_add_frame = KEY_5
-var key_add_keyframe = KEY_6
-var key_add_keyframe_blank = KEY_7
-var key_paint = KEY_B
-var key_play = KEY_S
-var key_frame_next = KEY_D
-var key_frame_previous = KEY_A
-var key_decrease = KEY_BRACKETLEFT
-var key_increase = KEY_BRACKETRIGHT
+static var KEYFRAME_SCRIPT
+static var KEYFRAME_SCRIPT_CUSTOM
+
+var key_add_frame := KEY_5
+var key_add_keyframe := KEY_6
+var key_add_keyframe_blank := KEY_7
+var key_add_script := KEY_9
+var key_paint := KEY_B
+var key_play := KEY_S
+var key_frame_next := KEY_D
+var key_frame_previous := KEY_A
+var key_decrease := KEY_BRACKETLEFT
+var key_increase := KEY_BRACKETRIGHT
 
 static var hud
 static var timeline
@@ -49,6 +53,7 @@ static var onion_skin_enabled := true
 static var onion_skin_frames := 1
 
 var editing_brush
+var selected_keyframe: BrushKeyframe2D
 var is_editing := false
 
 var canvas_transform_previous
@@ -93,6 +98,9 @@ func _enter_tree():
 	button_move_mode.pressed.connect(_on_mode_changed)
 	button_rotate_mode.pressed.connect(_on_mode_changed)
 	button_scale_mode.pressed.connect(_on_mode_changed)
+	
+	KEYFRAME_SCRIPT = preload("res://addons/goolash/brush_keyframe2d.gd")
+	KEYFRAME_SCRIPT_CUSTOM = preload("res://addons/goolash/frame_script.gd")
 
 
 func _on_mode_changed():
@@ -161,8 +169,8 @@ func _handles(object) -> bool:
 func _on_selection_changed():
 	var selection := get_editor_interface().get_selection()
 	var selected_nodes = selection.get_selected_nodes()
+	selected_keyframe = null
 	if selected_nodes.size() == 1:
-		
 		if selected_nodes[0] is BrushClip2D:
 			select_brush_clip(selected_nodes[0])
 			return
@@ -170,15 +178,26 @@ func _on_selection_changed():
 			var frame: BrushKeyframe2D = selected_nodes[0]
 			select_brush_clip(frame.get_clip())
 			frame.get_clip().goto(frame.frame_num)
+			selected_keyframe = frame
 			return
 		elif selected_nodes[0] is Brush2D:
 			select_brush(selected_nodes[0])
 			return
+		elif selected_nodes[0] is BrushLayer2D:
+			var layer: BrushLayer2D = selected_nodes[0]
+			select_brush_clip(layer.get_clip())
+			editing_brush._editing_layer_num = layer.layer_num
 	
 	if editing_brush:
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 		timeline.load_brush_clip(null)
 		_edit_brush_complete()
+	
+	var visible_2d = EditorInterface.get_editor_main_screen().get_child(0).visible
+	var visible_3d = EditorInterface.get_editor_main_screen().get_child(1).visible
+	var visible_script = EditorInterface.get_editor_main_screen().get_child(2).visible
+	if visible_script and (visible_2d or visible_3d):
+		EditorInterface.get_editor_main_screen().get_child(2).visible = false
 
 
 func select_brush(sprite):
@@ -287,6 +306,17 @@ func _on_key_pressed(event: InputEventKey) -> bool:
 			else:
 				_convert_keyframe_blank()
 			return true
+		key_add_script:
+			if selected_keyframe:
+				if selected_keyframe.has_custom_script:
+					pass
+				else:
+					selected_keyframe.set_script(KEYFRAME_SCRIPT_CUSTOM.duplicate())
+					selected_keyframe.has_custom_script = true
+					selected_keyframe.edited.emit()
+				EditorInterface.edit_script(selected_keyframe.get_script(), 5, 1)
+				EditorInterface.get_editor_main_screen().get_child(2).visible = true
+				
 		key_decrease:
 			_action_paint_erase_size *= 1 / (2.0 ** (1.0 / 6.0))
 			_action_paint_size *= 1 / (2.0 ** (1.0 / 6.0))
@@ -430,6 +460,8 @@ func _on_mouse_motion(mouse_position):
 	match _current_action:
 		ACTION_WARP:
 			action_warp_process(mouse_position)
+		ACTION_SHAPE:
+			action_shape_process(mouse_position)
 		ACTION_PAINT:
 			action_paint_process(mouse_position)
 		ACTION_MOVE:
@@ -478,6 +510,8 @@ func _action_start(mouse_position, alt):
 			action_oval_start(mouse_position)
 		TOOL_RECT:
 			action_rect_start(mouse_position)
+		TOOL_SHAPE:
+			action_shape_start(mouse_position)
 
 
 func current_action_complete(mouse_position):
@@ -493,6 +527,8 @@ func current_action_complete(mouse_position):
 			action_oval_complete(mouse_position)
 		ACTION_RECT:
 			action_rect_complete(mouse_position)
+		ACTION_SHAPE:
+			action_shape_complete()
 	_current_action = ACTION_NONE
 
 
@@ -963,6 +999,35 @@ func create_line_polygon(from, to, vertices_per_side, noise: Vector2):
 		var t = i / float(vertices_per_side)
 		polygon.push_back(from.lerp(to, t) + noise_offset)
 	return polygon
+
+
+
+## ACTION SHAPE
+
+func action_shape_start(action_position):
+	_current_action = ACTION_SHAPE
+	_action_position_previous = action_position
+	_action_paint_stroke = BrushStrokeData.new([], [], current_color)
+	_get_editing_brush().add_stroke(_action_paint_stroke)
+
+func action_shape_process(action_position):
+	if Input.is_key_pressed(KEY_ALT) and _action_paint_stroke.polygon.size() > 0:
+		_action_paint_stroke.polygon[_action_paint_stroke.polygon.size() - 1] = action_position
+		_get_editing_brush().draw()
+		return
+	
+	_action_paint_stroke.polygon.push_back(action_position)
+	_get_editing_brush().draw()
+
+
+func action_shape_complete():
+	if _action_alt:
+		_action_paint_complete_subtract()
+	else:
+		_action_paint_complete_add()
+
+##
+
 
 
 func merge_stroke(stroke):

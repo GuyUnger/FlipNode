@@ -10,7 +10,10 @@ extends Brush2D
 		return label
 	set(value):
 		label = value
-		update_name()
+		if Engine.is_editor_hint():
+			update_name()
+
+@export var has_custom_script := false
 
 #func copy() -> Keyframe2D:
 	#var frame = Keyframe.new()
@@ -20,6 +23,7 @@ extends Brush2D
 
 func _ready():
 	if Engine.is_editor_hint():
+		has_custom_script = get_script().source_code != GoolashEditor.KEYFRAME_SCRIPT.source_code
 		update_name()
 	super()
 
@@ -30,6 +34,10 @@ func get_clip() -> BrushClip2D:
 
 func get_layer() -> BrushLayer2D:
 	return get_parent()
+
+
+func enter():
+	_enter_frame()
 
 
 func _enter_frame():
@@ -44,10 +52,10 @@ func clear():
 func update_name():
 	if label != "":
 		name = "Frame %s" % label.capitalize()
-		return
-	name = "Frame %s" % frame_num
-	if is_blank():
-		name += " (Blank)"
+	else:
+		name = "Frame %s" % frame_num
+	if has_custom_script:
+		name += " 📃"
 
 
 func is_blank() -> bool:

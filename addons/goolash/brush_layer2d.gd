@@ -17,7 +17,8 @@ var current_visible_frame
 func _ready():
 	show_behind_parent = true
 	find_keyframes()
-	update_keyframe_endpoints()
+	if Engine.is_editor_hint():
+		update_keyframe_endpoints()
 	for keyframe in keyframes:
 		keyframe.visible = false
 	display_frame(0)
@@ -74,12 +75,17 @@ func display_frame(frame_num):
 				frame.visible = false
 		return
 	
+	var visible_frame = get_frame(frame_num)
+	if visible_frame == current_visible_frame:
+		return
+	
 	if current_visible_frame:
 		current_visible_frame.visible = false
 	
-	current_visible_frame = get_frame(frame_num)
-	if current_visible_frame:
-		current_visible_frame.visible = true
+	if visible_frame:
+		current_visible_frame = visible_frame
+		visible_frame.visible = true
+		visible_frame.enter()
 
 
 func get_frame(frame_num: int) -> BrushKeyframe2D:

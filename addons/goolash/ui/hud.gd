@@ -89,7 +89,7 @@ func select_tool(tool):
 			set_pressed(%ButtonPaint)
 			show_properties(%PropertiesPaint)
 		GoolashEditor.TOOL_SHAPE:
-			set_pressed(%ButtonPen)
+			set_pressed(%ButtonShape)
 			show_properties()
 		GoolashEditor.TOOL_OVAL:
 			set_pressed(%ButtonOval)

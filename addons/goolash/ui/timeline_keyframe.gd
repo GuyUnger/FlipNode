@@ -29,7 +29,8 @@ func draw():
 	%Label.visible = keyframe.label != ""
 	%Label.text = keyframe.label
 	size.x = (keyframe.frame_end_num - keyframe.frame_num + 1) * Timeline.FRAME_WIDTH
-
+	
+	%Script.visible = keyframe.has_custom_script
 
 func _on_pressed():
 	EditorInterface.inspect_object(null)

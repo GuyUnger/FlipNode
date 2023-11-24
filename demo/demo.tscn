@@ -1,4 +1,4 @@
-[gd_scene load_steps=52 format=3 uid="uid://bgirhyd6vj5my"]
+[gd_scene load_steps=83 format=3 uid="uid://bgirhyd6vj5my"]
 
 [ext_resource type="Script" path="res://addons/goolash/brush_clip2d.gd" id="1_kilw2"]
 [ext_resource type="Script" path="res://addons/goolash/brush_layer2d.gd" id="2_omsrh"]
@@ -123,6 +123,142 @@ color = Color(0.803922, 0.521569, 0.247059, 1)
 polygon = PackedVector2Array(434.619, 239.297, 446.757, 241.094, 460.213, 249.113, 476.261, 254.566, 492.781, 265.593, 501.587, 275.826, 506.307, 285.446, 510.185, 298.537, 514.063, 311.628, 516.247, 323.458, 518.432, 335.288, 518.528, 354.097, 516.102, 366.238, 510.852, 375.521, 501.343, 388.063, 494.373, 393.694, 483.918, 399.053, 474.216, 401.825, 464.514, 404.596, 452.427, 411.019, 441.939, 412.233, 431.452, 413.447, 399.343, 407.321, 386.804, 400.626, 383.971, 395.853, 380.969, 383.952, 378.394, 366.689, 378.394, 347.79, 381.139, 334.374, 381.567, 319.899, 383.038, 312.756, 383.054, 312.534, 383.211, 311.914, 383.588, 310.082, 385.61, 300.266, 386.9, 297.319, 390.274, 283.971, 397.358, 268.507, 406.735, 256.866, 412.253, 256.574, 419.218, 248.966, 420.476, 248.293, 424.373, 243.007, 429.383, 239.831, 434.609, 239.295)
 polygon_curve = SubResource("Curve2D_yu07f")
 holes = Array[PackedVector2Array]([PackedVector2Array(458.816, 291.336, 465.917, 294.115, 474.49, 302.022, 476.602, 307.12, 476.838, 313.551, 473.823, 321.74, 468.586, 326.977, 463.488, 329.088, 455.722, 329.324, 449.867, 327.671, 448.583, 328.322, 446.819, 327.077, 437.041, 320.172, 435.741, 317.542, 435.744, 312.241, 442.91, 294.999, 443.698, 294.999, 447.976, 292.141, 456.057, 291.064)])
+hole_curves = Array[Curve2D]([])
+
+[sub_resource type="Curve2D" id="Curve2D_kagky"]
+bake_interval = 20.0
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 1797.31, 734.358)
+}
+point_count = 1
+
+[sub_resource type="Resource" id="Resource_ne1m8"]
+script = ExtResource("4_cmco8")
+color = Color(0.803922, 0.521569, 0.247059, 1)
+polygon = PackedVector2Array(1797.31, 734.358)
+polygon_curve = SubResource("Curve2D_kagky")
+holes = Array[PackedVector2Array]([])
+hole_curves = Array[Curve2D]([])
+
+[sub_resource type="Curve2D" id="Curve2D_lfim5"]
+bake_interval = 20.0
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 1969.84, 769.713)
+}
+point_count = 1
+
+[sub_resource type="Resource" id="Resource_l5tvw"]
+script = ExtResource("4_cmco8")
+color = Color(0.803922, 0.521569, 0.247059, 1)
+polygon = PackedVector2Array(1969.84, 769.713)
+polygon_curve = SubResource("Curve2D_lfim5")
+holes = Array[PackedVector2Array]([])
+hole_curves = Array[Curve2D]([])
+
+[sub_resource type="Curve2D" id="Curve2D_nhvtt"]
+bake_interval = 20.0
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 2011.69, 840.468)
+}
+point_count = 1
+
+[sub_resource type="Resource" id="Resource_jjops"]
+script = ExtResource("4_cmco8")
+color = Color(0.803922, 0.521569, 0.247059, 1)
+polygon = PackedVector2Array(2011.69, 840.468)
+polygon_curve = SubResource("Curve2D_nhvtt")
+holes = Array[PackedVector2Array]([])
+hole_curves = Array[Curve2D]([])
+
+[sub_resource type="Resource" id="Resource_sb5yn"]
+script = ExtResource("4_cmco8")
+color = Color(0.803922, 0.521569, 0.247059, 1)
+polygon = PackedVector2Array(1832.71, 1043.86)
+holes = Array[PackedVector2Array]([])
+hole_curves = Array[Curve2D]([])
+
+[sub_resource type="Resource" id="Resource_pnndo"]
+script = ExtResource("4_cmco8")
+color = Color(0.803922, 0.521569, 0.247059, 1)
+polygon = PackedVector2Array(2108.72, 1157.61)
+holes = Array[PackedVector2Array]([])
+hole_curves = Array[Curve2D]([])
+
+[sub_resource type="Resource" id="Resource_xufli"]
+script = ExtResource("4_cmco8")
+color = Color(0.803922, 0.521569, 0.247059, 1)
+polygon = PackedVector2Array(2260.68, 1128.35)
+holes = Array[PackedVector2Array]([])
+hole_curves = Array[Curve2D]([])
+
+[sub_resource type="Resource" id="Resource_cv8w2"]
+script = ExtResource("4_cmco8")
+color = Color(0.803922, 0.521569, 0.247059, 1)
+polygon = PackedVector2Array(2180.45, 1294.47)
+holes = Array[PackedVector2Array]([])
+hole_curves = Array[Curve2D]([])
+
+[sub_resource type="Resource" id="Resource_uq5n8"]
+script = ExtResource("4_cmco8")
+color = Color(0.803922, 0.521569, 0.247059, 1)
+polygon = PackedVector2Array(2174.79, 1281.26)
+holes = Array[PackedVector2Array]([])
+hole_curves = Array[Curve2D]([])
+
+[sub_resource type="Resource" id="Resource_5kgvr"]
+script = ExtResource("4_cmco8")
+color = Color(0.803922, 0.521569, 0.247059, 1)
+polygon = PackedVector2Array(2138.92, 1325.62)
+holes = Array[PackedVector2Array]([])
+hole_curves = Array[Curve2D]([])
+
+[sub_resource type="Resource" id="Resource_vhog2"]
+script = ExtResource("4_cmco8")
+color = Color(0.803922, 0.521569, 0.247059, 1)
+polygon = PackedVector2Array(2119.1, 1167.05, 2119.1, 1170.83, 2119.1, 1172.71)
+holes = Array[PackedVector2Array]([])
+hole_curves = Array[Curve2D]([])
+
+[sub_resource type="Resource" id="Resource_iam45"]
+script = ExtResource("4_cmco8")
+color = Color(0.803922, 0.521569, 0.247059, 1)
+polygon = PackedVector2Array(1673.59, 1377.53)
+holes = Array[PackedVector2Array]([])
+hole_curves = Array[Curve2D]([])
+
+[sub_resource type="Resource" id="Resource_cqw1v"]
+script = ExtResource("4_cmco8")
+color = Color(0.803922, 0.521569, 0.247059, 1)
+polygon = PackedVector2Array()
+holes = Array[PackedVector2Array]([])
+hole_curves = Array[Curve2D]([])
+
+[sub_resource type="Resource" id="Resource_nk2wx"]
+script = ExtResource("4_cmco8")
+color = Color(0.803922, 0.521569, 0.247059, 1)
+polygon = PackedVector2Array(2005.83, 1059.45)
+holes = Array[PackedVector2Array]([])
+hole_curves = Array[Curve2D]([])
+
+[sub_resource type="Resource" id="Resource_akenp"]
+script = ExtResource("4_cmco8")
+color = Color(0.803922, 0.521569, 0.247059, 1)
+polygon = PackedVector2Array()
+holes = Array[PackedVector2Array]([])
+hole_curves = Array[Curve2D]([])
+
+[sub_resource type="Resource" id="Resource_b06gc"]
+script = ExtResource("4_cmco8")
+color = Color(0.803922, 0.521569, 0.247059, 1)
+polygon = PackedVector2Array()
+holes = Array[PackedVector2Array]([])
+hole_curves = Array[Curve2D]([])
+
+[sub_resource type="Resource" id="Resource_75mx8"]
+script = ExtResource("4_cmco8")
+color = Color(0.803922, 0.521569, 0.247059, 1)
+polygon = PackedVector2Array(1482.54, 1376.43)
+holes = Array[PackedVector2Array]([])
 hole_curves = Array[Curve2D]([])
 
 [sub_resource type="Curve2D" id="Curve2D_etgsg"]
@@ -326,29 +462,100 @@ polygon_curve = SubResource("Curve2D_ejl2u")
 holes = Array[PackedVector2Array]([])
 hole_curves = Array[Curve2D]([])
 
+[sub_resource type="Curve2D" id="Curve2D_yln4x"]
+bake_interval = 20.0
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 1564.44, 601.742, 0, 0, 0, 0, 1568.93, 601.742, 0, 0, 0, 0, 1574.55, 602.864, 0, 0, 0, 0, 1577.91, 603.987, 0, 0, 0, 0, 1582.4, 605.109, 0, 0, 0, 0, 1585.77, 606.231, 0, 0, 0, 0, 1587.03, 641.677, 0, 0, 0, 0, 1593.98, 634.718, 0, 0, 0, 0, 1598.23, 631.89, 0, 0, 0, 0, 1609.54, 624.819, 0, 0, 0, 0, 1629.34, 619.162, 0, 0, 0, 0, 1653.38, 616.334, 0, 0, 0, 0, 1680.25, 616.334, 0, 0, 0, 0, 1688.74, 617.748, 0, 0, 0, 0, 1692.98, 617.748, 0, 0, 0, 0, 1695.81, 619.162, 0, 0, 0, 0, 1629.34, 691.287, 0, 0, 0, 0, 1629.34, 699.772, 0, 0, 0, 0, 1627.93, 701.187, 0, 0, 0, 0, 1626.51, 702.601, 0, 0, 0, 0, 1625.1, 702.601, 0, 0, 0, 0, 1622.27, 704.015, 0, 0, 0, 0, 1618.03, 705.429, 0, 0, 0, 0, 1610.96, 705.429, 0, 0, 0, 0, 1605.3, 704.015, 0, 0, 0, 0, 1599.64, 701.187, 0, 0, 0, 0, 1595.4, 698.358, 0, 0, 0, 0, 1589.74, 694.115, 0, 0, 0, 0, 1588.83, 692.753, 0, 0, 0, 0, 1589.5, 711.525, 0, 0, 0, 0, 1590.26, 711.743, 0, 0, 0, 0, 1592.51, 711.743, 0, 0, 0, 0, 1592.51, 721.845, 0, 0, 0, 0, 1591.38, 725.212, 0, 0, 0, 0, 1591.38, 733.07, 0, 0, 0, 0, 1590.26, 733.07, 0, 0, 0, 0, 1589.5, 711.525, 0, 0, 0, 0, 1582.4, 709.498, 0, 0, 0, 0, 1575.67, 707.253, 0, 0, 0, 0, 1565.57, 703.886, 0, 0, 0, 0, 1561.08, 702.763, 0, 0, 0, 0, 1557.71, 700.518, 0, 0, 0, 0, 1546.48, 696.029, 0, 0, 0, 0, 1541.99, 694.906, 0, 0, 0, 0, 1538.63, 692.661, 0, 0, 0, 0, 1533.02, 689.294, 0, 0, 0, 0, 1524.04, 685.926, 0, 0, 0, 0, 1520.67, 682.559, 0, 0, 0, 0, 1518.42, 680.314, 0, 0, 0, 0, 1516.18, 676.947, 0, 0, 0, 0, 1513.93, 673.579, 0, 0, 0, 0, 1510.57, 665.722, 0, 0, 0, 0, 1508.32, 663.477, 0, 0, 0, 0, 1506.08, 656.742, 0, 0, 0, 0, 1504.95, 654.497, 0, 0, 0, 0, 1503.83, 646.64, 0, 0, 0, 0, 1503.83, 637.66, 0, 0, 0, 0, 1504.95, 634.293, 0, 0, 0, 0, 1506.08, 633.171, 0, 0, 0, 0, 1510.57, 626.436, 0, 0, 0, 0, 1511.69, 624.191, 0, 0, 0, 0, 1516.18, 620.823, 0, 0, 0, 0, 1521.79, 615.211, 0, 0, 0, 0, 1525.16, 611.844, 0, 0, 0, 0, 1527.4, 610.721, 0, 0, 0, 0, 1529.65, 608.476, 0, 0, 0, 0, 1534.14, 605.109, 0, 0, 0, 0, 1538.63, 602.864, 0, 0, 0, 0, 1539.75, 601.742, 0, 0, 0, 0, 1545.36, 600.619, 0, 0, 0, 0, 1558.83, 600.619)
+}
+point_count = 71
+
+[sub_resource type="Resource" id="Resource_nc1y0"]
+script = ExtResource("4_cmco8")
+color = Color(0.803922, 0.521569, 0.247059, 1)
+polygon = PackedVector2Array(1564.44, 601.742, 1568.93, 601.742, 1574.55, 602.864, 1577.91, 603.987, 1582.4, 605.109, 1585.77, 606.231, 1587.03, 641.677, 1593.98, 634.718, 1598.23, 631.89, 1609.54, 624.819, 1629.34, 619.162, 1653.38, 616.334, 1680.25, 616.334, 1688.74, 617.748, 1692.98, 617.748, 1695.81, 619.162, 1629.34, 691.287, 1629.34, 699.772, 1627.93, 701.187, 1626.51, 702.601, 1625.1, 702.601, 1622.27, 704.015, 1618.03, 705.429, 1610.96, 705.429, 1605.3, 704.015, 1599.64, 701.187, 1595.4, 698.358, 1589.74, 694.115, 1588.83, 692.753, 1589.5, 711.525, 1590.26, 711.743, 1592.51, 711.743, 1592.51, 721.845, 1591.38, 725.212, 1591.38, 733.07, 1590.26, 733.07, 1589.5, 711.525, 1582.4, 709.498, 1575.67, 707.253, 1565.57, 703.886, 1561.08, 702.763, 1557.71, 700.518, 1546.48, 696.029, 1541.99, 694.906, 1538.63, 692.661, 1533.02, 689.294, 1524.04, 685.926, 1520.67, 682.559, 1518.42, 680.314, 1516.18, 676.947, 1513.93, 673.579, 1510.57, 665.722, 1508.32, 663.477, 1506.08, 656.742, 1504.95, 654.497, 1503.83, 646.64, 1503.83, 637.66, 1504.95, 634.293, 1506.08, 633.171, 1510.57, 626.436, 1511.69, 624.191, 1516.18, 620.823, 1521.79, 615.211, 1525.16, 611.844, 1527.4, 610.721, 1529.65, 608.476, 1534.14, 605.109, 1538.63, 602.864, 1539.75, 601.742, 1545.36, 600.619, 1558.83, 600.619)
+polygon_curve = SubResource("Curve2D_yln4x")
+holes = Array[PackedVector2Array]([])
+hole_curves = Array[Curve2D]([])
+
+[sub_resource type="Curve2D" id="Curve2D_nui3i"]
+bake_interval = 20.0
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 439.969, 540.835, 0, 0, 0, 0, 441.091, 552.059, 0, 0, 0, 0, 446.704, 563.284, 0, 0, 0, 0, 453.439, 571.141, 0, 0, 0, 0, 459.051, 574.508, 0, 0, 0, 0, 471.398, 577.876, 0, 0, 0, 0, 478.133, 577.876, 0, 0, 0, 0, 480.378, 575.631, 0, 0, 0, 0, 483.745, 572.263, 0, 0, 0, 0, 484.867, 566.651, 0, 0, 0, 0, 485.99, 561.039, 0, 0, 0, 0, 485.99, 549.814, 0, 0, 0, 0, 483.745, 541.957, 0, 0, 0, 0, 481.5, 536.345, 0, 0, 0, 0, 477.01, 529.61, 0, 0, 0, 0, 471.398, 523.998, 0, 0, 0, 0, 464.663, 519.508, 0, 0, 0, 0, 462.418, 518.385, 0, 0, 0, 0, 460.173, 517.263, 0, 0, 0, 0, 457.928, 516.14, 0, 0, 0, 0, 457.928, 516.14)
+}
+point_count = 21
+
+[sub_resource type="Resource" id="Resource_qfluj"]
+script = ExtResource("4_cmco8")
+color = Color(0.803922, 0.521569, 0.247059, 1)
+polygon = PackedVector2Array(439.969, 540.835, 441.091, 552.059, 446.704, 563.284, 453.439, 571.141, 459.051, 574.508, 471.398, 577.876, 478.133, 577.876, 480.378, 575.631, 483.745, 572.263, 484.867, 566.651, 485.99, 561.039, 485.99, 549.814, 483.745, 541.957, 481.5, 536.345, 477.01, 529.61, 471.398, 523.998, 464.663, 519.508, 462.418, 518.385, 460.173, 517.263, 457.928, 516.14, 457.928, 516.14)
+polygon_curve = SubResource("Curve2D_nui3i")
+holes = Array[PackedVector2Array]([])
+hole_curves = Array[Curve2D]([])
+
+[sub_resource type="Curve2D" id="Curve2D_gmp3g"]
+bake_interval = 20.0
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 561.195, 527.365, 0, 0, 0, 0, 560.072, 531.855, 0, 0, 0, 0, 560.072, 540.835, 0, 0, 0, 0, 560.072, 544.202, 0, 0, 0, 0, 560.072, 550.937, 0, 0, 0, 0, 560.072, 557.671, 0, 0, 0, 0, 565.685, 564.406, 0, 0, 0, 0, 567.93, 568.896, 0, 0, 0, 0, 569.052, 571.141, 0, 0, 0, 0, 570.175, 572.263, 0, 0, 0, 0, 571.297, 572.263, 0, 0, 0, 0, 574.664, 573.386, 0, 0, 0, 0, 578.032, 574.508, 0, 0, 0, 0, 578.032, 574.508, 0, 0, 0, 0, 581.399, 574.508, 0, 0, 0, 0, 582.522, 574.508, 0, 0, 0, 0, 584.767, 574.508, 0, 0, 0, 0, 585.889, 573.386, 0, 0, 0, 0, 590.379, 572.263, 0, 0, 0, 0, 594.869, 568.896, 0, 0, 0, 0, 598.236, 566.651, 0, 0, 0, 0, 599.359, 565.529, 0, 0, 0, 0, 600.481, 561.039, 0, 0, 0, 0, 601.604, 557.671, 0, 0, 0, 0, 603.849, 554.304, 0, 0, 0, 0, 603.849, 550.937, 0, 0, 0, 0, 603.849, 547.569, 0, 0, 0, 0, 604.971, 544.202, 0, 0, 0, 0, 604.971, 541.957, 0, 0, 0, 0, 604.971, 539.712, 0, 0, 0, 0, 604.971, 537.467, 0, 0, 0, 0, 604.971, 534.1, 0, 0, 0, 0, 603.849, 531.855, 0, 0, 0, 0, 602.726, 529.61, 0, 0, 0, 0, 601.604, 526.242, 0, 0, 0, 0, 599.359, 522.875, 0, 0, 0, 0, 597.114, 519.508, 0, 0, 0, 0, 594.869, 518.385, 0, 0, 0, 0, 594.869, 517.263, 0, 0, 0, 0, 593.746, 517.263, 0, 0, 0, 0, 592.624, 516.14, 0, 0, 0, 0, 591.501, 516.14, 0, 0, 0, 0, 590.379, 516.14, 0, 0, 0, 0, 589.256, 518.385, 0, 0, 0, 0, 587.011, 521.753, 0, 0, 0, 0, 584.767, 525.12, 0, 0, 0, 0, 583.644, 526.242, 0, 0, 0, 0, 582.522, 528.487, 0, 0, 0, 0, 581.399, 530.732, 0, 0, 0, 0, 581.399, 531.855, 0, 0, 0, 0, 580.277, 531.855, 0, 0, 0, 0, 572.42, 529.61, 0, 0, 0, 0, 571.297, 528.487, 0, 0, 0, 0, 570.175, 527.365, 0, 0, 0, 0, 567.93, 525.12, 0, 0, 0, 0, 567.93, 523.998, 0, 0, 0, 0, 566.807, 523.998, 0, 0, 0, 0, 566.807, 522.875, 0, 0, 0, 0, 566.807, 521.753, 0, 0, 0, 0, 566.807, 520.63)
+}
+point_count = 60
+
+[sub_resource type="Resource" id="Resource_owwfl"]
+script = ExtResource("4_cmco8")
+color = Color(0.803922, 0.521569, 0.247059, 1)
+polygon = PackedVector2Array(561.195, 527.365, 560.072, 531.855, 560.072, 540.835, 560.072, 544.202, 560.072, 550.937, 560.072, 557.671, 565.685, 564.406, 567.93, 568.896, 569.052, 571.141, 570.175, 572.263, 571.297, 572.263, 574.664, 573.386, 578.032, 574.508, 578.032, 574.508, 581.399, 574.508, 582.522, 574.508, 584.767, 574.508, 585.889, 573.386, 590.379, 572.263, 594.869, 568.896, 598.236, 566.651, 599.359, 565.529, 600.481, 561.039, 601.604, 557.671, 603.849, 554.304, 603.849, 550.937, 603.849, 547.569, 604.971, 544.202, 604.971, 541.957, 604.971, 539.712, 604.971, 537.467, 604.971, 534.1, 603.849, 531.855, 602.726, 529.61, 601.604, 526.242, 599.359, 522.875, 597.114, 519.508, 594.869, 518.385, 594.869, 517.263, 593.746, 517.263, 592.624, 516.14, 591.501, 516.14, 590.379, 516.14, 589.256, 518.385, 587.011, 521.753, 584.767, 525.12, 583.644, 526.242, 582.522, 528.487, 581.399, 530.732, 581.399, 531.855, 580.277, 531.855, 572.42, 529.61, 571.297, 528.487, 570.175, 527.365, 567.93, 525.12, 567.93, 523.998, 566.807, 523.998, 566.807, 522.875, 566.807, 521.753, 566.807, 520.63)
+polygon_curve = SubResource("Curve2D_gmp3g")
+holes = Array[PackedVector2Array]([])
+hole_curves = Array[Curve2D]([])
+
+[sub_resource type="Curve2D" id="Curve2D_6r52n"]
+bake_interval = 20.0
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 200.359, 464.585, 0, 0, 0, 0, 200.595, 464.349)
+}
+point_count = 2
+
+[sub_resource type="Curve2D" id="Curve2D_vm23d"]
+bake_interval = 20.0
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 259.47, 429.544, 0, 0, 0, 0, 265.133, 429.544, 0, 0, 0, 0, 273.628, 430.016, 0, 0, 0, 0, 278.347, 430.488, 0, 0, 0, 0, 284.954, 431.432, 0, 0, 0, 0, 291.561, 432.847, 0, 0, 0, 0, 294.393, 433.319, 0, 0, 0, 0, 301.944, 435.679, 0, 0, 0, 0, 305.247, 436.623, 0, 0, 0, 0, 307.135, 437.567, 0, 0, 0, 0, 310.439, 438.983, 0, 0, 0, 0, 313.27, 440.87, 0, 0, 0, 0, 314.686, 441.342, 0, 0, 0, 0, 316.574, 443.23, 0, 0, 0, 0, 317.99, 445.118, 0, 0, 0, 0, 319.406, 446.534, 0, 0, 0, 0, 321.765, 449.837, 0, 0, 0, 0, 323.181, 452.197, 0, 0, 0, 0, 324.597, 454.085, 0, 0, 0, 0, 328.372, 458.804, 0, 0, 0, 0, 332.62, 465.883, 0, 0, 0, 0, 335.923, 475.794, 0, 0, 0, 0, 338.283, 481.457, 0, 0, 0, 0, 340.171, 488.064, 0, 0, 0, 0, 341.115, 493.255, 0, 0, 0, 0, 342.53, 500.334, 0, 0, 0, 0, 343.002, 507.413, 0, 0, 0, 0, 343.002, 515.436, 0, 0, 0, 0, 339.227, 531.01, 0, 0, 0, 0, 326.013, 554.607, 0, 0, 0, 0, 320.349, 564.99, 0, 0, 0, 0, 317.99, 567.349, 0, 0, 0, 0, 314.214, 571.125, 0, 0, 0, 0, 308.551, 576.788, 0, 0, 0, 0, 292.033, 585.283, 0, 0, 0, 0, 287.314, 587.171, 0, 0, 0, 0, 283.538, 588.115, 0, 0, 0, 0, 274.572, 588.115, 0, 0, 0, 0, 268.908, 587.643, 0, 0, 0, 0, 266.077, 587.643, 0, 0, 0, 0, 260.413, 587.171, 0, 0, 0, 0, 256.166, 586.699, 0, 0, 0, 0, 250.031, 586.227, 0, 0, 0, 0, 246.727, 585.283, 0, 0, 0, 0, 244.839, 584.811, 0, 0, 0, 0, 242.48, 583.867, 0, 0, 0, 0, 241.064, 583.395, 0, 0, 0, 0, 239.176, 582.451, 0, 0, 0, 0, 237.289, 581.979, 0, 0, 0, 0, 235.401, 581.036, 0, 0, 0, 0, 233.041, 580.092, 0, 0, 0, 0, 231.625, 579.148, 0, 0, 0, 0, 229.738, 577.732, 0, 0, 0, 0, 227.85, 576.788, 0, 0, 0, 0, 226.906, 575.372, 0, 0, 0, 0, 225.962, 574.9, 0, 0, 0, 0, 225.962, 574.428, 0, 0, 0, 0, 225.49, 574.428, 0, 0, 0, 0, 224.546, 573.485, 0, 0, 0, 0, 224.074, 572.541, 0, 0, 0, 0, 223.13, 572.069, 0, 0, 0, 0, 222.658, 571.125, 0, 0, 0, 0, 221.715, 570.181, 0, 0, 0, 0, 220.771, 569.237, 0, 0, 0, 0, 220.299, 568.765, 0, 0, 0, 0, 219.827, 568.293, 0, 0, 0, 0, 218.883, 568.293, 0, 0, 0, 0, 217.939, 567.821, 0, 0, 0, 0, 215.579, 566.878, 0, 0, 0, 0, 215.107, 566.878, 0, 0, 0, 0, 213.692, 566.406, 0, 0, 0, 0, 211.804, 565.934, 0, 0, 0, 0, 204.725, 565.934, 0, 0, 0, 0, 203.309, 566.406, 0, 0, 0, 0, 201.893, 566.406, 0, 0, 0, 0, 200.949, 566.878, 0, 0, 0, 0, 199.534, 567.349, 0, 0, 0, 0, 198.118, 567.821, 0, 0, 0, 0, 196.23, 568.765, 0, 0, 0, 0, 194.814, 569.237, 0, 0, 0, 0, 191.511, 570.653, 0, 0, 0, 0, 189.623, 570.653, 0, 0, 0, 0, 188.207, 571.597, 0, 0, 0, 0, 187.263, 572.069, 0, 0, 0, 0, 185.375, 572.069, 0, 0, 0, 0, 184.432, 572.541, 0, 0, 0, 0, 182.544, 572.541, 0, 0, 0, 0, 181.128, 573.013, 0, 0, 0, 0, 171.689, 573.013, 0, 0, 0, 0, 168.386, 572.541, 0, 0, 0, 0, 166.026, 572.069, 0, 0, 0, 0, 164.138, 572.069, 0, 0, 0, 0, 163.666, 571.597, 0, 0, 0, 0, 160.835, 571.125, 0, 0, 0, 0, 156.587, 568.765, 0, 0, 0, 0, 155.171, 567.821, 0, 0, 0, 0, 153.756, 567.349, 0, 0, 0, 0, 152.34, 565.934, 0, 0, 0, 0, 150.924, 564.99, 0, 0, 0, 0, 147.62, 561.686, 0, 0, 0, 0, 146.677, 560.27, 0, 0, 0, 0, 145.261, 558.855, 0, 0, 0, 0, 144.317, 556.967, 0, 0, 0, 0, 143.373, 555.079, 0, 0, 0, 0, 141.957, 552.719, 0, 0, 0, 0, 140.541, 551.304, 0, 0, 0, 0, 139.126, 548.472, 0, 0, 0, 0, 137.238, 545.64, 0, 0, 0, 0, 135.822, 542.809, 0, 0, 0, 0, 134.878, 540.449, 0, 0, 0, 0, 133.934, 537.617, 0, 0, 0, 0, 132.518, 535.73, 0, 0, 0, 0, 132.047, 533.37, 0, 0, 0, 0, 131.103, 531.482, 0, 0, 0, 0, 130.631, 530.066, 0, 0, 0, 0, 130.631, 514.964, 0, 0, 0, 0, 131.103, 512.133, 0, 0, 0, 0, 131.103, 509.301, 0, 0, 0, 0, 131.575, 505.998, 0, 0, 0, 0, 132.047, 503.166, 0, 0, 0, 0, 132.518, 500.334, 0, 0, 0, 0, 133.462, 497.975, 0, 0, 0, 0, 133.934, 495.143, 0, 0, 0, 0, 136.294, 491.368, 0, 0, 0, 0, 137.238, 489.008, 0, 0, 0, 0, 138.182, 487.592, 0, 0, 0, 0, 140.541, 484.76, 0, 0, 0, 0, 141.485, 483.345, 0, 0, 0, 0, 145.733, 479.097, 0, 0, 0, 0, 147.148, 477.209, 0, 0, 0, 0, 148.092, 476.738, 0, 0, 0, 0, 150.924, 474.378, 0, 0, 0, 0, 152.34, 473.434, 0, 0, 0, 0, 153.756, 472.962, 0, 0, 0, 0, 156.115, 471.546, 0, 0, 0, 0, 160.363, 470.602, 0, 0, 0, 0, 162.722, 469.658, 0, 0, 0, 0, 166.498, 468.243, 0, 0, 0, 0, 169.33, 467.771, 0, 0, 0, 0, 170.745, 467.299, 0, 0, 0, 0, 174.049, 466.827, 0, 0, 0, 0, 175.937, 466.827, 0, 0, 0, 0, 178.296, 466.355, 0, 0, 0, 0, 189.623, 466.355, 0, 0, 0, 0, 191.983, 465.883, 0, 0, 0, 0, 193.398, 465.411, 0, 0, 0, 0, 194.342, 465.411, 0, 0, 0, 0, 197.646, 464.939, 0, 0, 0, 0, 200.448, 464.379, 0, 0, 0, 0, 201.421, 462.107, 0, 0, 0, 0, 202.837, 459.748, 0, 0, 0, 0, 203.781, 457.388, 0, 0, 0, 0, 205.197, 455.5, 0, 0, 0, 0, 208.028, 450.309, 0, 0, 0, 0, 210.388, 446.534, 0, 0, 0, 0, 212.748, 444.646, 0, 0, 0, 0, 216.523, 441.342, 0, 0, 0, 0, 219.355, 438.983, 0, 0, 0, 0, 221.715, 437.567, 0, 0, 0, 0, 223.13, 436.151, 0, 0, 0, 0, 225.962, 434.263, 0, 0, 0, 0, 229.266, 431.904, 0, 0, 0, 0, 231.625, 430.488, 0, 0, 0, 0, 234.457, 429.544, 0, 0, 0, 0, 240.12, 428.6, 0, 0, 0, 0, 247.199, 428.6)
+}
+point_count = 166
+
+[sub_resource type="Resource" id="Resource_b2nql"]
+script = ExtResource("4_cmco8")
+color = Color(0.803922, 0.521569, 0.247059, 1)
+polygon = PackedVector2Array(221.99, 438.677, 227.653, 438.677, 236.148, 439.149, 240.867, 439.621, 247.474, 440.565, 254.082, 441.981, 256.913, 442.453, 264.464, 444.812, 267.768, 445.756, 269.655, 446.7, 272.959, 448.116, 275.791, 450.004, 277.206, 450.475, 279.094, 452.363, 280.51, 454.251, 281.926, 455.667, 284.286, 458.97, 285.701, 461.33, 287.117, 463.218, 290.893, 467.937, 295.14, 475.016, 298.444, 484.927, 300.803, 490.59, 302.691, 497.197, 303.635, 502.388, 305.051, 509.468, 305.523, 516.546, 305.523, 524.569, 301.747, 540.143, 288.533, 563.74, 282.87, 574.123, 280.51, 576.482, 276.735, 580.258, 271.071, 585.921, 254.553, 594.416, 249.834, 596.304, 246.059, 597.247, 237.092, 597.247, 231.429, 596.776, 228.597, 596.776, 222.934, 596.304, 218.686, 595.832, 212.551, 595.36, 209.247, 594.416, 207.36, 593.944, 205, 593, 203.584, 592.528, 201.697, 591.584, 199.809, 591.112, 197.921, 590.168, 195.561, 589.225, 194.146, 588.281, 192.258, 586.865, 190.37, 585.921, 189.426, 584.505, 188.482, 584.033, 188.482, 583.561, 188.01, 583.561, 187.066, 582.617, 186.594, 581.674, 185.651, 581.202, 185.179, 580.258, 184.235, 579.314, 183.291, 578.37, 182.819, 577.898, 182.347, 577.426, 181.403, 577.426, 180.459, 576.954, 178.1, 576.01, 177.628, 576.01, 176.212, 575.538, 174.324, 575.066, 167.245, 575.066, 165.829, 575.538, 164.413, 575.538, 163.47, 576.01, 162.054, 576.482, 160.638, 576.954, 158.75, 577.898, 157.334, 578.37, 154.031, 579.786, 152.143, 579.786, 150.727, 580.73, 149.783, 581.202, 147.896, 581.202, 146.952, 581.674, 145.064, 581.674, 143.648, 582.146, 134.21, 582.146, 130.906, 581.674, 128.546, 581.202, 126.659, 581.202, 126.187, 580.73, 123.355, 580.258, 119.108, 577.898, 117.692, 576.954, 116.276, 576.482, 114.86, 575.066, 113.444, 574.123, 110.141, 570.819, 109.197, 569.403, 107.781, 567.987, 106.837, 566.1, 105.893, 564.212, 104.477, 561.852, 103.062, 560.436, 101.646, 557.605, 99.7581, 554.773, 98.3423, 551.942, 97.3984, 549.582, 96.4545, 546.75, 95.0387, 544.862, 94.5668, 542.503, 93.6229, 540.615, 93.151, 539.199, 93.151, 524.097, 93.6229, 521.266, 93.6229, 518.434, 94.0948, 515.13, 94.5668, 512.299, 95.0387, 509.468, 95.9826, 507.108, 96.4545, 504.276, 98.8142, 500.501, 99.7581, 498.141, 100.702, 496.725, 103.062, 493.894, 104.006, 492.478, 108.253, 488.23, 109.669, 486.343, 110.613, 485.871, 113.444, 483.511, 114.86, 482.567, 116.276, 482.095, 118.636, 480.679, 122.883, 479.736, 125.243, 478.792, 129.018, 477.376, 131.85, 476.904, 133.266, 476.432, 136.569, 475.96, 138.457, 475.96, 140.817, 475.488, 152.143, 475.488, 154.503, 475.016, 155.919, 474.544, 156.862, 474.544, 160.166, 474.072, 162.968, 473.512, 163.942, 471.241, 165.357, 468.881, 166.301, 466.521, 167.717, 464.634, 170.549, 459.442, 172.908, 455.667, 175.268, 453.779, 179.044, 450.475, 181.875, 448.116, 184.235, 446.7, 185.651, 445.284, 188.482, 443.396, 191.786, 441.037, 194.146, 439.621, 196.977, 438.677, 202.64, 437.733, 209.719, 437.733)
+polygon_curve = SubResource("Curve2D_vm23d")
+holes = Array[PackedVector2Array]([PackedVector2Array(162.88, 473.718, 162.968, 473.512, 163.116, 473.482)])
+hole_curves = Array[Curve2D]([SubResource("Curve2D_6r52n")])
+
+[sub_resource type="Resource" id="Resource_w1exp"]
+script = ExtResource("4_cmco8")
+color = Color(0.803922, 0.521569, 0.247059, 1)
+polygon = PackedVector2Array(114.543, 396.559, 109.594, 400.802, 106.058, 405.044, 103.937, 410.701, 102.523, 414.944, 101.815, 417.772, 101.815, 419.186, 101.108, 425.55, 101.108, 428.379, 101.108, 431.914, 101.815, 434.743, 102.523, 436.157, 103.23, 436.864, 104.644, 437.571, 105.351, 438.985, 106.058, 439.693, 106.765, 439.693, 107.472, 440.4, 108.887, 441.814, 110.301, 442.521, 111.715, 443.228, 112.422, 443.935, 113.836, 444.642, 115.958, 445.349, 118.079, 446.056, 119.493, 446.764, 120.2, 446.764, 120.907, 446.764, 122.322, 447.471, 123.736, 447.471, 124.443, 447.471, 125.857, 447.471, 127.271, 447.471, 129.393, 447.471, 132.928, 447.471, 133.635, 447.471, 134.342, 447.471, 135.049, 447.471, 135.757, 446.764, 137.171, 446.764, 137.878, 446.056, 138.585, 446.056, 139.999, 445.349, 139.999, 445.349, 140.706, 444.642, 141.413, 444.642, 142.121, 444.642, 142.828, 443.935, 143.535, 443.935, 144.949, 443.228, 145.656, 442.521, 146.363, 442.521, 147.777, 441.107, 148.485, 441.107, 149.192, 441.107, 149.192, 440.4, 149.899, 440.4, 150.606, 439.693, 151.313, 438.985, 152.02, 438.278, 152.727, 437.571, 154.141, 436.157, 155.556, 434.743, 156.263, 432.621, 156.97, 432.621, 156.97, 431.207, 157.677, 430.5, 157.677, 429.793, 158.384, 428.379, 159.091, 427.672, 159.798, 426.965, 160.505, 425.55, 161.212, 424.843, 161.92, 424.136, 162.627, 422.722, 163.334, 422.015, 164.041, 422.015, 164.748, 420.601, 165.455, 420.601, 165.455, 419.894, 166.869, 419.894, 168.284, 419.186, 168.991, 419.186, 169.698, 417.772, 170.405, 417.772, 171.112, 417.065, 171.819, 417.065, 173.233, 416.358, 175.355, 414.944, 177.476, 414.237, 178.183, 413.53, 180.304, 412.115, 181.011, 411.408, 181.719, 410.701, 182.426, 409.287, 182.426, 407.873, 183.84, 406.458, 184.547, 402.216, 184.547, 400.095, 185.254, 397.973, 185.254, 394.438, 185.254, 392.316, 184.547, 390.902, 183.84, 389.488, 183.84, 388.781, 183.133, 388.074, 183.133, 386.659, 182.426, 385.952, 181.719, 385.245, 181.011, 384.538, 180.304, 383.124, 179.597, 383.124, 178.89, 383.124, 178.89, 382.417, 178.183, 382.417, 178.183, 381.71, 177.476, 381.71, 176.062, 381.71, 175.355, 381.71, 175.355, 381.003, 174.647, 381.003, 173.233, 381.003, 171.819, 381.003, 171.112, 381.003, 170.405, 381.003, 169.698, 381.003, 168.991, 381.71, 168.284, 381.71, 167.576, 382.417, 167.576, 382.417, 166.869, 382.417, 166.162, 382.417, 165.455, 383.124, 164.748, 383.124, 164.748, 383.831, 162.627, 383.831, 161.92, 383.831, 160.505, 384.538, 159.798, 384.538, 159.091, 385.245, 159.091, 385.952, 158.384, 385.952, 157.677, 385.952, 156.263, 386.659, 154.849, 388.074, 153.434, 388.781, 152.727, 388.781, 152.02, 389.488, 151.313, 390.195, 149.899, 390.195, 149.899, 390.902, 149.192, 391.609, 148.485, 392.316, 147.777, 392.316, 147.07, 392.316, 146.363, 393.023, 143.535, 394.438, 142.828, 395.145, 141.413, 395.852, 140.706, 395.852, 137.171, 395.852, 134.342, 395.852, 132.928, 395.852, 130.1, 395.852, 129.393, 395.852, 128.686, 395.852, 124.443, 396.559, 123.029, 396.559, 120.2, 396.559)
+holes = Array[PackedVector2Array]([])
+hole_curves = Array[Curve2D]([])
+
+[sub_resource type="Resource" id="Resource_bx5nn"]
+script = ExtResource("4_cmco8")
+color = Color(0.803922, 0.521569, 0.247059, 1)
+polygon = PackedVector2Array(222.731, 405.044, 224.145, 409.287, 226.973, 412.822, 229.095, 416.358, 234.044, 422.015, 235.459, 423.429, 240.408, 425.55, 242.53, 425.55, 246.772, 426.257, 249.601, 426.257, 253.843, 426.257, 255.965, 426.257, 262.329, 426.257, 263.743, 426.257, 265.864, 425.55, 265.864, 425.55, 266.571, 425.55, 266.571, 424.843, 266.571, 424.136, 269.4, 422.015, 270.814, 421.308, 272.935, 417.772, 272.935, 414.944, 272.935, 412.115, 272.935, 409.994, 272.935, 409.287, 272.935, 407.873, 272.935, 405.751, 271.521, 403.63, 269.4, 401.509, 267.279, 399.387, 266.571, 397.973, 265.157, 397.266, 263.036, 395.145, 262.329, 395.145, 261.622, 393.731, 260.207, 393.023, 259.5, 391.609, 258.793, 390.902, 257.379, 390.195, 257.379, 390.195, 256.672, 390.195, 255.965, 389.488, 254.551, 388.781, 252.429, 388.781, 251.015, 388.781, 249.601, 388.781, 246.772, 388.781, 246.772, 388.781, 246.065, 388.781, 244.651, 388.781, 243.237, 389.488, 241.823, 390.195, 241.116, 390.902, 236.873, 393.023, 236.166, 393.023, 235.459, 393.731, 225.559, 400.802, 224.852, 400.802)
+holes = Array[PackedVector2Array]([])
+hole_curves = Array[Curve2D]([])
+
+[sub_resource type="Resource" id="Resource_5tahp"]
+script = ExtResource("4_cmco8")
+color = Color(0.803922, 0.521569, 0.247059, 1)
+polygon = PackedVector2Array(308.998, 571.922, 303.341, 577.578, 300.513, 580.407, 296.977, 583.942, 294.856, 586.771, 291.32, 590.306, 289.199, 593.842, 286.37, 599.499, 285.663, 602.327, 284.956, 605.863, 284.956, 608.691, 285.663, 611.519, 285.663, 613.641, 287.077, 615.762, 288.492, 617.176, 289.906, 618.591, 290.613, 619.298, 291.32, 620.712, 292.734, 622.126, 294.149, 622.833, 295.563, 624.247, 296.977, 624.954, 298.391, 625.662, 299.805, 625.662, 301.22, 626.369, 302.634, 626.369, 303.341, 626.369, 304.048, 626.369, 304.755, 626.369, 305.462, 626.369, 306.169, 626.369, 308.291, 626.369, 311.119, 626.369, 312.533, 626.369, 314.655, 626.369, 316.776, 626.369, 318.897, 626.369, 320.312, 626.369, 321.726, 626.369, 323.14, 626.369, 324.554, 626.369, 324.554, 626.369, 328.09, 624.954, 330.918, 624.954, 333.039, 624.954, 335.868, 623.54, 339.403, 623.54, 341.525, 622.126, 342.939, 622.126, 343.646, 621.419, 344.353, 620.712, 345.06, 620.712, 345.767, 620.712, 346.474, 620.005, 347.182, 620.005, 348.596, 619.298, 350.717, 617.883, 352.838, 616.469, 354.253, 615.055, 357.081, 612.227, 358.495, 610.105, 359.202, 608.691, 360.617, 605.863, 361.324, 604.448, 362.738, 601.62, 364.859, 597.377, 364.859, 596.67, 366.273, 591.72, 366.273, 589.599, 366.981, 588.185, 367.688, 585.357, 367.688, 584.649, 367.688, 583.942, 367.688, 581.821, 367.688, 581.114, 367.688, 579.7, 366.981, 576.871, 365.566, 575.457, 364.859, 574.043, 363.445, 571.922, 362.031, 569.8, 360.617, 569.093, 358.495, 566.972, 357.081, 566.265, 354.96, 564.85, 352.838, 562.729, 350.717, 561.315, 349.303, 561.315, 347.889, 560.608, 346.474, 559.901, 345.06, 559.901, 343.646, 559.901, 340.818, 559.194, 339.403, 559.194, 337.282, 559.194, 335.161, 559.194, 333.747, 559.194, 333.039, 559.194, 331.625, 559.194, 330.211, 559.194, 329.504, 559.194, 328.797, 559.194, 327.383, 559.194, 325.968, 559.194, 325.968, 559.194, 323.847, 559.901, 322.433, 560.608, 321.019, 561.315, 319.604, 562.729, 318.897, 562.729, 318.897, 563.436, 318.19, 564.143, 318.19, 564.85, 318.19, 565.557, 318.19, 566.265, 317.483, 566.972, 316.776, 568.386, 316.776, 569.093, 316.069, 569.8, 316.069, 570.507, 315.362, 571.214)
+holes = Array[PackedVector2Array]([])
+hole_curves = Array[Curve2D]([])
+
 [node name="Node2D" type="Node2D"]
 
 [node name="BrushClip2D" type="Node2D" parent="."]
 position = Vector2(-151, -36)
 script = ExtResource("1_kilw2")
-layers = [Object(Node2D,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","visible":true,"modulate":Color(1, 1, 1, 1),"self_modulate":Color(1, 1, 1, 1),"show_behind_parent":true,"top_level":false,"clip_children":0,"light_mask":1,"visibility_layer":1,"z_index":0,"z_as_relative":true,"y_sort_enabled":false,"texture_filter":0,"texture_repeat":0,"material":null,"use_parent_material":false,"position":Vector2(0, 0),"rotation":0.0,"scale":Vector2(1, 1),"skew":0.0,"script":ExtResource("2_omsrh"),"frame_count":1,"locked":false,"keyframes":[Object(Node2D,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","visible":true,"modulate":Color(1, 1, 1, 1),"self_modulate":Color(1, 1, 1, 1),"show_behind_parent":true,"top_level":false,"clip_children":0,"light_mask":1,"visibility_layer":1,"z_index":0,"z_as_relative":true,"y_sort_enabled":false,"texture_filter":0,"texture_repeat":0,"material":null,"use_parent_material":false,"position":Vector2(0, 0),"rotation":0.0,"scale":Vector2(1, 1),"skew":0.0,"script":ExtResource("3_iijxs"),"frame_num":0,"frame_end_num":0,"label":"","stroke_data":[SubResource("Resource_e1nee"), SubResource("Resource_ttu0s"), SubResource("Resource_k7o6w"), SubResource("Resource_ne6nu"), SubResource("Resource_02vaw"), SubResource("Resource_8u260"), SubResource("Resource_oovyl")],"strokes":[Object(CanvasGroup,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","visible":true,"modulate":Color(1, 1, 1, 1),"self_modulate":Color(0.803922, 0.521569, 0.247059, 1),"show_behind_parent":true,"top_level":false,"clip_children":0,"light_mask":1,"visibility_layer":1,"z_index":0,"z_as_relative":true,"y_sort_enabled":false,"texture_filter":0,"texture_repeat":0,"material":Resource("res://addons/goolash/brush_stroke_material.tres"),"use_parent_material":false,"position":Vector2(0, 0),"rotation":0.0,"scale":Vector2(1, 1),"skew":0.0,"fit_margin":10.0,"clear_margin":10.0,"use_mipmaps":false,"script":Resource("res://addons/goolash/brush_stroke2d.gd"))
-, Object(CanvasGroup,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","visible":true,"modulate":Color(1, 1, 1, 1),"self_modulate":Color(0.803922, 0.521569, 0.247059, 1),"show_behind_parent":true,"top_level":false,"clip_children":0,"light_mask":1,"visibility_layer":1,"z_index":0,"z_as_relative":true,"y_sort_enabled":false,"texture_filter":0,"texture_repeat":0,"material":Resource("res://addons/goolash/brush_stroke_material.tres"),"use_parent_material":false,"position":Vector2(0, 0),"rotation":0.0,"scale":Vector2(1, 1),"skew":0.0,"fit_margin":10.0,"clear_margin":10.0,"use_mipmaps":false,"script":Resource("res://addons/goolash/brush_stroke2d.gd"))
-, Object(CanvasGroup,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","visible":true,"modulate":Color(1, 1, 1, 1),"self_modulate":Color(0.803922, 0.521569, 0.247059, 1),"show_behind_parent":true,"top_level":false,"clip_children":0,"light_mask":1,"visibility_layer":1,"z_index":0,"z_as_relative":true,"y_sort_enabled":false,"texture_filter":0,"texture_repeat":0,"material":Resource("res://addons/goolash/brush_stroke_material.tres"),"use_parent_material":false,"position":Vector2(0, 0),"rotation":0.0,"scale":Vector2(1, 1),"skew":0.0,"fit_margin":10.0,"clear_margin":10.0,"use_mipmaps":false,"script":Resource("res://addons/goolash/brush_stroke2d.gd"))
-, Object(CanvasGroup,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","visible":true,"modulate":Color(1, 1, 1, 1),"self_modulate":Color(0.803922, 0.521569, 0.247059, 1),"show_behind_parent":true,"top_level":false,"clip_children":0,"light_mask":1,"visibility_layer":1,"z_index":0,"z_as_relative":true,"y_sort_enabled":false,"texture_filter":0,"texture_repeat":0,"material":Resource("res://addons/goolash/brush_stroke_material.tres"),"use_parent_material":false,"position":Vector2(0, 0),"rotation":0.0,"scale":Vector2(1, 1),"skew":0.0,"fit_margin":10.0,"clear_margin":10.0,"use_mipmaps":false,"script":Resource("res://addons/goolash/brush_stroke2d.gd"))
-, Object(CanvasGroup,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","visible":true,"modulate":Color(1, 1, 1, 1),"self_modulate":Color(0.803922, 0.521569, 0.247059, 1),"show_behind_parent":true,"top_level":false,"clip_children":0,"light_mask":1,"visibility_layer":1,"z_index":0,"z_as_relative":true,"y_sort_enabled":false,"texture_filter":0,"texture_repeat":0,"material":Resource("res://addons/goolash/brush_stroke_material.tres"),"use_parent_material":false,"position":Vector2(0, 0),"rotation":0.0,"scale":Vector2(1, 1),"skew":0.0,"fit_margin":10.0,"clear_margin":10.0,"use_mipmaps":false,"script":Resource("res://addons/goolash/brush_stroke2d.gd"))
-, Object(CanvasGroup,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","visible":true,"modulate":Color(1, 1, 1, 1),"self_modulate":Color(0.803922, 0.521569, 0.247059, 1),"show_behind_parent":true,"top_level":false,"clip_children":0,"light_mask":1,"visibility_layer":1,"z_index":0,"z_as_relative":true,"y_sort_enabled":false,"texture_filter":0,"texture_repeat":0,"material":Resource("res://addons/goolash/brush_stroke_material.tres"),"use_parent_material":false,"position":Vector2(0, 0),"rotation":0.0,"scale":Vector2(1, 1),"skew":0.0,"fit_margin":10.0,"clear_margin":10.0,"use_mipmaps":false,"script":Resource("res://addons/goolash/brush_stroke2d.gd"))
-, Object(CanvasGroup,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","visible":true,"modulate":Color(1, 1, 1, 1),"self_modulate":Color(0.803922, 0.521569, 0.247059, 1),"show_behind_parent":true,"top_level":false,"clip_children":0,"light_mask":1,"visibility_layer":1,"z_index":0,"z_as_relative":true,"y_sort_enabled":false,"texture_filter":0,"texture_repeat":0,"material":Resource("res://addons/goolash/brush_stroke_material.tres"),"use_parent_material":false,"position":Vector2(0, 0),"rotation":0.0,"scale":Vector2(1, 1),"skew":0.0,"fit_margin":10.0,"clear_margin":10.0,"use_mipmaps":false,"script":Resource("res://addons/goolash/brush_stroke2d.gd"))
-],"physics_mode":1,"bounciness":0.7,"collision_layer":1,"collision_mask":1)
-],"current_visible_frame":Object(Node2D,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","visible":true,"modulate":Color(1, 1, 1, 1),"self_modulate":Color(1, 1, 1, 1),"show_behind_parent":true,"top_level":false,"clip_children":0,"light_mask":1,"visibility_layer":1,"z_index":0,"z_as_relative":true,"y_sort_enabled":false,"texture_filter":0,"texture_repeat":0,"material":null,"use_parent_material":false,"position":Vector2(0, 0),"rotation":0.0,"scale":Vector2(1, 1),"skew":0.0,"script":ExtResource("3_iijxs"),"frame_num":0,"frame_end_num":0,"label":"","stroke_data":[SubResource("Resource_e1nee"), SubResource("Resource_ttu0s"), SubResource("Resource_k7o6w"), SubResource("Resource_ne6nu"), SubResource("Resource_02vaw"), SubResource("Resource_8u260"), SubResource("Resource_oovyl")],"strokes":[Object(CanvasGroup,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","visible":true,"modulate":Color(1, 1, 1, 1),"self_modulate":Color(0.803922, 0.521569, 0.247059, 1),"show_behind_parent":true,"top_level":false,"clip_children":0,"light_mask":1,"visibility_layer":1,"z_index":0,"z_as_relative":true,"y_sort_enabled":false,"texture_filter":0,"texture_repeat":0,"material":Resource("res://addons/goolash/brush_stroke_material.tres"),"use_parent_material":false,"position":Vector2(0, 0),"rotation":0.0,"scale":Vector2(1, 1),"skew":0.0,"fit_margin":10.0,"clear_margin":10.0,"use_mipmaps":false,"script":Resource("res://addons/goolash/brush_stroke2d.gd"))
-, Object(CanvasGroup,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","visible":true,"modulate":Color(1, 1, 1, 1),"self_modulate":Color(0.803922, 0.521569, 0.247059, 1),"show_behind_parent":true,"top_level":false,"clip_children":0,"light_mask":1,"visibility_layer":1,"z_index":0,"z_as_relative":true,"y_sort_enabled":false,"texture_filter":0,"texture_repeat":0,"material":Resource("res://addons/goolash/brush_stroke_material.tres"),"use_parent_material":false,"position":Vector2(0, 0),"rotation":0.0,"scale":Vector2(1, 1),"skew":0.0,"fit_margin":10.0,"clear_margin":10.0,"use_mipmaps":false,"script":Resource("res://addons/goolash/brush_stroke2d.gd"))
-, Object(CanvasGroup,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","visible":true,"modulate":Color(1, 1, 1, 1),"self_modulate":Color(0.803922, 0.521569, 0.247059, 1),"show_behind_parent":true,"top_level":false,"clip_children":0,"light_mask":1,"visibility_layer":1,"z_index":0,"z_as_relative":true,"y_sort_enabled":false,"texture_filter":0,"texture_repeat":0,"material":Resource("res://addons/goolash/brush_stroke_material.tres"),"use_parent_material":false,"position":Vector2(0, 0),"rotation":0.0,"scale":Vector2(1, 1),"skew":0.0,"fit_margin":10.0,"clear_margin":10.0,"use_mipmaps":false,"script":Resource("res://addons/goolash/brush_stroke2d.gd"))
-, Object(CanvasGroup,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","visible":true,"modulate":Color(1, 1, 1, 1),"self_modulate":Color(0.803922, 0.521569, 0.247059, 1),"show_behind_parent":true,"top_level":false,"clip_children":0,"light_mask":1,"visibility_layer":1,"z_index":0,"z_as_relative":true,"y_sort_enabled":false,"texture_filter":0,"texture_repeat":0,"material":Resource("res://addons/goolash/brush_stroke_material.tres"),"use_parent_material":false,"position":Vector2(0, 0),"rotation":0.0,"scale":Vector2(1, 1),"skew":0.0,"fit_margin":10.0,"clear_margin":10.0,"use_mipmaps":false,"script":Resource("res://addons/goolash/brush_stroke2d.gd"))
-, Object(CanvasGroup,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","visible":true,"modulate":Color(1, 1, 1, 1),"self_modulate":Color(0.803922, 0.521569, 0.247059, 1),"show_behind_parent":true,"top_level":false,"clip_children":0,"light_mask":1,"visibility_layer":1,"z_index":0,"z_as_relative":true,"y_sort_enabled":false,"texture_filter":0,"texture_repeat":0,"material":Resource("res://addons/goolash/brush_stroke_material.tres"),"use_parent_material":false,"position":Vector2(0, 0),"rotation":0.0,"scale":Vector2(1, 1),"skew":0.0,"fit_margin":10.0,"clear_margin":10.0,"use_mipmaps":false,"script":Resource("res://addons/goolash/brush_stroke2d.gd"))
-, Object(CanvasGroup,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","visible":true,"modulate":Color(1, 1, 1, 1),"self_modulate":Color(0.803922, 0.521569, 0.247059, 1),"show_behind_parent":true,"top_level":false,"clip_children":0,"light_mask":1,"visibility_layer":1,"z_index":0,"z_as_relative":true,"y_sort_enabled":false,"texture_filter":0,"texture_repeat":0,"material":Resource("res://addons/goolash/brush_stroke_material.tres"),"use_parent_material":false,"position":Vector2(0, 0),"rotation":0.0,"scale":Vector2(1, 1),"skew":0.0,"fit_margin":10.0,"clear_margin":10.0,"use_mipmaps":false,"script":Resource("res://addons/goolash/brush_stroke2d.gd"))
-, Object(CanvasGroup,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","visible":true,"modulate":Color(1, 1, 1, 1),"self_modulate":Color(0.803922, 0.521569, 0.247059, 1),"show_behind_parent":true,"top_level":false,"clip_children":0,"light_mask":1,"visibility_layer":1,"z_index":0,"z_as_relative":true,"y_sort_enabled":false,"texture_filter":0,"texture_repeat":0,"material":Resource("res://addons/goolash/brush_stroke_material.tres"),"use_parent_material":false,"position":Vector2(0, 0),"rotation":0.0,"scale":Vector2(1, 1),"skew":0.0,"fit_margin":10.0,"clear_margin":10.0,"use_mipmaps":false,"script":Resource("res://addons/goolash/brush_stroke2d.gd"))
-],"physics_mode":1,"bounciness":0.7,"collision_layer":1,"collision_mask":1)
-,"layer_num":0)
-]
+loops = null
 
 [node name="Layer 1" type="Node2D" parent="BrushClip2D"]
 show_behind_parent = true
@@ -358,7 +565,7 @@ frame_count = 1
 [node name="Frame 0" type="Node2D" parent="BrushClip2D/Layer 1"]
 show_behind_parent = true
 script = ExtResource("3_iijxs")
-stroke_data = [SubResource("Resource_e1nee"), SubResource("Resource_ttu0s"), SubResource("Resource_k7o6w"), SubResource("Resource_ne6nu"), SubResource("Resource_02vaw"), SubResource("Resource_8u260"), SubResource("Resource_oovyl")]
+stroke_data = [SubResource("Resource_e1nee"), SubResource("Resource_ttu0s"), SubResource("Resource_k7o6w"), SubResource("Resource_ne6nu"), SubResource("Resource_02vaw"), SubResource("Resource_8u260"), SubResource("Resource_oovyl"), SubResource("Resource_ne1m8"), SubResource("Resource_l5tvw"), SubResource("Resource_jjops"), SubResource("Resource_sb5yn"), SubResource("Resource_pnndo"), SubResource("Resource_xufli"), SubResource("Resource_cv8w2"), SubResource("Resource_uq5n8"), SubResource("Resource_5kgvr"), SubResource("Resource_vhog2"), SubResource("Resource_iam45"), SubResource("Resource_cqw1v"), SubResource("Resource_nk2wx"), SubResource("Resource_akenp"), SubResource("Resource_b06gc"), SubResource("Resource_75mx8")]
 physics_mode = 1
 bounciness = 0.7
 
@@ -373,6 +580,6 @@ bounciness = 0.0
 [node name="Brush2D" type="Node2D" parent="."]
 show_behind_parent = true
 script = ExtResource("6_ibm72")
-stroke_data = [SubResource("Resource_xsqbd"), SubResource("Resource_7plt4"), SubResource("Resource_5ljst"), SubResource("Resource_qtdsm"), SubResource("Resource_lffnr"), SubResource("Resource_i6221"), SubResource("Resource_7a1ju"), SubResource("Resource_uoijb"), SubResource("Resource_xoqfk"), SubResource("Resource_hguyi"), SubResource("Resource_c7cs5"), SubResource("Resource_sdken"), SubResource("Resource_ubrdf"), SubResource("Resource_8homb")]
+stroke_data = [SubResource("Resource_xsqbd"), SubResource("Resource_7plt4"), SubResource("Resource_5ljst"), SubResource("Resource_qtdsm"), SubResource("Resource_lffnr"), SubResource("Resource_i6221"), SubResource("Resource_7a1ju"), SubResource("Resource_uoijb"), SubResource("Resource_xoqfk"), SubResource("Resource_hguyi"), SubResource("Resource_c7cs5"), SubResource("Resource_sdken"), SubResource("Resource_ubrdf"), SubResource("Resource_8homb"), SubResource("Resource_nc1y0"), SubResource("Resource_qfluj"), SubResource("Resource_owwfl"), SubResource("Resource_b2nql"), SubResource("Resource_w1exp"), SubResource("Resource_bx5nn"), SubResource("Resource_5tahp")]
 physics_mode = 2
 bounciness = 0.0
