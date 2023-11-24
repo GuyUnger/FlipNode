@@ -79,5 +79,5 @@ Navigating and editing timeline
 - [ ] Filling a hole removes strokes inside it
 - [ ] Holes in erasing shapes are ignored
 - [ ] Sometimes strokes dont properly merge
-- [ ] Sometimes mouse is hidden in places it shouldnt
+- [ ] Sometimes mouse is hidden
 - [ ] All times things break:(
