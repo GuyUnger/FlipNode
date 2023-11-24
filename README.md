@@ -18,8 +18,10 @@ Not yet implemented/planned features:
 - [ ] Selecting
 - [ ] Scaling/rotating selection
 - [ ] Layer transform tweening
-- [ ] Audio on frames
+
+Lower priority:
 - [ ] Scripts on frames
+- [ ] Audio on frames
 - [ ] Rigid bodies
 - [ ] Simpler way to enable physics bodies
 - [ ] 3D support?
