@@ -23,7 +23,6 @@ Lower priority:
 - [ ] Scripts on frames
 - [ ] Audio on frames
 - [ ] Rigid bodies
-- [ ] Simpler way to enable physics bodies
 - [ ] 3D support?
 - [ ] Soft bodies?
 
