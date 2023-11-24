@@ -2,6 +2,33 @@
 
 ## Vector paint and animation addon for Godot 4 
 
+*This plugin is in a very early state and should not be used for production*
+
 - Fast and easy drawing right inside the scene
 - Frame by frame animation
 - Great for prototyping
+
+
+Not yet implemented/planned features:
+- [ ] Rectangle tool
+- [ ] Oval tool
+- [ ] Shape tool
+- [ ] Allow filling holes between different colored stroke
+- [ ] Undo/redo
+- [ ] Selecting
+- [ ] Scaling/rotating selection
+- [ ] Layer transform tweening
+
+Lower priority:
+- [ ] Scripts on frames
+- [ ] Audio on frames
+- [ ] Rigid bodies
+- [ ] Simpler way to enable physics bodies
+- [ ] 3D support?
+- [ ] Soft bodies?
+
+Known issues:
+- [ ] Filling shapes removes parts of strokes inside it
+- [ ] Holes in eraser are still removed if it overlaps a stroke
+- [ ] Sometimes strokes dont properly merge
+- [ ] Mouse is sometimes hidden in places where it shouldnt
