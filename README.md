@@ -9,7 +9,7 @@
 - 🚀 Fast and easy drawing right inside your scene
 - ✍️ Frame by frame animation
 - 🧪 Great for prototyping
-- ⚽ Draw physics objects, e.g. quick level design
+- ⚽ Draw physics objects, for e.g. quick level design
 
 ## To-do
 ### 📝 Not yet implemented/planned features:
@@ -20,7 +20,6 @@
   - [ ] Copy/paste
 - [ ] Allow filling holes between different colored strokes
 - [ ] Layer tweening
-- [ ] Shape tool
 - [ ] Rigid bodies
 
 *Lower priority:*
