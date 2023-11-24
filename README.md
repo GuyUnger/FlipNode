@@ -70,6 +70,7 @@ Navigating and editing timeline
 - [ ] Decouple editor and drawing tools to make in game editing easy to implement
 - [ ] Soft bodies?
 - [ ] 3D support?
+- [ ] Editing multiple brushes with multi-select?
 
 ### 🪲 Known issues:
 - [ ] Filling shapes removes parts of strokes inside it
