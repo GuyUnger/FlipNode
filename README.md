@@ -13,7 +13,7 @@ Not yet implemented/planned features:
 - [ ] Rectangle tool
 - [ ] Oval tool
 - [ ] Shape tool
-- [ ] Allow filling holes between different colored stroke
+- [ ] Allow filling holes between different colored strokes
 - [ ] Undo/redo
 - [ ] Selecting
 - [ ] Scaling/rotating selection
