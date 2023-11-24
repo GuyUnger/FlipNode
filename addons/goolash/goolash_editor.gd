@@ -241,8 +241,6 @@ func _forward_canvas_gui_input(event: InputEvent) -> bool:
 	elif event is InputEventKey:
 		if event.is_pressed():
 			return _on_key_pressed(event)
-		else:
-			return _on_key_released(event)
 	return false
 
 
@@ -329,24 +327,12 @@ func _on_key_pressed(event: InputEventKey) -> bool:
 	return false
 
 
-func _on_key_released(event: InputEventKey) -> bool:
-	match event.keycode:
-		KEY_ALT:
-			return _on_input_key_alt_released()
-	return false
-
 
 func _on_input_key_alt_pressed() -> bool:
 	if current_tool == TOOL_PAINT or current_tool == TOOL_FILL:
 		current_tool_override = TOOL_EYEDROPPER
 		queue_redraw()
 	return false
-
-
-func _on_input_key_alt_released():
-	current_tool_override = -1
-	queue_redraw()
-	return true
 #endregion
 
 func _process(delta):
@@ -377,6 +363,10 @@ func _process(delta):
 			## this no work :(
 		else:
 			Input.set_default_cursor_shape(Input.CURSOR_ARROW)
+	
+	if current_tool_override == TOOL_EYEDROPPER and not Input.is_key_pressed(KEY_ALT):
+		current_tool_override = -1
+		queue_redraw()
 
 
 func _insert_frame():

@@ -10,7 +10,7 @@ signal edited
 	get:
 		return current_frame
 	set(value):
-		if loops:
+		if looping:
 			value %= _frame_count
 		else:
 			value = clamp(value, 0, _frame_count)
@@ -31,7 +31,7 @@ var total_frames: int:
 @export_range(0, 120) var fps_override := 0
 
 @export var auto_play := true
-@export var loops := true
+@export var looping := true
 @export var is_playing := false
 
 @export var labels: Dictionary

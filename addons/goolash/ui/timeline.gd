@@ -45,6 +45,7 @@ func load_brush_clip(brush_clip: BrushClip2D):
 		%LineEditFPS.text = str(brush_clip.fps_override)
 	
 	%ButtonAutoPlay.button_pressed = brush_clip.auto_play
+	%ButtonLoop.button_pressed = brush_clip.looping
 	
 	_clear_layers()
 	var is_editable = GoolashEditor.is_editable(brush_clip)
@@ -187,3 +188,11 @@ func _process(delta):
 		var to_frame = int(floor((get_local_mouse_position().x - tl_node.position.x + 1) / FRAME_WIDTH))
 		to_frame = clamp(to_frame, 0, brush_clip.total_frames - 1)
 		brush_clip.goto(to_frame)
+
+
+func _on_button_loop_toggled(toggled_on):
+	brush_clip.looping = toggled_on
+
+
+func _on_button_auto_play_toggled(toggled_on):
+	brush_clip.auto_play = toggled_on

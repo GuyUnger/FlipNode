@@ -1,10 +1,11 @@
-[gd_scene load_steps=10 format=3 uid="uid://83afmn7xmr1c"]
+[gd_scene load_steps=11 format=3 uid="uid://83afmn7xmr1c"]
 
 [ext_resource type="Texture2D" uid="uid://ba2hxmxea6m1a" path="res://addons/goolash/icons/PagePrevious.svg" id="1_mqbbs"]
 [ext_resource type="Texture2D" uid="uid://cy0je6d77bnw2" path="res://addons/goolash/icons/Play.svg" id="1_vtfin"]
 [ext_resource type="Script" path="res://addons/goolash/ui/timeline.gd" id="1_x5p0l"]
 [ext_resource type="Texture2D" uid="uid://ntomq1ouceco" path="res://addons/goolash/icons/PageNext.svg" id="3_w0qs8"]
 [ext_resource type="Texture2D" uid="uid://m5wq1j1x5deq" path="res://addons/goolash/icons/AutoPlay.svg" id="4_qdy44"]
+[ext_resource type="Texture2D" uid="uid://sp3bibddihdm" path="res://addons/goolash/icons/Loop.svg" id="6_7ikk7"]
 [ext_resource type="Texture2D" uid="uid://djjrjid7ltt80" path="res://addons/goolash/icons/Onion.svg" id="6_d6fgv"]
 [ext_resource type="Texture2D" uid="uid://cl88p0t1ojo5m" path="res://addons/goolash/icons/Add.svg" id="7_0x6bv"]
 
@@ -36,7 +37,6 @@ vertical_alignment = 1
 
 [node name="Timeline" type="VBoxContainer" parent="."]
 unique_name_in_owner = true
-visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -111,6 +111,16 @@ layout_mode = 2
 tooltip_text = "Toggle Autoplay"
 toggle_mode = true
 icon = ExtResource("4_qdy44")
+flat = true
+icon_alignment = 1
+
+[node name="ButtonLoop" type="Button" parent="Timeline/HBoxContainer/LayerOptionsContainer/LayerOptions"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 2
+tooltip_text = "Toggle Autoplay"
+toggle_mode = true
+icon = ExtResource("6_7ikk7")
 flat = true
 icon_alignment = 1
 
@@ -315,6 +325,8 @@ theme_override_constants/separation = 2
 [connection signal="pressed" from="Timeline/HBoxContainer/LayerOptionsContainer/LayerOptions/ButtonNextFrame" to="." method="_on_button_next_frame_pressed"]
 [connection signal="focus_exited" from="Timeline/HBoxContainer/LayerOptionsContainer/LayerOptions/LineEditFPS" to="." method="_on_line_edit_fps_focus_exited"]
 [connection signal="text_submitted" from="Timeline/HBoxContainer/LayerOptionsContainer/LayerOptions/LineEditFPS" to="." method="_on_line_edit_fps_text_submitted"]
+[connection signal="toggled" from="Timeline/HBoxContainer/LayerOptionsContainer/LayerOptions/ButtonAutoPlay" to="." method="_on_button_auto_play_toggled"]
+[connection signal="toggled" from="Timeline/HBoxContainer/LayerOptionsContainer/LayerOptions/ButtonLoop" to="." method="_on_button_loop_toggled"]
 [connection signal="toggled" from="Timeline/HBoxContainer/EditorOptions/ButtonOnion" to="." method="_on_button_onion_toggled"]
 [connection signal="focus_exited" from="Timeline/HBoxContainer/EditorOptions/LineEditOnionFrames" to="." method="_on_line_edit_onion_frames_focus_exited"]
 [connection signal="text_submitted" from="Timeline/HBoxContainer/EditorOptions/LineEditOnionFrames" to="." method="_on_line_edit_onion_frames_text_submitted"]
