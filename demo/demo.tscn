@@ -1,10 +1,9 @@
-[gd_scene load_steps=27 format=3 uid="uid://bgirhyd6vj5my"]
+[gd_scene load_steps=24 format=3 uid="uid://bgirhyd6vj5my"]
 
 [ext_resource type="Script" path="res://addons/goolash/brush_clip2d.gd" id="1_kilw2"]
 [ext_resource type="Script" path="res://addons/goolash/brush_layer2d.gd" id="2_omsrh"]
 [ext_resource type="Script" path="res://addons/goolash/brush_keyframe2d.gd" id="3_iijxs"]
 [ext_resource type="Script" path="res://addons/goolash/brush_stroke_data.gd" id="4_cmco8"]
-[ext_resource type="Script" path="res://addons/goolash/brush_body2d.gd" id="5_4ock4"]
 [ext_resource type="Script" path="res://addons/goolash/brush_sprite2d.gd" id="6_ibm72"]
 
 [sub_resource type="Curve2D" id="Curve2D_jcgwg"]
@@ -126,25 +125,19 @@ polygon_curve = SubResource("Curve2D_yu07f")
 holes = Array[PackedVector2Array]([PackedVector2Array(458.816, 291.336, 465.917, 294.115, 474.49, 302.022, 476.602, 307.12, 476.838, 313.551, 473.823, 321.74, 468.586, 326.977, 463.488, 329.088, 455.722, 329.324, 449.867, 327.671, 448.583, 328.322, 446.819, 327.077, 437.041, 320.172, 435.741, 317.542, 435.744, 312.241, 442.91, 294.999, 443.698, 294.999, 447.976, 292.141, 456.057, 291.064)])
 hole_curves = Array[Curve2D]([])
 
-[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_v86va"]
-bounce = 1.0
-
-[sub_resource type="CircleShape2D" id="CircleShape2D_kv2nj"]
-radius = 30.0
-
-[sub_resource type="Curve2D" id="Curve2D_wg7cr"]
+[sub_resource type="Curve2D" id="Curve2D_etgsg"]
 bake_interval = 20.0
 _data = {
-"points": PackedVector2Array(0, 0, 0, 0, 10.4115, -25.4512, 0, 0, 0, 0, 17.9799, -22.4171, 0, 0, 0, 0, 25.1355, -15.8499, 0, 0, 0, 0, 28.7131, -4.64369, 0, 0, 0, 0, 28.3162, 7.76154, 0, 0, 0, 0, 25.597, 14.9416, 0, 0, 0, 0, 20.9563, 19.979, 0, 0, 0, 0, 10.4031, 24.0873, 0, 0, 0, 0, 0.37891, 24.881, 0, 0, 0, 0, -6.67954, 19.7038, 0, 0, 0, 0, -8.20821, 12.4209, 0, 0, 0, 0, -6.87796, 9.20934, 0, 0, 0, 0, -2.87973, 5.92809, 0, 0, 0, 0, 6.84611, 6.45677, 0, 0, 0, 0, 10.3375, 5.05449, 0, 0, 0, 0, 11.2142, -0.24039, 0, 0, 0, 0, 10.0224, -5.15803, 0, 0, 0, 0, 2.23254, -7.08869, 0, 0, 0, 0, -0.81684, -13.1875, 0, 0, 0, 0, 2.72837, -22.2357, 0, 0, 0, 0, 9.85555, -25.506)
+"points": PackedVector2Array(0, 0, 0, 0, -137.273, -67.3, 0, 0, 0, 0, -125.511, -63.9205, 0, 0, 0, 0, -112.358, -62.4563, 0, 0, 0, 0, -104.035, -55.1031, 0, 0, 0, 0, -103.353, -51.6852, 0, 0, 0, 0, -104.849, -46.7434, 0, 0, 0, 0, -107.312, -44.2776, 0, 0, 0, 0, -112.262, -42.7762, 0, 0, 0, 0, -119.933, -46.1645, 0, 0, 0, 0, -130.818, -46.3109, 0, 0, 0, 0, -138.89, -49.5953, 0, 0, 0, 0, -156.054, -48.3317, 0, 0, 0, 0, -167.319, -41.948, 0, 0, 0, 0, -174.403, -40.0277, 0, 0, 0, 0, -179.064, -36.2406, 0, 0, 0, 0, -182.492, -11.7218, 0, 0, 0, 0, -179.11, 21.0788, 0, 0, 0, 0, -167.412, 52.6363, 0, 0, 0, 0, -150.709, 117.697, 0, 0, 0, 0, -143.873, 153.508, 0, 0, 0, 0, -142.103, 167.525, 0, 0, 0, 0, -142.064, 234.523, 0, 0, 0, 0, -140.356, 264.136, 0, 0, 0, 0, -137.16, 277.89, 0, 0, 0, 0, -135.311, 296.724, 0, 0, 0, 0, -135.307, 343.536, 0, 0, 0, 0, -142.165, 400.465, 0, 0, 0, 0, -142.205, 412.546, 0, 0, 0, 0, -148.875, 446.139, 0, 0, 0, 0, -148.933, 466.363, 0, 0, 0, 0, -152.721, 472.033, 0, 0, 0, 0, -157.67, 473.534, 0, 0, 0, 0, -161.08, 472.856, 0, 0, 0, 0, -165.078, 469.575, 0, 0, 0, 0, -166.579, 461.262, 0, 0, 0, 0, -166.509, 443.329, 0, 0, 0, 0, -159.723, 409.247, 0, 0, 0, 0, -156.317, 363.661, 0, 0, 0, 0, -152.999, 342.177, 0, 0, 0, 0, -153.124, 296.431, 0, 0, 0, 0, -158.168, 264.691, 0, 0, 0, 0, -159.783, 235.325, 0, 0, 0, 0, -159.822, 168.327, 0, 0, 0, 0, -168.182, 120.664, 0, 0, 0, 0, -173.217, 100.645, 0, 0, 0, 0, -184.852, 56.1642, 0, 0, 0, 0, -196.506, 24.7714, 0, 0, 0, 0, -200.215, -13.0039, 0, 0, 0, 0, -196.68, -41.6506, 0, 0, 0, 0, -189.19, -51.2642, 0, 0, 0, 0, -181.657, -56.3769, 0, 0, 0, 0, -174.573, -58.2972, 0, 0, 0, 0, -162.753, -64.9649, 0, 0, 0, 0, -150.952, -67.3213, 0, 0, 0, 0, -137.489, -67.3213)
 }
-point_count = 21
+point_count = 55
 
-[sub_resource type="Resource" id="Resource_qkbqg"]
+[sub_resource type="Resource" id="Resource_vb6sb"]
 script = ExtResource("4_cmco8")
 color = Color(0.803922, 0.521569, 0.247059, 1)
-polygon = PackedVector2Array(3.11815, -29.3791, 13.7048, -26.7872, 16.2878, -24.8677, 16.5035, -23.1588, 16.5234, -23.001, 17.9799, -22.4171, 25.1355, -15.8499, 28.7131, -4.64369, 28.3162, 7.76154, 25.597, 14.9416, 20.9563, 19.979, 20.3991, 20.196, 20.2269, 22.0622, 11.9796, 26.5108, 5.28469, 30.1221, -10.0852, 28.0032, -19.5338, 23.0402, -24.9387, 15.9743, -26.5936, 9.98067, -27.655, 8.78374, -29.6059, 2.5781, -29.2212, -6.6347, -25.2951, -16.2176, -18.6306, -24.677, -10.895, -28.2645, -6.50479, -28.4619, -5.91396, -28.8123, 3.11346, -29.3796)
-polygon_curve = SubResource("Curve2D_wg7cr")
-holes = Array[PackedVector2Array]([])
+polygon = PackedVector2Array(1061.69, -80.6045, 1064.16, -78.949, 1077.58, -79.0083, 1096.95, -79.0938, 1098.69, -78.9227, 1112.13, -76.734, 1121.17, -71.7709, 1125.29, -55.0055, 1129.4, -38.2402, 1129.4, -21.1854, 1129.4, -1.61107, 1129.4, 10.4291, 1129.4, 23.7774, 1129.4, 38.2885, 1129.4, 70.2179, 1129.4, 87.3454, 1129.4, 105.054, 1129.4, 123.199, 1129.4, 215.378, 1129.4, 233.087, 1129.4, 250.214, 1129.4, 358.672, 1128.49, 370.275, 1127.58, 381.878, 1127.6, 389.026, 1127.65, 404.752, 1127.7, 420.478, 1127.72, 427.626, 1125.92, 442.409, 1125.92, 456.339, 1125.91, 470.616, 1125.91, 486.983, 1125.91, 503.35, 1125.91, 517.628, 1125.91, 531.557, 1126.7, 539.56, 1128.45, 557.165, 1130.2, 574.77, 1130.99, 582.773, 1131.01, 592.167, 1131.02, 601.796, 1131.04, 612.834, 1131.05, 623.872, 1131.07, 633.501, 1131.08, 642.895, 1129.58, 647.845, 1127.12, 650.303, 1122.17, 651.804, 1108.72, 651.804, 1091.68, 650.958, 1074.64, 650.111, 1059.25, 648.515, 1043.48, 646.879, 1025.4, 645.003, 1007.33, 643.128, 991.556, 641.492, 976.171, 639.896, 959.668, 639.107, 943.164, 638.319, 936.766, 637.515, 922.689, 635.746, 908.613, 633.976, 902.215, 633.172, 889.183, 633.183, 875.825, 633.194, 860.512, 633.207, 845.2, 633.219, 831.842, 633.231, 818.81, 633.241, 811.559, 633.605, 792.443, 634.563, 779.671, 635.203, 765.416, 635.918, 750.172, 636.682, 734.434, 637.471, 718.696, 638.26, 703.452, 639.024, 689.198, 639.739, 676.426, 640.379, 657.31, 641.338, 650.058, 641.701, 643.01, 641.844, 624.428, 642.22, 612.014, 642.472, 598.158, 642.753, 583.34, 643.053, 568.042, 643.363, 552.744, 643.673, 537.927, 643.973, 524.071, 644.254, 511.656, 644.505, 493.074, 644.881, 486.026, 645.024, 476.149, 646.077, 466.025, 647.156, 454.42, 648.393, 442.815, 649.629, 432.691, 650.708, 422.814, 651.761, 412.534, 653.843, 401.997, 655.977, 389.919, 658.423, 377.84, 660.87, 367.303, 663.004, 357.024, 665.086, 350.347, 665.891, 335.658, 667.663, 320.97, 669.435, 314.293, 670.241, 296.526, 671.934, 278.759, 673.627, 269.089, 673.889, 259.177, 674.157, 247.815, 674.464, 236.453, 674.771, 226.541, 675.039, 216.871, 675.3, 208.656, 676.091, 190.582, 677.832, 172.507, 679.573, 164.292, 680.364, 150.387, 680.356, 136.134, 680.349, 119.796, 680.34, 103.458, 680.331, 89.2049, 680.324, 75.2999, 680.316, 67.9033, 680.85, 51.6307, 682.026, 35.3581, 683.201, 27.9615, 683.736, 19.9129, 683.737, 10.6752, 683.738, -1.30626, 683.739, -15.4828, 683.741, -31.3057, 683.743, -48.2261, 683.745, -65.6953, 683.747, -83.1645, 683.749, -100.085, 683.751, -115.908, 683.753, -130.084, 683.755, -142.066, 683.756, -151.304, 683.757, -159.352, 683.758, -174.516, 681.15, -189.681, 678.542, -198.714, 673.072, -200.215, 668.122, -200.204, 659.014, -200.193, 649.677, -200.18, 638.975, -200.167, 628.272, -200.156, 618.936, -200.145, 609.827, -197.96, 602.947, -193.154, 587.81, -188.347, 572.674, -186.162, 565.793, -184.071, 556.629, -181.928, 547.235, -179.47, 536.467, -177.013, 525.699, -174.87, 516.306, -172.779, 507.141, -171.79, 500.282, -169.613, 485.192, -167.437, 470.102, -166.448, 463.242, -166.452, 461.969, -166.579, 461.262, -166.51, 443.362, -166.514, 442.071, -166.559, 427.515, -166.579, 420.899, -165.769, 412.006, -163.987, 392.441, -162.205, 372.876, -161.395, 363.983, -161.464, 350.396, -161.534, 336.809, -160.678, 324.672, -159.822, 312.535, -157.245, 299.578, -154.676, 286.663, -155.646, 280.561, -158.168, 264.691, -158.976, 250.008, -159.783, 235.325, -159.789, 224.856, -159.796, 214.126, -159.803, 201.826, -159.81, 189.525, -159.816, 178.795, -159.822, 168.327, -161.128, 160.879, -164.002, 144.495, -166.875, 128.111, -168.182, 120.664, -170.699, 110.655, -173.217, 100.645, -175.035, 93.6948, -179.034, 78.4045, -183.034, 63.1143, -184.852, 56.1642, -190.679, 40.4678, -196.506, 24.7714, -198.361, 5.88376, -200.215, -13.0039, -198.448, -27.3272, -196.68, -41.6506, -189.19, -51.2642, -181.657, -56.3769, -174.573, -58.2972, -162.753, -64.9649, -150.952, -67.3213, -137.489, -67.3213, -137.273, -67.3, -125.511, -63.9205, -117.584, -63.0381, -116.222, -65.3075, -110.58, -67.3213, -110.138, -67.2778, -104.281, -64.7119, -101.713, -59.2723, -103.48, -40.2939, -103.48, -27.6843, -103.48, -15.0748, -103.202, -7.62554, -102.591, 8.76272, -101.979, 25.151, -101.701, 32.6002, -98.4582, 40.8638, -97.5492, 58.1428, -96.6401, 75.4218, -94.9546, 82.4252, -94.9709, 95.4517, -94.9873, 108.478, -92.4779, 119.497, -89.9686, 130.516, -89.9693, 143.464, -89.97, 156.412, -88.2393, 161.271, -88.2169, 173.684, -89.021, 179.888, -90.7903, 193.535, -92.5594, 207.182, -93.3636, 213.385, -93.3609, 226.234, -93.3582, 239.405, -93.355, 254.502, -93.3519, 269.6, -93.3491, 282.77, -93.3465, 295.619, -91.6028, 300.86, -91.5987, 314.222, -89.9092, 321.24, -89.9207, 335.106, -89.9325, 349.318, -89.946, 365.61, -89.9595, 381.903, -89.9713, 396.115, -89.9828, 409.981, -88.2393, 415.222, -88.2358, 430.824, -88.2322, 446.817, -88.2281, 465.15, -88.224, 483.484, -88.2204, 499.476, -88.2169, 515.079, -89.9267, 522.928, -89.9828, 541.161, -89.6303, 543.245, -82.986, 547.137, -81.4897, 552.088, -81.8169, 553.557, -75.5889, 554.993, -60.7791, 558.407, -51.6688, 558.407, -41.2126, 558.408, -27.6506, 558.409, -11.6039, 558.41, 6.3062, 558.411, 25.4587, 558.412, 45.2323, 558.413, 65.0059, 558.414, 84.1583, 558.415, 102.068, 558.416, 118.115, 558.417, 131.677, 558.417, 142.133, 558.418, 151.244, 558.418, 161.814, 555.113, 171.933, 554.187, 182.052, 553.26, 240.915, 553.26, 248.671, 555.043, 258.287, 555.044, 269.324, 555.045, 283.639, 555.045, 300.576, 555.046, 319.481, 555.047, 329.466, 555.048, 339.697, 555.048, 350.092, 555.049, 360.568, 555.049, 371.045, 555.05, 381.44, 555.05, 391.671, 555.051, 401.656, 555.051, 420.56, 555.052, 437.498, 555.053, 451.813, 555.054, 462.85, 555.054, 472.466, 555.055, 480.779, 553.283, 489.25, 553.031, 507.886, 552.476, 526.523, 551.921, 534.994, 551.669, 540.274, 549.897, 549.101, 549.635, 568.522, 549.06, 587.942, 548.484, 596.77, 548.223, 603.749, 546.544, 610.339, 546.542, 624.838, 546.54, 639.338, 546.538, 645.928, 546.537, 654.626, 544.851, 660.336, 544.779, 675.387, 544.588, 685.444, 544.461, 696.668, 544.319, 708.67, 544.167, 721.062, 544.01, 733.453, 543.854, 745.456, 543.702, 756.68, 543.56, 766.736, 543.432, 781.788, 543.242, 787.497, 543.169, 800.752, 544.995, 806.308, 545.067, 820.956, 545.255, 830.743, 545.381, 841.666, 545.522, 853.347, 545.672, 865.406, 545.828, 877.466, 545.983, 889.146, 546.134, 900.07, 546.274, 909.856, 546.4, 924.504, 546.589, 930.06, 546.66, 948.532, 544.951, 967.004, 543.241, 971.863, 541.51, 985.958, 541.488, 985.969, 541.49, 995.893, 543.304, 1005.12, 543.31, 1014.58, 543.315, 1025.43, 543.322, 1036.27, 543.329, 1045.73, 543.335, 1047.25, 543.336, 1045.99, 540.306, 1048.55, 524.406, 1051.1, 508.506, 1051.09, 495.614, 1051.08, 482.722, 1049.38, 470.31, 1047.68, 457.898, 1047.68, 425.944, 1049.4, 420.538, 1049.53, 400.661, 1052.78, 391.741, 1053.05, 382.716, 1053.65, 362.861, 1054.24, 343.006, 1054.52, 333.981, 1052.74, 323.986, 1052.75, 313.383, 1052.76, 302.78, 1049.36, 293.083, 1049.11, 277.875, 1048.85, 262.286, 1048.55, 244.417, 1048.26, 226.547, 1048, 210.959, 1047.75, 195.751, 1045.99, 190.493, 1046.01, 183.79, 1046.04, 169.043, 1046.06, 154.297, 1046.08, 147.593, 1044.31, 136.685, 1044.31, 81.1765, 1046.04, 75.7699, 1046.89, 56.0529, 1047.74, 36.3359, 1051.1, 25.8316, 1051.09, 10.5663, 1051.08, -5.0807, 1051.07, -23.0175, 1051.06, -40.9543, 1051.05, -56.6013, 1051.04, -70.1814, 1051.04, -70.1849, 1051.04, -70.1883, 1051.04, -71.8667, 1053.65, -78.1663, 1059.95, -80.7757)
+polygon_curve = SubResource("Curve2D_etgsg")
+holes = Array[PackedVector2Array]([PackedVector2Array(1065.45, 427.987, 1065.47, 441.195, 1065.49, 454.403, 1067, 457.842, 1067.12, 474.098, 1067.92, 471.507, 1067.67, 463.328, 1067.13, 445.334, 1066.59, 427.34, 1066.52, 424.982)])
 hole_curves = Array[Curve2D]([])
 
 [node name="Node2D" type="Node2D"]
@@ -159,7 +152,7 @@ layers = [Object(Node2D,"_import_path":NodePath(""),"unique_name_in_owner":false
 , Object(CanvasGroup,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","visible":true,"modulate":Color(1, 1, 1, 1),"self_modulate":Color(0.803922, 0.521569, 0.247059, 1),"show_behind_parent":true,"top_level":false,"clip_children":0,"light_mask":1,"visibility_layer":1,"z_index":0,"z_as_relative":true,"y_sort_enabled":false,"texture_filter":0,"texture_repeat":0,"material":Resource("res://addons/goolash/brush_stroke_material.tres"),"use_parent_material":false,"position":Vector2(0, 0),"rotation":0.0,"scale":Vector2(1, 1),"skew":0.0,"fit_margin":10.0,"clear_margin":10.0,"use_mipmaps":false,"script":Resource("res://addons/goolash/brush_stroke2d.gd"))
 , Object(CanvasGroup,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","visible":true,"modulate":Color(1, 1, 1, 1),"self_modulate":Color(0.803922, 0.521569, 0.247059, 1),"show_behind_parent":true,"top_level":false,"clip_children":0,"light_mask":1,"visibility_layer":1,"z_index":0,"z_as_relative":true,"y_sort_enabled":false,"texture_filter":0,"texture_repeat":0,"material":Resource("res://addons/goolash/brush_stroke_material.tres"),"use_parent_material":false,"position":Vector2(0, 0),"rotation":0.0,"scale":Vector2(1, 1),"skew":0.0,"fit_margin":10.0,"clear_margin":10.0,"use_mipmaps":false,"script":Resource("res://addons/goolash/brush_stroke2d.gd"))
 , Object(CanvasGroup,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","visible":true,"modulate":Color(1, 1, 1, 1),"self_modulate":Color(0.803922, 0.521569, 0.247059, 1),"show_behind_parent":true,"top_level":false,"clip_children":0,"light_mask":1,"visibility_layer":1,"z_index":0,"z_as_relative":true,"y_sort_enabled":false,"texture_filter":0,"texture_repeat":0,"material":Resource("res://addons/goolash/brush_stroke_material.tres"),"use_parent_material":false,"position":Vector2(0, 0),"rotation":0.0,"scale":Vector2(1, 1),"skew":0.0,"fit_margin":10.0,"clear_margin":10.0,"use_mipmaps":false,"script":Resource("res://addons/goolash/brush_stroke2d.gd"))
-])
+],"physics_mode":2)
 ],"current_visible_frame":Object(Node2D,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","visible":true,"modulate":Color(1, 1, 1, 1),"self_modulate":Color(1, 1, 1, 1),"show_behind_parent":true,"top_level":false,"clip_children":0,"light_mask":1,"visibility_layer":1,"z_index":0,"z_as_relative":true,"y_sort_enabled":false,"texture_filter":0,"texture_repeat":0,"material":null,"use_parent_material":false,"position":Vector2(0, 0),"rotation":0.0,"scale":Vector2(1, 1),"skew":0.0,"script":ExtResource("3_iijxs"),"frame_num":0,"frame_end_num":0,"label":"","tweening":false,"key_transform":Transform2D(1, 0, 0, 1, 0, 0),"stroke_data":[SubResource("Resource_e1nee"), SubResource("Resource_ttu0s"), SubResource("Resource_k7o6w"), SubResource("Resource_ne6nu"), SubResource("Resource_02vaw"), SubResource("Resource_8u260"), SubResource("Resource_oovyl")],"strokes":[Object(CanvasGroup,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","visible":true,"modulate":Color(1, 1, 1, 1),"self_modulate":Color(0.803922, 0.521569, 0.247059, 1),"show_behind_parent":true,"top_level":false,"clip_children":0,"light_mask":1,"visibility_layer":1,"z_index":0,"z_as_relative":true,"y_sort_enabled":false,"texture_filter":0,"texture_repeat":0,"material":Resource("res://addons/goolash/brush_stroke_material.tres"),"use_parent_material":false,"position":Vector2(0, 0),"rotation":0.0,"scale":Vector2(1, 1),"skew":0.0,"fit_margin":10.0,"clear_margin":10.0,"use_mipmaps":false,"script":Resource("res://addons/goolash/brush_stroke2d.gd"))
 , Object(CanvasGroup,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","visible":true,"modulate":Color(1, 1, 1, 1),"self_modulate":Color(0.803922, 0.521569, 0.247059, 1),"show_behind_parent":true,"top_level":false,"clip_children":0,"light_mask":1,"visibility_layer":1,"z_index":0,"z_as_relative":true,"y_sort_enabled":false,"texture_filter":0,"texture_repeat":0,"material":Resource("res://addons/goolash/brush_stroke_material.tres"),"use_parent_material":false,"position":Vector2(0, 0),"rotation":0.0,"scale":Vector2(1, 1),"skew":0.0,"fit_margin":10.0,"clear_margin":10.0,"use_mipmaps":false,"script":Resource("res://addons/goolash/brush_stroke2d.gd"))
 , Object(CanvasGroup,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","visible":true,"modulate":Color(1, 1, 1, 1),"self_modulate":Color(0.803922, 0.521569, 0.247059, 1),"show_behind_parent":true,"top_level":false,"clip_children":0,"light_mask":1,"visibility_layer":1,"z_index":0,"z_as_relative":true,"y_sort_enabled":false,"texture_filter":0,"texture_repeat":0,"material":Resource("res://addons/goolash/brush_stroke_material.tres"),"use_parent_material":false,"position":Vector2(0, 0),"rotation":0.0,"scale":Vector2(1, 1),"skew":0.0,"fit_margin":10.0,"clear_margin":10.0,"use_mipmaps":false,"script":Resource("res://addons/goolash/brush_stroke2d.gd"))
@@ -167,7 +160,7 @@ layers = [Object(Node2D,"_import_path":NodePath(""),"unique_name_in_owner":false
 , Object(CanvasGroup,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","visible":true,"modulate":Color(1, 1, 1, 1),"self_modulate":Color(0.803922, 0.521569, 0.247059, 1),"show_behind_parent":true,"top_level":false,"clip_children":0,"light_mask":1,"visibility_layer":1,"z_index":0,"z_as_relative":true,"y_sort_enabled":false,"texture_filter":0,"texture_repeat":0,"material":Resource("res://addons/goolash/brush_stroke_material.tres"),"use_parent_material":false,"position":Vector2(0, 0),"rotation":0.0,"scale":Vector2(1, 1),"skew":0.0,"fit_margin":10.0,"clear_margin":10.0,"use_mipmaps":false,"script":Resource("res://addons/goolash/brush_stroke2d.gd"))
 , Object(CanvasGroup,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","visible":true,"modulate":Color(1, 1, 1, 1),"self_modulate":Color(0.803922, 0.521569, 0.247059, 1),"show_behind_parent":true,"top_level":false,"clip_children":0,"light_mask":1,"visibility_layer":1,"z_index":0,"z_as_relative":true,"y_sort_enabled":false,"texture_filter":0,"texture_repeat":0,"material":Resource("res://addons/goolash/brush_stroke_material.tres"),"use_parent_material":false,"position":Vector2(0, 0),"rotation":0.0,"scale":Vector2(1, 1),"skew":0.0,"fit_margin":10.0,"clear_margin":10.0,"use_mipmaps":false,"script":Resource("res://addons/goolash/brush_stroke2d.gd"))
 , Object(CanvasGroup,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","visible":true,"modulate":Color(1, 1, 1, 1),"self_modulate":Color(0.803922, 0.521569, 0.247059, 1),"show_behind_parent":true,"top_level":false,"clip_children":0,"light_mask":1,"visibility_layer":1,"z_index":0,"z_as_relative":true,"y_sort_enabled":false,"texture_filter":0,"texture_repeat":0,"material":Resource("res://addons/goolash/brush_stroke_material.tres"),"use_parent_material":false,"position":Vector2(0, 0),"rotation":0.0,"scale":Vector2(1, 1),"skew":0.0,"fit_margin":10.0,"clear_margin":10.0,"use_mipmaps":false,"script":Resource("res://addons/goolash/brush_stroke2d.gd"))
-])
+],"physics_mode":2)
 ,"layer_num":0)
 ]
 
@@ -180,54 +173,11 @@ frame_count = 1
 show_behind_parent = true
 script = ExtResource("3_iijxs")
 stroke_data = [SubResource("Resource_e1nee"), SubResource("Resource_ttu0s"), SubResource("Resource_k7o6w"), SubResource("Resource_ne6nu"), SubResource("Resource_02vaw"), SubResource("Resource_8u260"), SubResource("Resource_oovyl")]
+physics_mode = 2
 
-[node name="StaticBody2D" type="StaticBody2D" parent="BrushClip2D/Layer 1/Frame 0"]
-script = ExtResource("5_4ock4")
-
-[node name="RigidBody2D" type="RigidBody2D" parent="."]
-position = Vector2(157, 40)
-physics_material_override = SubResource("PhysicsMaterial_v86va")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="RigidBody2D"]
-shape = SubResource("CircleShape2D_kv2nj")
-
-[node name="BrushSprite2D" type="Node2D" parent="RigidBody2D"]
+[node name="BrushSprite2D2" type="Node2D" parent="."]
 show_behind_parent = true
+position = Vector2(93, 87)
 script = ExtResource("6_ibm72")
-stroke_data = [SubResource("Resource_qkbqg")]
-
-[node name="RigidBody2D2" type="RigidBody2D" parent="."]
-position = Vector2(300, 66)
-physics_material_override = SubResource("PhysicsMaterial_v86va")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="RigidBody2D2"]
-shape = SubResource("CircleShape2D_kv2nj")
-
-[node name="BrushSprite2D" type="Node2D" parent="RigidBody2D2"]
-show_behind_parent = true
-script = ExtResource("6_ibm72")
-stroke_data = [SubResource("Resource_qkbqg")]
-
-[node name="RigidBody2D3" type="RigidBody2D" parent="."]
-position = Vector2(665, 51)
-physics_material_override = SubResource("PhysicsMaterial_v86va")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="RigidBody2D3"]
-shape = SubResource("CircleShape2D_kv2nj")
-
-[node name="BrushSprite2D" type="Node2D" parent="RigidBody2D3"]
-show_behind_parent = true
-script = ExtResource("6_ibm72")
-stroke_data = [SubResource("Resource_qkbqg")]
-
-[node name="RigidBody2D4" type="RigidBody2D" parent="."]
-position = Vector2(889, 86)
-physics_material_override = SubResource("PhysicsMaterial_v86va")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="RigidBody2D4"]
-shape = SubResource("CircleShape2D_kv2nj")
-
-[node name="BrushSprite2D" type="Node2D" parent="RigidBody2D4"]
-show_behind_parent = true
-script = ExtResource("6_ibm72")
-stroke_data = [SubResource("Resource_qkbqg")]
+stroke_data = [SubResource("Resource_vb6sb")]
+physics_mode = 1

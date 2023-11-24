@@ -229,11 +229,11 @@ func _is_point_inside_hole(point: Vector2) -> bool:
 
 
 func optimize(tolerance := 1.0) -> void:
-	polygon_curve = polygon_to_curve(_douglas_peucker(polygon, tolerance), tolerance)
+	polygon_curve = polygon_to_curve(GoolashEditor.douglas_peucker(polygon, tolerance), tolerance)
 	polygon = polygon_curve.get_baked_points()
 	hole_curves = []
 	for i in holes.size():
-		var hole_curve = polygon_to_curve(_douglas_peucker(holes[i]), tolerance)
+		var hole_curve = polygon_to_curve(GoolashEditor.douglas_peucker(holes[i]), tolerance)
 		hole_curves.push_back(hole_curve)
 		holes[i] = hole_curve.get_baked_points()
 
@@ -242,7 +242,7 @@ func create_curves():
 	polygon_curve = polygon_to_curve(polygon, 1.0)
 	hole_curves = []
 	for i in holes.size():
-		var hole_curve = polygon_to_curve(_douglas_peucker(holes[i]), 1.0)
+		var hole_curve = polygon_to_curve(GoolashEditor.douglas_peucker(holes[i]), 1.0)
 		hole_curves.push_back(hole_curve)
 
 
@@ -252,54 +252,6 @@ func polygon_to_curve(polygon: PackedVector2Array, bake_interval: float) -> Curv
 	for p in polygon:
 		curve.add_point(p)
 	return curve
-
-
-func _douglas_peucker(points: PackedVector2Array, tolerance := 1.0) -> PackedVector2Array:
-	if points.size() < 3:
-		return points
-	
-	## Find the point with the maximum distance from the line between the first and last point
-	var dmax := 0.0
-	var index := 0
-	for i in range(1, points.size() - 1):
-		var d := 0.0
-		var point = points[i]
-		var point1 = points[0]
-		var point2 = points[points.size() - 1]
-		## Calculate the perpendicular distance between point and line segment point1-point2 
-		var dx = point2.x - point1.x
-		var dy = point2.y - point1.y
-		if dx == 0 and dy == 0:
-			## Point1 and point2 are the same point
-			d = point1.distance_to(point)
-		else:
-			var t = ((point.x - point1.x) * dx + (point.y - point1.y) * dy) / (dx ** 2 + dy ** 2)
-			if t < 0.0:
-				## Point is beyond the 'left' end of the segment
-				d = point.distance_to(point1)
-			elif t > 1:
-				### Point is beyond the 'right' end of the segment
-				d = point.distance_to(point2)
-			else:
-				## Point is within the segment
-				var point_t = Vector2(
-						point1.x + t * dx,
-						point1.y + t * dy
-					)
-				d = point.distance_to(point_t)
-		
-		if d > dmax:
-			index = i
-			dmax = d
-	
-	## If the maximum distance is greater than the tolerance, recursively simplify
-	if dmax > tolerance:
-		var results1 = _douglas_peucker(points.slice(0, index+1), tolerance)
-		var results2 = _douglas_peucker(points.slice(index), tolerance)
-		return results1 + results2.slice(1)
-	else:
-		return PackedVector2Array([points[0], points[points.size() - 1]])
-
 
 func is_polygon_valid(polygon):
 	if polygon.size() > 16:
