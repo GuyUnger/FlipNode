@@ -11,23 +11,25 @@
 - ⚽ Draw physics objects, for e.g. quick level design
 
 
-# How to use
+# Shortcuts and how to use
 
-## Drawing Tools
-Use [LMB] to draw and [RMB] to erase
+Use <kbd>LMB</kbd> to draw and <kbd>RMB</kbd> to erase
 
-[ALT] for quick color picking
-- [Q] 🖱️ Select
+- 🖱️ **Select** <kbd>Q</kbd>
   - Click and drag strokes to move them
   - Click and drag stroke edges to warp them
-- [B] 🖌️ Paint brush
-- [O] ⚪ Oval brush
-   - [ALT] Draw from center
-   - [SHIFT] Uniform circles
-- [R] ⬜ Rectangle brush
-   - [ALT] Draw from center
-   - [SHIFT] Uniform squares
-- [G] 🪣 Fill bucket
+- 🖌️ **Paint brush** <kbd>B</kbd>
+- ⚪ **Oval brush** <kbd>O</kbd>
+   - Draw from center <kbd>ALT</kbd>
+   - Uniform circles <kbd>SHIFT</kbd>
+- ⬜ **Rectangle brush** <kbd>R</kbd>
+   - Draw from center <kbd>ALT</kbd>
+   - Uniform squares <kbd>SHIFT</kbd>
+- 🪣 **Fill bucket** <kbd>G</kbd>
+
+Hold <kbd>ALT</kbd> for quick color picking
+
+<kbd>[</kbd> and <kbd>]</kbd> to shrink/grow brush size
 
 ## Brush2D
 ### For simple drawings and physics objects.
@@ -36,28 +38,28 @@ You can setup the physics mode in the inspector
 
 ## BrushClip2D
 ### For animations. Has layers, frame scripts and audio.
-Adds children for all layers and frames. These can all be accessed through the timeline, but are exposed so you can add your own nodes to frames.
+Creates nodes for all layers and frames. These can all be accessed through the timeline, but are exposed so you can add your own nodes to frames.
 
 ### Timeline
-- Set a custom fps for this object, if no value is input it will default to the project value
+Here you can:
+- Set a custom `fps` for this BrushClip, if left empty it will use the project default value
 - Enable onion skinning to see next/previous frames
 - Add/delete layers
 
 Navigating and editing timeline
-- [A] ◀️ Previous frame
-- [D] ▶️ Next frame
-- [S] ⏯️ Play/pause
-- [5] ⬜ Insert frame
-- [SHIFT+5] ❌ Erase frame
-- [6] ⚪ Insert keyframe
-- [SHIFT+6] ❌ Remove keyframe
-- [7] ⚫ Insert blank keyframe
+- ⏯️ Play/pause <kbd>S</kbd>
+- ◀️ Previous frame <kbd>A</kbd>
+- ▶️ Next frame <kbd>D</kbd>
+- ⬜ Insert frame <kbd>5</kbd>
+- ❌ Erase frame <kbd>SHIFT+5</kbd>
+- ⚪ Insert keyframe <kbd>6</kbd>
+- ❌ Remove keyframe<kbd>SHIFT+6</kbd>
+- ⚫ Insert blank keyframe <kbd>7</kbd> 
 
-*The [5] and [SHIFT+5] shortcuts conflict with godot shortcuts, but these are so useless i recommend clearing the godot ones*
+*The <kbd>5</kbd> and <kbd>SHIFT+5</kbd> shortcuts conflict with godot shortcuts, but these are so useless i recommend clearing the godot ones*
 
 ## To-do
 ### 📝 Not yet implemented/planned features:
-- [ ] Undo/redo
 - [ ] Selections
   - [ ] Transform
   - [ ] Clear
