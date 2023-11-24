@@ -120,7 +120,7 @@ func _generate_rigid_body():
 		
 		var stroke = BrushStroke2D.instantiate()
 		rigidbody.add_child(stroke)
-		stroke.draw(BrushStrokeData.new(polygon))
+		stroke.draw(BrushStrokeData.new(polygon, [], stroke_data[0].color))
 
 func get_islands():
 	var islands := []
@@ -143,4 +143,5 @@ func get_islands():
 	return islands
 
 func _draw():
-	GoolashEditor.editor._forward_draw_brush(self)
+	if Engine.is_editor_hint():
+		GoolashEditor.editor._forward_draw_brush(self)

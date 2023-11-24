@@ -476,6 +476,8 @@ func _action_start(mouse_position, alt):
 					hud._update_color_picker_color()
 		TOOL_OVAL:
 			action_oval_start(mouse_position)
+		TOOL_RECT:
+			action_rect_start(mouse_position)
 
 
 func current_action_complete(mouse_position):
@@ -489,26 +491,23 @@ func current_action_complete(mouse_position):
 			action_move_complete()
 		ACTION_OVAL:
 			action_oval_complete(mouse_position)
+		ACTION_RECT:
+			action_rect_complete(mouse_position)
 	_current_action = ACTION_NONE
 
-
-#func _select_frame(frame: BrushKeyframe2D):
-	#_selected_frame = frame
-	#
-	#if frame.frame_num == editing_brush.current_frame:
-		#return
-	#
-	#editing_brush.goto_frame(frame.frame_num)
 
 func _forward_draw_brush(brush):
 	match _current_action:
 		ACTION_OVAL:
 			action_oval_draw(brush)
+		ACTION_RECT:
+			action_rect_draw(brush)
 
 
 func _forward_draw_hud():
 	if allow_custom_cursor and allow_hide_cursor:
 		_draw_custom_cursor()
+
 
 func _draw_custom_cursor():
 	if not _get_editing_brush():
@@ -539,16 +538,10 @@ func _draw_custom_cursor():
 				if stroke.is_point_inside(cursor_position):
 					hud.draw_circle(cursor_position, preview_size, stroke.color)
 					_draw_circle_outline(hud, cursor_position, preview_size, Color.WHITE)
-				else:
-					pass
-					#_draw_circle_outline(target, mouse_position, preview_size * 0.7, Color(1.0, 1.0, 1.0, 0.2))
 				hud.draw_texture(TextureEyedropper, cursor_position + Vector2(-8, -16))
 		TOOL_FILL:
 			hud.draw_texture(TextureFill, cursor_position)
-	
-	#match _current_action:
-		#ACTION_OVAL:
-			#_draw_action_oval()
+
 
 func _draw_circle_outline(target, draw_position: Vector2, size: float, color: Color = Color.WHITE, width = 0.5, striped := false):
 	var point_count := 36
@@ -835,12 +828,14 @@ func _create_polygon_circle(start_position: Vector2, end_position: Vector2, size
 		brush_polygon.push_back(end_position + Vector2.DOWN.rotated(angle + PI + i / points * PI) * size)
 	return PackedVector2Array(brush_polygon)
 
+
 ## ACTION OVAL
 
 func action_oval_start(action_position):
 	_current_action = ACTION_OVAL
 	
 	_action_position_previous = action_position
+
 
 func action_oval_draw(brush):
 	var polygon = get_oval_tool_shape(
@@ -851,6 +846,23 @@ func action_oval_draw(brush):
 			0.0
 	)
 	brush.draw_polygon(polygon, [Color.WHITE if _action_alt else current_color])
+
+
+func action_oval_complete(action_position):
+	var brush = _get_editing_brush()
+	var polygon = get_oval_tool_shape(
+			_action_position_previous,
+			brush.get_local_mouse_position(),
+			Input.is_key_pressed(KEY_SHIFT),
+			Input.is_key_pressed(KEY_ALT)
+	)
+	var stroke := BrushStrokeData.new(polygon, [], current_color)
+	
+	if _action_alt:
+		subtract_stroke(stroke)
+	else:
+		merge_stroke(stroke)
+
 
 func get_oval_tool_shape(from: Vector2, to: Vector2, centered: bool, equal: bool, noise := 0.03):
 	var center: Vector2
@@ -869,27 +881,6 @@ func get_oval_tool_shape(from: Vector2, to: Vector2, centered: bool, equal: bool
 	return create_oval_polygon(center, size, noise)
 
 
-func action_oval_complete(action_position):
-	var brush = _get_editing_brush()
-	var polygon = get_oval_tool_shape(
-			_action_position_previous,
-			brush.get_local_mouse_position(),
-			Input.is_key_pressed(KEY_SHIFT),
-			Input.is_key_pressed(KEY_ALT)
-	)
-	var stroke := BrushStrokeData.new(polygon, [], current_color)
-	
-	if _action_alt:
-		subtract_stroke(stroke)
-	else:
-		merge_stroke(stroke)
-	#brush.add_stroke(stroke)
-	#brush.draw()
-	
-	#brush.edited.emit()
-	#if editing_brush is BrushClip2D:
-		#editing_brush.edited.emit()
-
 func create_oval_polygon(center: Vector2, size: Vector2, noise := 0.05) -> PackedVector2Array:
 	var polygon := []
 	if noise > 0.0:
@@ -901,10 +892,83 @@ func create_oval_polygon(center: Vector2, size: Vector2, noise := 0.05) -> Packe
 			polygon.push_back(center + Vector2.from_angle(i / 36.0 * TAU) * size)
 	return PackedVector2Array(polygon)
 
+## ACTION RECT
+
+func action_rect_start(action_position):
+	_current_action = ACTION_RECT
+	
+	_action_position_previous = action_position
+
+func action_rect_draw(brush):
+	var polygon = get_rect_tool_shape(
+			_action_position_previous,
+			brush.get_local_mouse_position(),
+			Input.is_key_pressed(KEY_SHIFT),
+			Input.is_key_pressed(KEY_ALT),
+			0.0
+	)
+	brush.draw_polygon(polygon, [Color.WHITE if _action_alt else current_color])
+
+
+func action_rect_complete(action_position):
+	var brush = _get_editing_brush()
+	var polygon = get_rect_tool_shape(
+			_action_position_previous,
+			brush.get_local_mouse_position(),
+			Input.is_key_pressed(KEY_SHIFT),
+			Input.is_key_pressed(KEY_ALT)
+	)
+	var stroke := BrushStrokeData.new(polygon, [], current_color)
+	
+	if _action_alt:
+		subtract_stroke(stroke)
+	else:
+		merge_stroke(stroke)
+
+
+func get_rect_tool_shape(from: Vector2, to: Vector2, centered: bool, equal: bool, noise := 0.03):
+	var center: Vector2
+	var size: Vector2 = (to - from) * 0.5
+	if Input.is_key_pressed(KEY_ALT):
+		center = from
+		if Input.is_key_pressed(KEY_SHIFT):
+			size = Vector2.ONE * max(abs(size.x), abs(size.y))
+		size *= 2.0
+	elif Input.is_key_pressed(KEY_SHIFT):
+		var max_size = max(abs(size.x), abs(size.y))
+		size = max_size * sign(size)
+		center = from + size
+	else:
+		center = (from + to) * 0.5
+	return create_rect_polygon(center, size, noise)
+
+
+func create_rect_polygon(center: Vector2, size: Vector2, noise := 0.02) -> PackedVector2Array:
+	var polygon := []
+	var vertices_per_side := 10 if noise > 0.0 else 1
+	var tl = center + size * Vector2(-1, -1)
+	var tr = center + size * Vector2(1, -1)
+	var br = center + size * Vector2(1, 1)
+	var bl = center + size * Vector2(-1, 1)
+	polygon.append_array(create_line_polygon(tl, tr, vertices_per_side, noise * size))
+	polygon.append_array(create_line_polygon(tr, br, vertices_per_side, noise * size))
+	polygon.append_array(create_line_polygon(br, bl, vertices_per_side, noise * size))
+	polygon.append_array(create_line_polygon(bl, tl, vertices_per_side, noise * size))
+	return PackedVector2Array(polygon)
+
+func create_line_polygon(from, to, vertices_per_side, noise: Vector2):
+	var polygon = []
+	for i in vertices_per_side:
+		var noise_offset = Vector2.from_angle(randf() * TAU) * randf() * noise
+		var t = i / float(vertices_per_side)
+		polygon.push_back(from.lerp(to, t) + noise_offset)
+	return polygon
+
 
 func merge_stroke(stroke):
 	_action_paint_stroke = stroke
 	_action_paint_complete_add()
+
 
 func subtract_stroke(stroke):
 	_action_paint_stroke = stroke
@@ -932,6 +996,7 @@ func queue_redraw():
 	hud.queue_redraw()
 	if _get_editing_brush():
 		_get_editing_brush().queue_redraw()
+
 
 static func is_editable(node):
 	return node.scene_file_path == "" or node.get_tree().edited_scene_root == node
