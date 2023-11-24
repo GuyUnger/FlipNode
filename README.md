@@ -30,13 +30,15 @@ Use [LMB] to draw and [RMB] to erase
 - [G] 🪣 Fill bucket
 
 ## Brush2D
-#### For drawings or physics objects.
+### For simple drawings and physics objects.
 
 You can setup the physics mode in the inspector
 
 ## BrushClip2D
-### For animations
-Opens the timeline panel:
+### For animations. Has layers, frame scripts and audio.
+Adds children for all layers and frames. These can all be accessed through the timeline, but are exposed so you can add your own nodes to frames.
+
+### Timeline
  - Set a custom fps for this object, if no value is input it will default to the project value
  - Enable onion skinning to see next/previous frames
  - Add/delete layers
