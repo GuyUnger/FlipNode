@@ -153,7 +153,7 @@ func _exit_tree() -> void:
 func _handles(object) -> bool:
 	if not button_select_mode.button_pressed:
 		return false
-	if object is BrushClip2D or object is BrushKeyframe2D or object is BrushSprite2D:
+	if object is BrushClip2D or object is BrushKeyframe2D or object is Brush2D:
 		return true
 	return false
 
@@ -164,15 +164,15 @@ func _on_selection_changed():
 	if selected_nodes.size() == 1:
 		
 		if selected_nodes[0] is BrushClip2D:
-			select_clip(selected_nodes[0])
+			select_brush_clip(selected_nodes[0])
 			return
 		elif selected_nodes[0] is BrushKeyframe2D:
 			var frame: BrushKeyframe2D = selected_nodes[0]
-			select_clip(frame.get_clip())
+			select_brush_clip(frame.get_clip())
 			frame.get_clip().goto(frame.frame_num)
 			return
-		elif selected_nodes[0] is BrushSprite2D:
-			select_sprite(selected_nodes[0])
+		elif selected_nodes[0] is Brush2D:
+			select_brush(selected_nodes[0])
 			return
 	
 	if editing_brush:
@@ -181,12 +181,12 @@ func _on_selection_changed():
 		_edit_brush_complete()
 
 
-func select_sprite(sprite):
+func select_brush(sprite):
 	_edit_brush_start(sprite)
 	is_editing = button_select_mode.button_pressed
 
 
-func select_clip(clip):
+func select_brush_clip(clip):
 	_edit_brush_start(clip)
 	timeline.load_brush_clip(clip)
 	hud._update_used_colors()
@@ -863,8 +863,8 @@ func merge_stroke(stroke):
 	_action_paint_complete_add()
 
 
-func _get_editing_sprite() -> BrushSprite2D:
-	if editing_brush is BrushSprite2D:
+func _get_editing_sprite() -> Brush2D:
+	if editing_brush is Brush2D:
 		return editing_brush
 	else:
 		return editing_brush.layers[_editing_layer_num].get_frame(editing_brush.current_frame)

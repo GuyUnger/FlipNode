@@ -1,6 +1,6 @@
 @tool
-@icon("res://addons/goolash/icons/BrushSprite2D.svg")
-class_name BrushSprite2D
+@icon("res://addons/goolash/icons/Brush2D.svg")
+class_name Brush2D
 extends Node2D
 
 const BrushStroke2D = preload("res://addons/goolash/brush_stroke2d.tscn")

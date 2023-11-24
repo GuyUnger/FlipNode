@@ -1,7 +1,7 @@
 @tool
 @icon("res://addons/goolash/icons/BrushKeyframe2D.svg")
 class_name BrushKeyframe2D
-extends BrushSprite2D
+extends Brush2D
 
 @export var frame_num: int
 @export var frame_end_num: int
