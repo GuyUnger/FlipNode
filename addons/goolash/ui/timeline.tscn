@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://83afmn7xmr1c"]
+[gd_scene load_steps=10 format=3 uid="uid://83afmn7xmr1c"]
 
 [ext_resource type="Texture2D" uid="uid://ba2hxmxea6m1a" path="res://addons/goolash/icons/PagePrevious.svg" id="1_mqbbs"]
 [ext_resource type="Texture2D" uid="uid://cy0je6d77bnw2" path="res://addons/goolash/icons/Play.svg" id="1_vtfin"]
@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://ntomq1ouceco" path="res://addons/goolash/icons/PageNext.svg" id="3_w0qs8"]
 [ext_resource type="Texture2D" uid="uid://m5wq1j1x5deq" path="res://addons/goolash/icons/AutoPlay.svg" id="4_qdy44"]
 [ext_resource type="Texture2D" uid="uid://djjrjid7ltt80" path="res://addons/goolash/icons/Onion.svg" id="6_d6fgv"]
+[ext_resource type="Texture2D" uid="uid://cl88p0t1ojo5m" path="res://addons/goolash/icons/Add.svg" id="7_0x6bv"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_h5x24"]
 
@@ -35,7 +36,6 @@ vertical_alignment = 1
 
 [node name="Timeline" type="VBoxContainer" parent="."]
 unique_name_in_owner = true
-visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -178,7 +178,7 @@ grow_vertical = 2
 theme_override_constants/separation = 0
 
 [node name="Control" type="Control" parent="Timeline/HBoxContainer/FrameCounts/HBoxContainer"]
-custom_minimum_size = Vector2(50, 0)
+custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
 
 [node name="Label" type="Label" parent="Timeline/HBoxContainer/FrameCounts/HBoxContainer/Control"]
@@ -193,7 +193,7 @@ text = "0"
 vertical_alignment = 2
 
 [node name="Control2" type="Control" parent="Timeline/HBoxContainer/FrameCounts/HBoxContainer"]
-custom_minimum_size = Vector2(50, 0)
+custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
 
 [node name="Label" type="Label" parent="Timeline/HBoxContainer/FrameCounts/HBoxContainer/Control2"]
@@ -204,11 +204,11 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_font_sizes/font_size = 14
-text = "4"
+text = "5"
 vertical_alignment = 2
 
 [node name="Control3" type="Control" parent="Timeline/HBoxContainer/FrameCounts/HBoxContainer"]
-custom_minimum_size = Vector2(50, 0)
+custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
 
 [node name="Label" type="Label" parent="Timeline/HBoxContainer/FrameCounts/HBoxContainer/Control3"]
@@ -276,15 +276,16 @@ theme_override_constants/separation = 2
 [node name="MarginContainer" type="MarginContainer" parent="Timeline/LayersContainer/HBoxContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 8
+theme_override_constants/margin_top = 6
 theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 8
+theme_override_constants/margin_bottom = 6
 
 [node name="ButtonAddLayer" type="Button" parent="Timeline/LayersContainer/HBoxContainer/VBoxContainer/MarginContainer"]
-custom_minimum_size = Vector2(32, 16)
+custom_minimum_size = Vector2(32, 20)
 layout_mode = 2
 theme_override_font_sizes/font_size = 8
-text = "➕"
+icon = ExtResource("7_0x6bv")
+icon_alignment = 1
 
 [node name="VSeparator" type="VSeparator" parent="Timeline/LayersContainer/HBoxContainer"]
 layout_mode = 2

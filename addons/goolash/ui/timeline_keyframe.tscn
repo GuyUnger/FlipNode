@@ -36,9 +36,9 @@ corner_radius_bottom_left = 4
 subpixel_positioning = 0
 
 [node name="Frame" type="Button"]
-custom_minimum_size = Vector2(12, 32)
+custom_minimum_size = Vector2(12, 24)
 offset_right = 12.0
-offset_bottom = 32.0
+offset_bottom = 24.0
 theme_override_styles/normal = SubResource("StyleBoxFlat_8tbbb")
 theme_override_styles/hover = SubResource("StyleBoxFlat_x8fol")
 script = ExtResource("1_1gijj")
@@ -47,7 +47,6 @@ style_blank = SubResource("StyleBoxFlat_y78mn")
 
 [node name="Label" type="Label" parent="."]
 unique_name_in_owner = true
-visible = false
 z_index = 1
 layout_mode = 1
 offset_top = -3.0
@@ -58,6 +57,7 @@ theme_override_constants/shadow_offset_x = 0
 theme_override_constants/shadow_offset_y = 1
 theme_override_fonts/font = SubResource("SystemFont_nfcst")
 theme_override_font_sizes/font_size = 12
+text = "Label"
 
 [node name="Symbol" type="TextureRect" parent="."]
 unique_name_in_owner = true

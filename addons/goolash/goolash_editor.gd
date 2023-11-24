@@ -351,7 +351,7 @@ func _insert_frame():
 func _remove_frame():
 	for layer in editing_brush.layers:
 		layer.remove_frame(editing_brush.current_frame)
-	editing_brush.prev_frame()
+	editing_brush.previous_frame()
 	editing_brush._update_frame_count()
 
 
@@ -497,45 +497,43 @@ func forward_draw(target: Control):
 	
 	match _current_action:
 		ACTION_OVAL:
-			var action_position = target.get_local_mouse_position()
-			var center = (_action_position_previous + action_position) * 0.5
-			var size = action_position - _action_position_previous
-			target.draw_polygon(create_oval_polygon(center, size), [current_color])
+			action_oval_draw(target)
 
 func draw_custom_cursor(target):
 	if not _get_editing_sprite():
 		return
 	var zoom = _get_editing_sprite().get_viewport().get_screen_transform().get_scale().x
 	
-	var mouse_position = target.get_local_mouse_position()
+	var cursor_position = target.get_local_mouse_position()
 	match _get_current_tool():
 		TOOL_PAINT:
 			if not (_current_action == ACTION_PAINT and _action_alt):
-				_draw_circle_outline(target, mouse_position, _action_paint_size * zoom, Color.BLACK, 1.0)
-				_draw_circle_outline(target, mouse_position, _action_paint_size * zoom + 2.0, Color.WHITE, 1.0)
+				_draw_circle_outline(target, cursor_position, _action_paint_size * zoom, Color.BLACK, 1.0)
+				_draw_circle_outline(target, cursor_position, _action_paint_size * zoom + 2.0, Color.WHITE, 1.0)
 			else:
-				_draw_circle_outline(target, mouse_position, _action_paint_erase_size * zoom, Color.BLACK, 1.0, true)
+				_draw_circle_outline(target, cursor_position, _action_paint_erase_size * zoom, Color.BLACK, 1.0, true)
 			if not (_current_action == ACTION_PAINT and not _action_alt):
-				_draw_circle_outline(target, mouse_position, _action_paint_erase_size * zoom, Color(1.0, 1.0, 1.0, 0.2), 1.0, true)
+				_draw_circle_outline(target, cursor_position, _action_paint_erase_size * zoom, Color(1.0, 1.0, 1.0, 0.2), 1.0, true)
 			
-			target.draw_circle(mouse_position, 2.0, Color.WHITE)
+			target.draw_circle(cursor_position, 2.0, Color.WHITE)
 		TOOL_SELECT:
 			for stroke: BrushStrokeData in _get_editing_sprite().stroke_data:
-				if _is_hovering_edge(stroke, mouse_position):
+				if _is_hovering_edge(stroke, cursor_position):
 					target.draw_circle(
-							stroke.polygon_curve.get_closest_point(mouse_position), 3.0, Color.WHITE
+							stroke.polygon_curve.get_closest_point(cursor_position), 3.0, Color.WHITE
 						)
 		TOOL_EYEDROPPER:
+			var preview_size := 20.0
 			for stroke: BrushStrokeData in _get_editing_sprite().stroke_data:
-				if stroke.is_point_inside(mouse_position):
-					target.draw_circle(mouse_position, 32.0 / zoom, stroke.color)
-					_draw_circle_outline(target, mouse_position, 32.0 / zoom, Color.WHITE)
+				if stroke.is_point_inside(cursor_position):
+					target.draw_circle(cursor_position, preview_size, stroke.color)
+					_draw_circle_outline(target, cursor_position, preview_size, Color.WHITE)
 				else:
-					_draw_circle_outline(target, mouse_position, 20.0 / zoom, Color(1.0, 1.0, 1.0, 0.2))
-				#target.draw_circle(mouse_position, 2.0 / zoom, Color.WHITE)
-				target.draw_texture(TextureEyedropper, mouse_position + Vector2(-8, -16))
+					pass
+					#_draw_circle_outline(target, mouse_position, preview_size * 0.7, Color(1.0, 1.0, 1.0, 0.2))
+				target.draw_texture(TextureEyedropper, cursor_position + Vector2(-8, -16))
 		TOOL_FILL:
-			target.draw_texture(TextureFill, mouse_position + Vector2.ONE * -12.0)
+			target.draw_texture(TextureFill, cursor_position + Vector2.ONE * -12.0)
 	
 	#match _current_action:
 		#ACTION_OVAL:
@@ -641,6 +639,8 @@ func action_warp_complete():
 			_get_editing_sprite().add_stroke(BrushStrokeData.new(polygon, [], selection.stroke.color))
 	_get_editing_sprite().draw()
 	_get_editing_sprite().edited.emit()
+	if editing_brush is BrushClip2D:
+		editing_brush.edited.emit()
 	action_warp_selections = []
 
 
@@ -709,6 +709,8 @@ func action_move_complete():
 	merge_stroke(moving_stroke)
 	moving_stroke = null
 	_get_editing_sprite().edited.emit()
+	if editing_brush is BrushClip2D:
+		editing_brush.edited.emit()
 
 
 func action_move_process(action_position: Vector2):
@@ -757,8 +759,12 @@ func action_paint_complete():
 	_action_paint_stroke.optimize()
 	if _action_alt:
 		_action_paint_complete_subtract()
+		_get_editing_sprite().edited.emit()
 	else:
 		_action_paint_complete_add()
+		_get_editing_sprite().edited.emit()
+	if editing_brush is BrushClip2D:
+		editing_brush.edited.emit()
 
 
 func _action_paint_complete_add():
@@ -825,11 +831,24 @@ func action_oval_start(action_position):
 	
 	_action_position_previous = action_position
 
+func action_oval_draw(target):
+	var action_position = editing_brush.get_local_mouse_position()
+	var center = (_action_position_previous + action_position) * 0.5
+	var size = action_position - _action_position_previous
+	target.draw_polygon(create_oval_polygon(center, size), [current_color])
+
+
 func action_oval_complete(action_position):
 	var polygon = []
 	var center = (action_position + _action_position_previous) * 0.5
 	var size = action_position - _action_position_previous
-	var brush := BrushStrokeData.new(create_oval_polygon(center, size))
+	var stroke := BrushStrokeData.new(create_oval_polygon(center, size))
+	
+	_get_editing_sprite().add_stroke(stroke)
+	
+	_get_editing_sprite().edited.emit()
+	if editing_brush is BrushClip2D:
+		editing_brush.edited.emit()
 
 func create_oval_polygon(center: Vector2, size: Vector2) -> PackedVector2Array:
 	var polygon := []
@@ -837,8 +856,6 @@ func create_oval_polygon(center: Vector2, size: Vector2) -> PackedVector2Array:
 		polygon.push_back(center + Vector2.from_angle(i / 60.0 * TAU) * size)
 	return PackedVector2Array(polygon)
 
-#func _draw_action_oval():
-	#
 
 func merge_stroke(stroke):
 	_action_paint_stroke = stroke

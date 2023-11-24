@@ -86,7 +86,7 @@ func get_frame(frame_num: int) -> BrushKeyframe2D:
 	if frame_num > frame_count - 1:
 		return null
 	for i in keyframes.size():
-		if keyframes[i].frame_num >= frame_num:
+		if keyframes[i].frame_end_num >= frame_num:
 			return keyframes[i]
 	return null
 

@@ -33,6 +33,7 @@ func load_brush_clip(brush_clip: BrushClip2D):
 	%Timeline.visible = brush_clip_selected
 	%LabelNoBrushClip.visible = not brush_clip_selected
 	if not brush_clip_selected:
+		custom_minimum_size.y = 30.0
 		return
 	
 	## FPS
@@ -56,11 +57,19 @@ func load_brush_clip(brush_clip: BrushClip2D):
 	%EditorOptions.visible = is_editable
 	
 	brush_clip.frame_changed.connect(_on_frame_changed)
-	_on_frame_changed()
-	
+	brush_clip.edited.connect(_on_brush_clip_edited)
+	update_timeline_length()
 
 
 func _on_frame_changed():
+	update_timeline_length()
+
+
+func _on_brush_clip_edited():
+	update_timeline_length()
+
+
+func update_timeline_length():
 	%FrameIndicator.position.x = GoolashEditor.editor.editing_brush.current_frame * FRAME_WIDTH + FRAME_WIDTH * 0.5
 	var end_pos = brush_clip.total_frames * FRAME_WIDTH
 	%AreaActive.size.x = end_pos

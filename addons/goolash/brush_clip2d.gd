@@ -4,6 +4,7 @@ class_name BrushClip2D
 extends Node2D
 
 signal frame_changed
+signal edited
 
 @export var current_frame: int = 0:
 	get:
