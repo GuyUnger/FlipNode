@@ -10,8 +10,39 @@ signal edited
 @export var stroke_data: Array
 var strokes: Array
 
+@export_group("Collision")
 enum PhysicsMode {NONE, STATIC, RIGID, SOFT}
-@export var physics_mode: PhysicsMode = PhysicsMode.NONE
+@export var physics_mode: PhysicsMode = PhysicsMode.NONE:
+	get:
+		return physics_mode
+	set(value):
+		physics_mode = value
+		notify_property_list_changed()
+
+var bounciness := 0.0
+
+@export_flags_2d_physics var collision_layer: int = 1:
+	set(value):
+		collision_layer = value
+		notify_property_list_changed()
+@export_flags_2d_physics var collision_mask: int = 1:
+	set(value):
+		collision_mask = value
+		notify_property_list_changed()
+
+func _validate_property(property):
+	match property.name:
+		"bounciness":
+			if physics_mode == PhysicsMode.RIGID:
+				property.usage = PROPERTY_USAGE_STORAGE | PROPERTY_USAGE_EDITOR
+			else:
+				property.usage = PROPERTY_USAGE_STORAGE
+		"collision_layer", "collision_mask":
+			if physics_mode == PhysicsMode.NONE:
+				property.usage = PROPERTY_USAGE_STORAGE
+			else:
+				property.usage = PROPERTY_USAGE_STORAGE | PROPERTY_USAGE_EDITOR
+
 
 func _ready():
 	show_behind_parent = true
@@ -52,6 +83,8 @@ func draw():
 
 func _generate_static_body():
 	var body = StaticBody2D.new()
+	body.collision_layer = collision_layer
+	body.collision_mask = collision_mask
 	add_child(body)
 	for polygon in get_islands():
 		var collision_polygon = CollisionPolygon2D.new()
@@ -60,6 +93,10 @@ func _generate_static_body():
 
 
 func _generate_rigid_body():
+	var physics_material: PhysicsMaterial
+	if bounciness > 0.0:
+		physics_material = PhysicsMaterial.new()
+		physics_material.bounce = bounciness
 	for polygon in get_islands():
 		var center := Vector2()
 		for vertex in polygon:
@@ -70,6 +107,10 @@ func _generate_rigid_body():
 			polygon[i] -= center
 		
 		var rigidbody = RigidBody2D.new()
+		if physics_material:
+			rigidbody.physics_material_override = physics_material
+		rigidbody.collision_layer = collision_layer
+		rigidbody.collision_mask = collision_mask
 		rigidbody.position = position + center
 		get_parent().add_child(rigidbody)
 		

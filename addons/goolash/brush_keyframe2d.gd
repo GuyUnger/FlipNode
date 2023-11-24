@@ -12,9 +12,6 @@ extends BrushSprite2D
 		label = value
 		update_name()
 
-@export var tweening := false
-@export var key_transform: Transform2D
-
 #func copy() -> Keyframe2D:
 	#var frame = Keyframe.new()
 	### todo: check if deep is necessary
@@ -22,9 +19,8 @@ extends BrushSprite2D
 	#return frame
 
 func _ready():
-	if not Engine.is_editor_hint():
-		set_process(false)
-	update_name()
+	if Engine.is_editor_hint():
+		update_name()
 	super()
 
 
@@ -56,8 +52,3 @@ func update_name():
 
 func is_blank() -> bool:
 	return stroke_data.size() == 0
-
-
-func _process(delta):
-	if get_clip().current_frame == frame_num:
-		key_transform = transform

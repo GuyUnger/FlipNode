@@ -332,7 +332,8 @@ func _process(delta):
 	allow_hide_cursor = (
 			EditorInterface.get_editor_main_screen().get_child(0).visible and
 			hud.get_rect().has_point(hud.get_local_mouse_position()) and
-			allow_custom_cursor
+			allow_custom_cursor and 
+			DisplayServer.window_is_focused()
 	)
 	if current_tool == TOOL_PAINT and allow_hide_cursor:
 		##todo: this needs more checks
