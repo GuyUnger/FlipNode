@@ -48,9 +48,11 @@ Navigating and editing timeline
  - [D] ▶️ Next frame
  - [S] ⏯️ Play/pause
  - [5] ⬜ Insert frame
+   - [SHIFT+5] ❌ Erase frame
  - [6] ⚪ Insert keyframe
  - [7] ⚫ Insert blank keyframe
 
+*The [5] and [SHIFT+5] shortcuts conflict with godot shortcuts, but these are so useless i recommend clearing the godot ones*
 
 ## To-do
 ### 📝 Not yet implemented/planned features:
@@ -70,6 +72,7 @@ Navigating and editing timeline
 - [ ] Decouple editor and drawing tools to make in game editing easy to implement
 - [ ] Soft bodies?
 - [ ] 3D support?
+- [ ] Editing multiple brushes with multi-select?
 
 ### 🪲 Known issues:
 - [ ] Filling shapes removes parts of strokes inside it
