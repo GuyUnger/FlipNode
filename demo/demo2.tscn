@@ -1,4 +1,4 @@
-[gd_scene load_steps=59 format=3 uid="uid://d2ikapvprfyl5"]
+[gd_scene load_steps=66 format=3 uid="uid://d2ikapvprfyl5"]
 
 [ext_resource type="Script" path="res://addons/goolash/brush_clip2d.gd" id="1_hc62x"]
 [ext_resource type="Script" path="res://addons/goolash/brush_layer2d.gd" id="2_h4sv3"]
@@ -102,6 +102,58 @@ polygon = PackedVector2Array(-8.69172, -48.3828, -2.29525, -44.0695, 9.97826, -4
 polygon_curve = SubResource("Curve2D_cs36j")
 holes = Array[PackedVector2Array]([PackedVector2Array(-6.60032, -24.2721, -0.0341, -24.1429, 8.20119, -21.3034, 12.5639, -18.5524, 15.9889, -13.6405, 12.6704, -6.32604, 3.32577, 2.38232, -3.48221, 1.65956, -9.06472, -7.41161, -9.70273, -22.1297, -8.31398, -24.792)])
 hole_curves = Array[Curve2D]([])
+
+[sub_resource type="Curve2D" id="Curve2D_pdukj"]
+bake_interval = 20.0
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, -4.76859, 79.4876, 0, 0, 0, 0, 0.35156, 82.2244, 0, 0, 0, 0, 8.52209, 91.5765, 0, 0, 0, 0, 23.0301, 101.753, 0, 0, 0, 0, 44.4325, 122.482, 0, 0, 0, 0, 50.4003, 134.93, 0, 0, 0, 0, 55.3979, 160.337, 0, 0, 0, 0, 60.161, 171.855, 0, 0, 0, 0, 72.5343, 162.805, 0, 0, 0, 0, 78.3378, 162.963, 0, 0, 0, 0, 83.0754, 166.319, 0, 0, 0, 0, 84.9832, 170.499, 0, 0, 0, 0, 84.6622, 175.613, 0, 0, 0, 0, 75.952, 186.02, 0, 0, 0, 0, 58.8574, 194.227, 0, 0, 0, 0, 50.8748, 193.658, 0, 0, 0, 0, 46.5173, 190.342, 0, 0, 0, 0, 36.2373, 166.587, 0, 0, 0, 0, 31.958, 143.278, 0, 0, 0, 0, 28.0546, 134.422, 0, 0, 0, 0, 9.32634, 116.607, 0, 0, 0, 0, -5.28645, 106.131, 0, 0, 0, 0, -15.9583, 93.7523, 0, 0, 0, 0, -16.7195, 89.2954, 0, 0, 0, 0, -15.0342, 83.7397, 0, 0, 0, 0, -12.2752, 80.9807, 0, 0, 0, 0, -6.71949, 79.2954)
+}
+point_count = 27
+
+[sub_resource type="Resource" id="Resource_l0icn"]
+script = ExtResource("2_r3qu0")
+color = Color(0.803922, 0.521569, 0.247059, 1)
+polygon = PackedVector2Array(7.44875, -50.415, 18.7064, -46.9592, 30.5896, -39.358, 36.8732, -31.8576, 41.201, -21.9536, 41.6829, -6.69461, 37.4821, 9.02254, 32.5391, 15.0853, 22.9496, 19.7283, 8.58119, 19.6184, 6.40358, 32.2402, 6.60461, 40.8106, 7.48917, 78.5206, 7.69021, 87.091, 6.69735, 89.4878, 8.52209, 91.5765, 23.0301, 101.753, 33.7313, 112.118, 44.4325, 122.482, 50.4003, 134.93, 52.8991, 147.634, 55.3979, 160.337, 60.161, 171.855, 72.5343, 162.805, 78.3378, 162.963, 83.0754, 166.319, 84.9832, 170.499, 84.6622, 175.613, 75.952, 186.02, 58.8574, 194.227, 50.8748, 193.658, 46.5173, 190.342, 41.3773, 178.464, 36.2373, 166.587, 34.0976, 154.932, 31.958, 143.278, 28.0546, 134.422, 18.6905, 125.514, 9.32634, 116.607, -5.28645, 106.131, -5.68366, 105.67, -6.58655, 107.202, -12.7308, 123.29, -17.5019, 141.631, -22.2731, 159.972, -28.0395, 173.24, -33.8059, 186.508, -37.4614, 199.199, -29.0578, 203.487, -26.8348, 208.297, -27.1557, 213.41, -29.5716, 217.319, -34.6917, 220.056, -50.3085, 217.373, -56.6279, 214.169, -59.5568, 207.098, -56.0264, 192.9, -52.496, 178.703, -47.2819, 167.444, -42.0678, 156.185, -37.4871, 138.144, -32.9063, 120.103, -28.842, 109.243, -24.7778, 98.3828, -15.0505, 82.8543, -13.5112, 82.2167, -12.5858, 81.2913, -12.6104, 79.9955, -12.7925, 70.4011, -13.21, 48.404, -13.392, 38.8096, -13.5697, 29.4492, -9.92785, 14.2717, -19.9741, 5.97218, -28.8116, -9.86233, -28.1816, -27.3085, -22.295, -39.358, -6.76659, -48.4553, 6.82464, -50.4764)
+polygon_curve = SubResource("Curve2D_pdukj")
+holes = Array[PackedVector2Array]([PackedVector2Array(4.61977, -30.4764, 13.7351, -26.9433, 20.0807, -20.8764, 21.7348, -9.56458, 19.4455, -0.59918, 3.53388, -0.95031, -4.03593, -6.35587, -8.82141, -14.2462, -6.99103, -18.3668, -7.08808, -25.7261, 4.23942, -30.5139)])
+hole_curves = Array[Curve2D]([])
+
+[sub_resource type="Curve2D" id="Curve2D_f8gm5"]
+bake_interval = 20.0
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, -15.4997, -21.938, 0, 0, 0, 0, -20.6199, -24.6747, 0, 0, 0, 0, -23.3566, -29.7949, 0, 0, 0, 0, -22.7877, -37.932, 0, 0, 0, 0, -18.1607, -44.3079, 0, 0, 0, 0, -8.59221, -45.9681, 0, 0, 0, 0, 13.4148, -42.9695, 0, 0, 0, 0, 23.6269, -38.6445, 0, 0, 0, 0, 39.6572, -25.1346, 0, 0, 0, 0, 42.9808, -17.1789, 0, 0, 0, 0, 42.9808, -6.67, 0, 0, 0, 0, 37.2402, 4.95768, 0, 0, 0, 0, 30.2338, 11.0203, 0, 0, 0, 0, 14.8306, 18.6486, 0, 0, 0, 0, -0.39771, 19.5925, 0, 0, 0, 0, -4.00251, 18.0994, 0, 0, 0, 0, -7.6856, 13.6115, 0, 0, 0, 0, -8.4468, 9.78466, 0, 0, 0, 0, -6.7615, 4.22896, 0, 0, 0, 0, -2.27361, 0.54587, 0, 0, 0, 0, 9.61044, -1.10283, 0, 0, 0, 0, 19.8033, -6.45918, 0, 0, 0, 0, 22.8148, -9.98141, 0, 0, 0, 0, 23.1947, -13.0893, 0, 0, 0, 0, 12.3333, -21.6081, 0, 0, 0, 0, 7.23003, -23.6684, 0, 0, 0, 0, -5.76633, -24.9665, 0, 0, 0, 0, -13.5488, -21.7458)
+}
+point_count = 28
+
+[sub_resource type="Resource" id="Resource_k84ya"]
+script = ExtResource("2_r3qu0")
+color = Color(0.803922, 0.521569, 0.247059, 1)
+polygon = PackedVector2Array(2.41127, -44.4688, 13.4148, -42.9695, 23.6269, -38.6445, 31.6421, -31.8895, 39.6572, -25.1346, 42.9808, -17.1789, 42.9808, -6.67, 37.2402, 4.95768, 30.2338, 11.0203, 14.8306, 18.6486, 8.80465, 19.0221, 8.86144, 20.8436, 9.19347, 31.4938, 7.28202, 42.1106, 5.37057, 52.7274, 5.29821, 72.1102, 5.24307, 86.88, 18.4354, 93.0258, 28.8024, 103.232, 35.145, 113.431, 41.4877, 123.629, 49.3941, 139.807, 62.1947, 151.303, 70.1118, 158.414, 76.9692, 156.812, 93.5296, 148.262, 99.2441, 147.029, 101.195, 147.221, 106.315, 149.958, 109.052, 155.078, 108.483, 160.856, 104.8, 165.344, 90.3287, 173.347, 74.2946, 178.635, 67.3139, 178.635, 66.6805, 178.827, 66.0471, 178.635, 64.7296, 178.635, 63.6341, 177.903, 61.1248, 177.142, 49.0406, 166.61, 36.9565, 156.077, 30.0496, 147.483, 23.6918, 133.628, 16.1573, 122.209, 8.62272, 110.789, -2.64072, 104.643, -5.58693, 103.035, -6.77923, 104.9, -12.5765, 118.304, -14.8244, 127.46, -17.1285, 136.845, -19.7697, 147.603, -22.411, 158.361, -24.7151, 167.746, -26.963, 176.902, -30.2045, 182.924, -42.5199, 205.803, -37.7252, 208.178, -33.0786, 212.353, -31.5852, 219.86, -35.8374, 226.224, -41.3928, 227.909, -45.2196, 227.148, -58.1441, 220.933, -64.3377, 215.914, -64.8937, 214.081, -65.2619, 213.713, -65.3232, 212.665, -66.0232, 210.358, -65.5985, 207.96, -65.668, 206.773, -62.5743, 200.967, -55.7682, 188.195, -48.9621, 175.423, -45.8684, 169.617, -43.6631, 160.563, -41.4027, 151.283, -38.8114, 140.644, -36.2202, 130.006, -33.9597, 120.726, -31.7544, 111.672, -23.7512, 93.4251, -14.787, 81.9152, -14.7219, 72.3479, -14.6257, 58.2123, -14.582, 51.787, -12.6796, 40.7891, -10.7772, 29.7911, -11.2971, 17.0607, -15.8009, 15.2677, -25.696, 4.11755, -28.548, -1.47869, -29.6588, -19.2403, -25.1473, -35.5727, -21.4642, -40.0605, -21.1806, -40.1465, -18.1607, -44.3079, -8.59221, -45.9681)
+polygon_curve = SubResource("Curve2D_f8gm5")
+holes = Array[PackedVector2Array]([PackedVector2Array(-6.92811, -24.4858, -9.68863, -16.242, -9.13109, -7.45179, -3.15792, -0.84058, -0.40647, 0.28684, 9.61044, -1.10283, 19.8033, -6.45918, 22.8148, -9.98141, 23.1947, -13.0893, 12.3333, -21.6081, 7.23003, -23.6684, -5.76633, -24.9665)])
+hole_curves = Array[Curve2D]([])
+
+[sub_resource type="Curve2D" id="Curve2D_2uchf"]
+bake_interval = 20.0
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 13.4721, -30.9501, 0, 0, 0, 0, 23.4488, -23.7443, 0, 0, 0, 0, 27.694, -16.882, 0, 0, 0, 0, 27.8991, -13.6604, 0, 0, 0, 0, 25.9067, -6.81764, 0, 0, 0, 0, 20.5924, -1.80386, 0, 0, 0, 0, 8.08829, 0.19417, 0, 0, 0, 0, -6.28725, -14.2111, 0, 0, 0, 0, -7.42204, -18.7301, 0, 0, 0, 0, -4.50037, -24.3596, 0, 0, 0, 0, -0.43182, -27.389, 0, 0, 0, 0, 12.9646, -31.0001)
+}
+point_count = 12
+
+[sub_resource type="Curve2D" id="Curve2D_o0luf"]
+bake_interval = 20.0
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 18.1294, -50.755, 0, 0, 0, 0, 28.2557, -45.5767, 0, 0, 0, 0, 39.9529, -35.5026, 0, 0, 0, 0, 47.3921, -21.195, 0, 0, 0, 0, 47.6894, -8.96871, 0, 0, 0, 0, 42.9259, 4.14972, 0, 0, 0, 0, 30.9506, 15.8278, 0, 0, 0, 0, 16.3456, 20.2939, 0, 0, 0, 0, 2.63283, 19.6993, 0, 0, 0, 0, -7.24416, 15.476, 0, 0, 0, 0, -23.0556, -2.98549, 0, 0, 0, 0, -27.2244, -13.1309, 0, 0, 0, 0, -27.2244, -22.3842, 0, 0, 0, 0, -20.6772, -36.6918, 0, 0, 0, 0, -11.9721, -43.9104, 0, 0, 0, 0, 5.60586, -50.755, 0, 0, 0, 0, 16.1785, -50.9471)
+}
+point_count = 17
+
+[sub_resource type="Resource" id="Resource_hg62h"]
+script = ExtResource("2_r3qu0")
+color = Color(0.803922, 0.521569, 0.247059, 1)
+polygon = PackedVector2Array(18.1294, -50.755, 28.2557, -45.5767, 39.9529, -35.5026, 47.3921, -21.195, 47.6894, -8.96871, 42.9259, 4.14972, 30.9506, 15.8278, 16.3456, 20.2939, 9.64988, 20.0036, 7.44438, 26.473, 5.91711, 36.5098, 5.94716, 52.1403, 7.73837, 71.3003, 9.04062, 85.23, 22.1443, 98.654, 45.2499, 115.795, 45.4025, 116.163, 49.4877, 117.987, 52.4718, 122.31, 53.1544, 127.387, 51.5477, 131.99, 45.2211, 138.316, 31.8443, 145.976, 18.4675, 153.636, 4.33074, 166.153, 3.37053, 171.873, 8.64622, 181.332, 8.47112, 189.721, 3.05916, 195.133, 1.06526, 195.53, -0.04537, 209.058, 5.43758, 209.656, 8.68181, 211.824, 11.6107, 219.192, 9.92544, 224.748, 5.43758, 228.431, -12.9571, 229.489, -20.0281, 226.56, -22.9571, 219.489, -18.77, 200.944, -17.9431, 187.092, -17.2684, 175.79, -20.7093, 169.207, -21.4706, 164.489, -19.7852, 158.933, -13.7893, 154.082, -13.1142, 150.194, -14.3068, 130.973, -15.4993, 111.752, -14.1432, 98.0232, -10.7734, 87.3579, -13.9595, 54.8456, -14.038, 35.449, -12.0621, 21.0219, -9.2724, 13.1078, -15.1499, 6.24527, -23.0556, -2.98549, -27.2244, -13.1309, -27.2244, -22.3842, -20.6772, -36.6918, -11.9721, -43.9104, 5.60586, -50.755, 16.1785, -50.9471)
+polygon_curve = SubResource("Curve2D_o0luf")
+holes = Array[PackedVector2Array]([PackedVector2Array(13.4721, -30.9501, 23.4488, -23.7443, 27.694, -16.882, 27.8991, -13.6604, 25.9067, -6.81764, 20.5924, -1.80386, 8.08829, 0.19417, 0.90052, -7.00844, -6.28725, -14.2111, -7.42204, -18.7301, -4.50037, -24.3596, -0.43182, -27.389, 12.9646, -31.0001), PackedVector2Array(4.73839, 110.412, 5.06893, 116.773, 5.79614, 130.766, 6.16863, 137.934, 8.2444, 136.255, 20.9643, 129.054, 25.4039, 126.54, 18.8082, 121.46, 10.0474, 114.712, 4.92429, 109.515)])
+hole_curves = Array[Curve2D]([SubResource("Curve2D_2uchf")])
 
 [sub_resource type="GDScript" id="GDScript_un620"]
 script/source = "@tool
@@ -408,12 +460,12 @@ hole_curves = Array[Curve2D]([])
 [node name="BrushClip2D" type="Node2D" parent="."]
 position = Vector2(226, 310)
 script = ExtResource("1_hc62x")
-_frame_count = 6
+_frame_count = 9
 
 [node name="Layer 3" type="Node2D" parent="BrushClip2D"]
 show_behind_parent = true
 script = ExtResource("2_h4sv3")
-frame_count = 6
+frame_count = 9
 
 [node name="Frame 0" type="Node2D" parent="BrushClip2D/Layer 3"]
 show_behind_parent = true
@@ -458,32 +510,61 @@ modulate = Color(1, 1, 1, 0.3)
 show_behind_parent = true
 z_index = -1
 script = ExtResource("3_rk7bc")
-frame_num = 4
-frame_end_num = 4
+frame_num = 5
+frame_end_num = 5
 stroke_data = [SubResource("Resource_m5k5v")]
 bounciness = 0.0
 
 [node name="Frame 5" type="Node2D" parent="BrushClip2D/Layer 3"]
 visible = false
+show_behind_parent = true
+script = ExtResource("3_rk7bc")
+frame_num = 8
+frame_end_num = 8
+stroke_data = [SubResource("Resource_rgl2i")]
+bounciness = 0.0
+
+[node name="Frame 6" type="Node2D" parent="BrushClip2D/Layer 3"]
+visible = false
 modulate = Color(1, 1, 1, 0.3)
 show_behind_parent = true
 z_index = -1
 script = ExtResource("3_rk7bc")
-frame_num = 5
-frame_end_num = 5
-stroke_data = [SubResource("Resource_rgl2i")]
+frame_num = 6
+frame_end_num = 6
+stroke_data = [SubResource("Resource_l0icn")]
+bounciness = 0.0
+
+[node name="Frame 7" type="Node2D" parent="BrushClip2D/Layer 3"]
+visible = false
+modulate = Color(1, 1, 1, 0.5)
+show_behind_parent = true
+z_index = -1
+script = ExtResource("3_rk7bc")
+frame_num = 7
+frame_end_num = 7
+stroke_data = [SubResource("Resource_k84ya")]
+bounciness = 0.0
+
+[node name="Frame 8" type="Node2D" parent="BrushClip2D/Layer 3"]
+visible = false
+show_behind_parent = true
+script = ExtResource("3_rk7bc")
+frame_num = 4
+frame_end_num = 4
+stroke_data = [SubResource("Resource_hg62h")]
 bounciness = 0.0
 
 [node name="Layer 2" type="Node2D" parent="BrushClip2D"]
 show_behind_parent = true
 script = ExtResource("2_h4sv3")
-frame_count = 4
+frame_count = 7
 layer_num = 1
 
 [node name="Frame 0 📃" type="Node2D" parent="BrushClip2D/Layer 2"]
 show_behind_parent = true
 script = SubResource("GDScript_un620")
-frame_end_num = 3
+frame_end_num = 6
 has_custom_script = true
 bounciness = 0.0
 
@@ -503,7 +584,7 @@ bounciness = 0.0
 
 [node name="BrushClip2D2" type="Node2D" parent="."]
 script = ExtResource("1_hc62x")
-current_frame = 4
+current_frame = 9
 _frame_count = 13
 
 [node name="Layer 1" type="Node2D" parent="BrushClip2D2"]
@@ -538,9 +619,8 @@ stroke_data = [SubResource("Resource_p4x10")]
 bounciness = 0.0
 
 [node name="Frame 3" type="Node2D" parent="BrushClip2D2/Layer 1"]
-modulate = Color(1, 1, 1, 0.3)
+visible = false
 show_behind_parent = true
-z_index = -1
 script = ExtResource("3_rk7bc")
 frame_num = 2
 frame_end_num = 2
@@ -548,9 +628,8 @@ stroke_data = [SubResource("Resource_jnj50")]
 bounciness = 0.0
 
 [node name="Frame 4" type="Node2D" parent="BrushClip2D2/Layer 1"]
-modulate = Color(1, 1, 1, 0.5)
+visible = false
 show_behind_parent = true
-z_index = -1
 script = ExtResource("3_rk7bc")
 frame_num = 3
 frame_end_num = 3
@@ -558,6 +637,7 @@ stroke_data = [SubResource("Resource_f35l6")]
 bounciness = 0.0
 
 [node name="Frame 5" type="Node2D" parent="BrushClip2D2/Layer 1"]
+visible = false
 show_behind_parent = true
 script = ExtResource("3_rk7bc")
 frame_num = 4
@@ -566,9 +646,8 @@ stroke_data = [SubResource("Resource_hg1nw")]
 bounciness = 0.0
 
 [node name="Frame 6" type="Node2D" parent="BrushClip2D2/Layer 1"]
-modulate = Color(1, 1, 1, 0.5)
+visible = false
 show_behind_parent = true
-z_index = -1
 script = ExtResource("3_rk7bc")
 frame_num = 5
 frame_end_num = 5
@@ -577,9 +656,7 @@ bounciness = 0.0
 
 [node name="Frame 7" type="Node2D" parent="BrushClip2D2/Layer 1"]
 visible = false
-modulate = Color(1, 1, 1, 0.3)
 show_behind_parent = true
-z_index = -1
 script = ExtResource("3_rk7bc")
 frame_num = 7
 frame_end_num = 7
@@ -588,9 +665,7 @@ bounciness = 0.0
 
 [node name="Frame 8" type="Node2D" parent="BrushClip2D2/Layer 1"]
 visible = false
-modulate = Color(1, 1, 1, 0.3)
 show_behind_parent = true
-z_index = -1
 script = ExtResource("3_rk7bc")
 frame_num = 8
 frame_end_num = 8
@@ -598,10 +673,7 @@ stroke_data = [SubResource("Resource_jcau0")]
 bounciness = 0.0
 
 [node name="Frame 9" type="Node2D" parent="BrushClip2D2/Layer 1"]
-visible = false
-modulate = Color(1, 1, 1, 0.3)
 show_behind_parent = true
-z_index = -1
 script = ExtResource("3_rk7bc")
 frame_num = 9
 frame_end_num = 9
@@ -610,9 +682,7 @@ bounciness = 0.0
 
 [node name="Frame 10" type="Node2D" parent="BrushClip2D2/Layer 1"]
 visible = false
-modulate = Color(1, 1, 1, 0.3)
 show_behind_parent = true
-z_index = -1
 script = ExtResource("3_rk7bc")
 frame_num = 10
 frame_end_num = 10
@@ -638,9 +708,8 @@ stroke_data = [SubResource("Resource_4pve0")]
 bounciness = 0.0
 
 [node name="Frame 13" type="Node2D" parent="BrushClip2D2/Layer 1"]
-modulate = Color(1, 1, 1, 0.3)
+visible = false
 show_behind_parent = true
-z_index = -1
 script = ExtResource("3_rk7bc")
 frame_num = 6
 frame_end_num = 6

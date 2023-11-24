@@ -63,6 +63,8 @@ var allow_hide_cursor := false
 
 var button_select_mode: Button
 
+var _strokes_before := []
+
 func _enter_tree():
 	editor = self
 	
@@ -775,12 +777,15 @@ func action_fill_try(action_position: Vector2):
 
 func action_paint_start(action_position: Vector2):
 	_current_action = ACTION_PAINT
-	
 	_action_position_previous = action_position
+	undo_redo_strokes_start()
+	
+	var brush = _get_editing_brush()
+	
 	
 	var color = Color.WHITE if _action_alt else current_color
 	_action_paint_stroke = BrushStrokeData.new([], [], color)
-	_get_editing_brush().add_stroke(_action_paint_stroke)
+	brush.add_stroke(_action_paint_stroke)
 	
 	action_paint_process(action_position)
 
@@ -798,9 +803,10 @@ func action_paint_complete():
 
 
 func _action_paint_complete_add():
+	var brush = _get_editing_brush()
 	var strokes := []
-	while _get_editing_brush().stroke_data.size() > 0:
-		var stroke = _get_editing_brush().stroke_data.pop_front()
+	while brush.stroke_data.size() > 0:
+		var stroke = brush.stroke_data.pop_front()
 		if stroke == _action_paint_stroke:
 			continue
 		if _action_paint_stroke.is_stroke_overlapping(stroke):
@@ -814,12 +820,13 @@ func _action_paint_complete_add():
 	strokes.push_back(_action_paint_stroke)
 	
 	for stroke in strokes:
-		_get_editing_brush().add_stroke(stroke)
+		brush.add_stroke(stroke)
 	
 	_action_paint_stroke = null
-	_get_editing_brush().draw()
-	_get_editing_brush().edited.emit()
-
+	brush.draw()
+	brush.edited.emit()
+	
+	undo_redo_strokes_complete("Paint brush draw")
 
 func _action_paint_complete_subtract():
 	var strokes := []
@@ -834,6 +841,8 @@ func _action_paint_complete_subtract():
 	_action_paint_stroke = null
 	_get_editing_brush().draw()
 	_get_editing_brush().edited.emit()
+	
+	undo_redo_strokes_complete("Paint brush erase")
 
 
 func action_paint_process(action_position: Vector2):
@@ -859,8 +868,9 @@ func _create_polygon_circle(start_position: Vector2, end_position: Vector2, size
 
 func action_oval_start(action_position):
 	_current_action = ACTION_OVAL
-	
 	_action_position_previous = action_position
+	
+	undo_redo_strokes_start()
 
 
 func action_oval_draw(brush):
@@ -886,8 +896,11 @@ func action_oval_complete(action_position):
 	
 	if _action_alt:
 		subtract_stroke(stroke)
+		undo_redo_strokes_complete("Oval brush erase")
 	else:
 		merge_stroke(stroke)
+		undo_redo_strokes_complete("Oval brush draw")
+	
 
 
 func get_oval_tool_shape(from: Vector2, to: Vector2, centered: bool, equal: bool, noise := 0.03):
@@ -918,12 +931,14 @@ func create_oval_polygon(center: Vector2, size: Vector2, noise := 0.05) -> Packe
 			polygon.push_back(center + Vector2.from_angle(i / 36.0 * TAU) * size)
 	return PackedVector2Array(polygon)
 
+
 ## ACTION RECT
 
 func action_rect_start(action_position):
 	_current_action = ACTION_RECT
-	
 	_action_position_previous = action_position
+	undo_redo_strokes_start()
+
 
 func action_rect_draw(brush):
 	var polygon = get_rect_tool_shape(
@@ -948,8 +963,10 @@ func action_rect_complete(action_position):
 	
 	if _action_alt:
 		subtract_stroke(stroke)
+		undo_redo_strokes_complete("Rect brush erase")
 	else:
 		merge_stroke(stroke)
+		undo_redo_strokes_complete("Rect brush draw")
 
 
 func get_rect_tool_shape(from: Vector2, to: Vector2, centered: bool, equal: bool, noise := 0.03):
@@ -995,6 +1012,8 @@ func create_line_polygon(from, to, vertices_per_side, noise: Vector2):
 ## ACTION SHAPE
 
 func action_shape_start(action_position):
+	undo_redo_strokes_start()
+	
 	_current_action = ACTION_SHAPE
 	_action_position_previous = action_position
 	_action_paint_stroke = BrushStrokeData.new([], [], current_color)
@@ -1013,8 +1032,10 @@ func action_shape_process(action_position):
 func action_shape_complete():
 	if _action_alt:
 		_action_paint_complete_subtract()
+		undo_redo_strokes_complete("Shape brush erase")
 	else:
 		_action_paint_complete_add()
+		undo_redo_strokes_complete("Shape brush draw")
 
 ##
 
@@ -1102,3 +1123,17 @@ static func douglas_peucker(points: PackedVector2Array, tolerance := 1.0) -> Pac
 		return results1 + results2.slice(1)
 	else:
 		return PackedVector2Array([points[0], points[points.size() - 1]])
+
+func undo_redo_strokes_start():
+	_strokes_before = _get_editing_brush().stroke_data.duplicate()
+
+
+func undo_redo_strokes_complete(name):
+	var brush = _get_editing_brush()
+	var undo_redo = get_undo_redo()
+	undo_redo.create_action(name)
+	undo_redo.add_undo_property(brush, "stroke_data", _strokes_before)
+	undo_redo.add_do_property(brush, "stroke_data", brush.stroke_data.duplicate())
+	undo_redo.add_do_method(brush, "draw")
+	undo_redo.add_undo_method(brush, "draw")
+	undo_redo.commit_action(false)
