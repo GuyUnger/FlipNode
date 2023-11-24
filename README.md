@@ -27,7 +27,7 @@ Use <kbd>LMB</kbd> to draw and <kbd>RMB</kbd> to erase
    - Uniform squares <kbd>SHIFT</kbd>
 - 🪣 **Fill bucket** <kbd>G</kbd>
 
-<kbd>ALT</kbd> for quick color picking
+Hold <kbd>ALT</kbd> for quick color picking
 
 <kbd>[</kbd> and <kbd>]</kbd> to shrink/grow brush size
 
