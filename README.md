@@ -38,10 +38,11 @@ You can setup the physics mode in the inspector
 
 ## BrushClip2D
 ### For animations. Has layers, frame scripts and audio.
-Adds children for all layers and frames. These can all be accessed through the timeline, but are exposed so you can add your own nodes to frames.
+Creates nodes for all layers and frames. These can all be accessed through the timeline, but are exposed so you can add your own nodes to frames.
 
 ### Timeline
-- Set a custom fps for this object, if no value is input it will default to the project value
+Here you can:
+- Set a custom `fps` for this BrushClip, if left empty it will use the project default value
 - Enable onion skinning to see next/previous frames
 - Add/delete layers
 
