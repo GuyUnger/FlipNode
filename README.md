@@ -3,7 +3,7 @@
 
 ![GoolashTitle](https://github.com/GuyUnger/Goolash/assets/7023847/0843ade0-ae36-4444-99a1-b96f3c4ae770)
 
-### Vector paint and animation addon for Godot 4 
+### Vector paint and animation addon for Godot 4.2+
 
 - 🚲 Fast and easy drawing right inside your scene
 - ✍️ Frame by frame animation
@@ -76,8 +76,8 @@ Navigating and editing timeline
 - [ ] Editing multiple brushes with multi-select?
 
 ### 🪲 Known issues:
-- [ ] Filling shapes removes parts of strokes inside it
-- [ ] Holes in eraser are still removed if it overlaps a stroke
+- [ ] Filling a hole removes strokes inside it
+- [ ] Holes in erasing shapes are ignored
 - [ ] Sometimes strokes dont properly merge
-- [ ] Mouse is sometimes hidden in places where it shouldnt
+- [ ] Sometimes mouse is hidden in places it shouldnt
 - [ ] All times things break:(
