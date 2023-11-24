@@ -272,3 +272,7 @@ func is_polygon_valid(polygon):
 			area += ar
 	
 	return area > 64.0
+
+
+func duplicate(deep = false):
+	return BrushStrokeData.new(polygon.duplicate(), holes.duplicate(), color)

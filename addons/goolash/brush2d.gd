@@ -145,3 +145,9 @@ func get_islands():
 func _draw():
 	if Engine.is_editor_hint():
 		GoolashEditor.editor._forward_draw_brush(self)
+
+func get_strokes_duplicate() -> Array:
+	var strokes_duplicate = []
+	for stroke in stroke_data:
+		strokes_duplicate.push_back(stroke.duplicate())
+	return strokes_duplicate

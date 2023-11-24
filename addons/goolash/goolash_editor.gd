@@ -754,22 +754,27 @@ func action_move_process(action_position: Vector2):
 ## ACTION FILL
 
 func action_fill_try(action_position: Vector2):
-	for stroke: BrushStrokeData in _get_editing_brush().stroke_data:
+	var brush = _get_editing_brush()
+	for stroke: BrushStrokeData in brush.stroke_data:
 		if stroke.is_point_inside(action_position):
+			undo_redo_strokes_start()
 			stroke.color = current_color
 			merge_stroke(stroke)
+			undo_redo_strokes_complete("Bucket fill recolor")
 			return
-	for stroke: BrushStrokeData in _get_editing_brush().stroke_data:
+	for stroke: BrushStrokeData in brush.stroke_data:
 		for i in stroke.holes.size():
 			if Geometry2D.is_point_in_polygon(action_position, stroke.holes[i]):
+				undo_redo_strokes_start()
 				if stroke.color == current_color:
 					stroke.holes.remove_at(i)
 				else:
 					var polygon = stroke.holes[i].duplicate()
 					polygon.reverse()
-					_get_editing_brush().add_stroke(BrushStrokeData.new(polygon, [], current_color))
-				_get_editing_brush().draw()
-				_get_editing_brush().edited.emit()
+					brush.add_stroke(BrushStrokeData.new(polygon, [], current_color))
+				brush.draw()
+				brush.edited.emit()
+				undo_redo_strokes_complete("Bucket fill hole")
 				return
 
 
@@ -804,6 +809,7 @@ func action_paint_complete():
 
 func _action_paint_complete_add():
 	var brush = _get_editing_brush()
+	
 	var strokes := []
 	while brush.stroke_data.size() > 0:
 		var stroke = brush.stroke_data.pop_front()
@@ -829,18 +835,20 @@ func _action_paint_complete_add():
 	undo_redo_strokes_complete("Paint brush draw")
 
 func _action_paint_complete_subtract():
+	var brush = _get_editing_brush()
+	
 	var strokes := []
-	_get_editing_brush().stroke_data.erase(_action_paint_stroke)
+	brush.stroke_data.erase(_action_paint_stroke)
 	while _get_editing_brush().stroke_data.size() > 0:
-		var stroke: BrushStrokeData = _get_editing_brush().stroke_data.pop_front()
+		var stroke: BrushStrokeData = brush.stroke_data.pop_front()
 		strokes.append_array(stroke.subtract_stroke(_action_paint_stroke))
 	
 	for stroke in strokes:
-		_get_editing_brush().add_stroke(stroke)
+		brush.add_stroke(stroke)
 	
 	_action_paint_stroke = null
-	_get_editing_brush().draw()
-	_get_editing_brush().edited.emit()
+	brush.draw()
+	brush.edited.emit()
 	
 	undo_redo_strokes_complete("Paint brush erase")
 
@@ -1124,16 +1132,20 @@ static func douglas_peucker(points: PackedVector2Array, tolerance := 1.0) -> Pac
 	else:
 		return PackedVector2Array([points[0], points[points.size() - 1]])
 
+
 func undo_redo_strokes_start():
-	_strokes_before = _get_editing_brush().stroke_data.duplicate()
+	_strokes_before = _get_editing_brush().get_strokes_duplicate()
 
 
 func undo_redo_strokes_complete(name):
 	var brush = _get_editing_brush()
+	var strokes_after = brush.get_strokes_duplicate()
+	
 	var undo_redo = get_undo_redo()
 	undo_redo.create_action(name)
 	undo_redo.add_undo_property(brush, "stroke_data", _strokes_before)
-	undo_redo.add_do_property(brush, "stroke_data", brush.stroke_data.duplicate())
+	undo_redo.add_do_property(brush, "stroke_data", strokes_after)
 	undo_redo.add_do_method(brush, "draw")
 	undo_redo.add_undo_method(brush, "draw")
+	
 	undo_redo.commit_action(false)

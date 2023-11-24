@@ -555,7 +555,6 @@ hole_curves = Array[Curve2D]([])
 [node name="BrushClip2D" type="Node2D" parent="."]
 position = Vector2(-151, -36)
 script = ExtResource("1_kilw2")
-looping = null
 
 [node name="Layer 1" type="Node2D" parent="BrushClip2D"]
 show_behind_parent = true
