@@ -103,7 +103,7 @@ func _enter_tree():
 	
 	KEYFRAME_SCRIPT = preload("res://addons/goolash/brush_keyframe2d.gd")
 	KEYFRAME_SCRIPT_CUSTOM = preload("res://addons/goolash/frame_script.gd")
-
+	
 
 func _on_mode_changed():
 	is_editing = is_instance_valid(editing_brush) and button_select_mode.button_pressed
@@ -118,6 +118,8 @@ func _init_project_settings():
 	add_project_setting("goolash/animation/onion_skin_enabled", true)
 	add_project_setting("goolash/animation/onion_skin_frames", 2)
 	add_project_setting("goolash/painting/default_color", Color.PERU)
+	add_project_setting("goolash/rendering/anti-alias", true)
+	add_project_setting("goolash/rendering/boiling", true)
 
 
 func add_project_setting(name: String, default_value) -> void:
@@ -132,7 +134,11 @@ func _load_project_settings():
 	onion_skin_enabled = ProjectSettings.get_setting_with_override("goolash/animation/onion_skin_enabled")
 	onion_skin_frames = ProjectSettings.get_setting_with_override("goolash/animation/onion_skin_frames")
 	current_color = ProjectSettings.get_setting_with_override("goolash/painting/default_color")
-
+	
+	var anti_alias = ProjectSettings.get_setting_with_override("goolash/rendering/anti-alias")
+	var boiling = ProjectSettings.get_setting_with_override("goolash/rendering/boiling")
+	
+	write_shader(anti_alias, boiling)
 
 func _on_settings_changed():
 	_load_project_settings()
@@ -563,7 +569,7 @@ func _draw_custom_cursor():
 		TOOL_EYEDROPPER:
 			var preview_size := 20.0
 			for stroke: BrushStrokeData in _get_editing_brush().stroke_data:
-				if stroke.is_point_inside(cursor_position):
+				if stroke.is_point_inside(_get_editing_brush().get_local_mouse_position()):
 					hud.draw_circle(cursor_position, preview_size, stroke.color)
 					_draw_circle_outline(hud, cursor_position, preview_size, Color.WHITE)
 				hud.draw_texture(TextureEyedropper, cursor_position + Vector2(-8, -16))
@@ -803,16 +809,16 @@ func action_paint_start(action_position: Vector2):
 func action_paint_complete():
 	_action_paint_stroke.optimize()
 	if _action_alt:
-		_action_paint_complete_subtract()
+		_action_brush_subtract_complete()
 		_get_editing_brush().edited.emit()
 	else:
-		_action_paint_complete_add()
+		_action_brush_add_complete()
 		_get_editing_brush().edited.emit()
 	if editing_brush is BrushClip2D:
 		editing_brush.edited.emit()
 
 
-func _action_paint_complete_add():
+func _action_brush_add_complete():
 	var brush = _get_editing_brush()
 	
 	var strokes := []
@@ -839,7 +845,7 @@ func _action_paint_complete_add():
 	
 	undo_redo_strokes_complete("Paint brush draw")
 
-func _action_paint_complete_subtract():
+func _action_brush_subtract_complete():
 	var brush = _get_editing_brush()
 	
 	var strokes := []
@@ -1029,7 +1035,7 @@ func action_shape_start(action_position):
 	
 	_current_action = ACTION_SHAPE
 	_action_position_previous = action_position
-	_action_paint_stroke = BrushStrokeData.new([], [], current_color)
+	_action_paint_stroke = BrushStrokeData.new([], [], Color.WHITE if _action_alt else current_color)
 	_get_editing_brush().add_stroke(_action_paint_stroke)
 
 func action_shape_process(action_position):
@@ -1044,10 +1050,10 @@ func action_shape_process(action_position):
 
 func action_shape_complete():
 	if _action_alt:
-		_action_paint_complete_subtract()
+		_action_brush_subtract_complete()
 		undo_redo_strokes_complete("Shape brush erase")
 	else:
-		_action_paint_complete_add()
+		_action_brush_add_complete()
 		undo_redo_strokes_complete("Shape brush draw")
 
 ##
@@ -1056,12 +1062,12 @@ func action_shape_complete():
 
 func merge_stroke(stroke):
 	_action_paint_stroke = stroke
-	_action_paint_complete_add()
+	_action_brush_add_complete()
 
 
 func subtract_stroke(stroke):
 	_action_paint_stroke = stroke
-	_action_paint_complete_subtract()
+	_action_brush_subtract_complete()
 
 
 func _get_editing_brush() -> Brush2D:
@@ -1154,3 +1160,56 @@ func undo_redo_strokes_complete(name):
 	undo_redo.add_undo_method(brush, "draw")
 	
 	undo_redo.commit_action(false)
+
+
+
+func write_shader(anti_alias: bool, boiling: bool):
+	var shader_source = ""
+	shader_source += "shader_type canvas_item;
+render_mode unshaded;
+
+uniform sampler2D screen_texture : hint_screen_texture, repeat_disable, filter_nearest;\n
+varying vec4 modulate;
+"
+	if boiling:
+		shader_source += "
+global uniform sampler2D goolash_boil_noise : repeat_enable;
+global uniform float goolash_frame;
+"
+	shader_source += "
+void vertex() {
+	modulate = COLOR;
+}
+void fragment() {
+	COLOR.rgb = modulate.rgb;"
+	
+	if boiling:
+		shader_source += "vec2 uv = SCREEN_UV;
+	vec2 noise_uv = UV / 6.0;
+	float frame = floor(goolash_frame / 4.0);
+	noise_uv += vec2(frame * 0.05, frame * PI);
+	uv += (texture(goolash_boil_noise, noise_uv).rg - 0.5) * 0.001;"
+	elif anti_alias:
+		shader_source += "	vec2 uv = SCREEN_UV;"
+	
+	if anti_alias:
+		shader_source += "
+	float a = 0.0;
+	a += texture(screen_texture, uv).r * 2.0;
+	for (float i = 0.0; i < 1.0; i += 1.0 / 3.0) {
+		a += texture(screen_texture, uv + vec2(sin(i * TAU + 0.8), cos(i * TAU + 0.8)) * 1.5 * SCREEN_PIXEL_SIZE).r;
+		a += texture(screen_texture, uv + vec2(sin(i * TAU), cos(i * TAU)) * 1.0 * SCREEN_PIXEL_SIZE).r;
+	}
+	a = smoothstep(0.2, 0.6, a / 8.0);\n
+	
+	COLOR.a = a * modulate.a;\n"
+	else:
+		shader_source += "
+	COLOR.a = texture(screen_texture, SCREEN_UV).r;"
+	
+	shader_source += "
+}"
+	var file := FileAccess.open("res://addons/goolash/brush_stroke.gdshader", FileAccess.WRITE)
+	file.store_string(shader_source)
+	file.close()
+

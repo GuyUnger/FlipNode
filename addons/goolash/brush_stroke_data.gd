@@ -91,6 +91,8 @@ func subtract_stroke(stroke: BrushStrokeData) -> Array:
 	var subtracted_holes: Array[PackedVector2Array]
 	var strokes := []
 	
+	var holes_in_holes := []
+	
 	for hole in holes:
 		if Geometry2D.intersect_polygons(subtract_polygon, hole).size() > 0:
 			var result_polygons = Geometry2D.merge_polygons(subtract_polygon, hole)
@@ -101,8 +103,30 @@ func subtract_stroke(stroke: BrushStrokeData) -> Array:
 					strokes.push_back(create_stroke(result_polygon))
 				else:
 					subtract_polygon = result_polygon
+					
 		else:
 			subtracted_holes.push_back(hole)
+		
+		for hole_a in stroke.holes:
+			var results = Geometry2D.intersect_polygons(hole, hole_a)
+			holes_in_holes.append_array(results)
+	
+	for hole_b in stroke.holes:
+		var results = Geometry2D.intersect_polygons(polygon, hole_b)
+		if results.size() > 0:
+			for result in results:
+				var shape_holes: Array[PackedVector2Array]
+				for hole_a in holes_in_holes:
+					if Geometry2D.intersect_polygons(hole_a, result).size() > 0: ## overlapping
+						if Geometry2D.clip_polygons(hole_a, result).size() == 0: ## inside
+							shape_holes.push_back(hole_a)
+						else:
+							var clip = Geometry2D.clip_polygons(result, hole_a)
+							if clip.size() > 0:
+								result = clip[0]
+								printt("yah")
+				strokes.push_back(create_stroke(result, shape_holes))
+	
 	
 	if Geometry2D.clip_polygons(subtract_polygon, polygon).size() == 0:
 		## hole added

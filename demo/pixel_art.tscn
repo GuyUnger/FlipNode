@@ -1,0 +1,169 @@
+[gd_scene load_steps=17 format=3 uid="uid://ds22ka0mfb7df"]
+
+[ext_resource type="Script" path="res://addons/goolash/brush2d.gd" id="1_wf78h"]
+[ext_resource type="Script" path="res://addons/goolash/brush_stroke_data.gd" id="2_e4cdw"]
+
+[sub_resource type="Curve2D" id="Curve2D_2kfnd"]
+bake_interval = 20.0
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 1.11655, 18.6531, 0, 0, 0, 0, 6.623, 24.3769, 0, 0, 0, 0, 12.9713, 54.7292, 0, 0, 0, 0, 10.0819, 107.315, 0, 0, 0, 0, 11.2074, 132.375, 0, 0, 0, 0, 13.5459, 139.252, 0, 0, 0, 0, 11.3111, 149.373, 0, 0, 0, 0, 6.82329, 153.056, 0, 0, 0, 0, 2.99645, 153.817, 0, 0, 0, 0, -1.39159, 153.056, 0, 0, 0, 0, -5.87945, 149.373, 0, 0, 0, 0, -8.49507, 139.595, 0, 0, 0, 0, -9.80968, 89.9286, 0, 0, 0, 0, -6.93981, 55.7843, 0, 0, 0, 0, -11.3012, 41.3792, 0, 0, 0, 0, -13.1771, 27.6424, 0, 0, 0, 0, -12.4158, 23.8155, 0, 0, 0, 0, -8.73276, 19.3277, 0, 0, 0, 0, -3.17706, 17.6424, 0, 0, 0, 0, 0.64989, 18.4037)
+}
+point_count = 20
+
+[sub_resource type="Resource" id="Resource_duyvh"]
+script = ExtResource("2_e4cdw")
+color = Color(0.803922, 0.521569, 0.247059, 1)
+polygon = PackedVector2Array(0.64989, 18.4037, 1.11655, 18.6531, 6.623, 24.3769, 9.79714, 39.5531, 12.9713, 54.7292, 12.5198, 62.9458, 10.5334, 99.0989, 10.0819, 107.315, 10.3552, 113.401, 13.6599, 112.49, 15.6108, 112.683, 25.0339, 119.182, 31.5947, 128.362, 34.1707, 127.278, 34.5208, 127.313, 42.9583, 130.744, 48.2185, 135.852, 53.5233, 142.059, 56.4187, 148.518, 65.4406, 149.14, 74.5564, 151.869, 81.0411, 151.779, 95.3076, 151.582, 109.574, 151.385, 116.059, 151.296, 135.67, 149.534, 152.809, 152.341, 170.511, 153.091, 172.784, 154.076, 175.206, 154.121, 190.085, 154.397, 207.207, 151.723, 224.33, 149.049, 236.558, 140.567, 248.786, 132.085, 250.456, 129.708, 250.458, 129.694, 250.514, 129.625, 258.965, 117.596, 264.872, 106.675, 270.779, 95.7547, 275.446, 93.2604, 276.54, 93.3682, 277.148, 93.8672, 278.176, 89.3762, 281.859, 84.8884, 284.255, 84.1615, 284.638, 83.1554, 289.305, 80.6612, 289.655, 80.6957, 294.324, 83.7635, 294.378, 86.0741, 294.486, 86.132, 297.223, 91.2521, 295.226, 103.818, 290.981, 114.65, 293.79, 125.822, 303.305, 129.599, 306.234, 137.3, 303.305, 144.371, 297.367, 147.857, 298.045, 157.459, 296.359, 163.015, 294.861, 164.245, 294.47, 165.535, 288.106, 169.787, 276.866, 171.4, 265.627, 173.012, 246.355, 173.065, 227.082, 173.117, 219.095, 170.534, 214.611, 163.82, 214.82, 162.768, 204.398, 163.957, 190.279, 165.568, 182.941, 165.414, 182.971, 165.834, 179.18, 172.483, 173.758, 174.558, 153.971, 172.014, 134.183, 169.469, 119.096, 171.204, 111.917, 171.293, 96.1232, 171.49, 80.3294, 171.687, 73.1503, 171.777, 61.8782, 168.966, 51.6662, 168.311, 41.4542, 167.656, 33.3981, 163.528, 32.3283, 163.894, 28.0072, 163.223, 25.9032, 168.455, 22.5407, 171.587, 10.8537, 172.899, 0.96992, 170.818, -6.80301, 166.084, -12.0297, 156.731, -13.1519, 146.476, -10.9305, 140.506, -8.5344, 138.109, -8.70047, 131.834, -9.15237, 114.762, -9.60427, 97.6889, -9.80968, 89.9286, -8.37474, 72.8564, -6.93981, 55.7843, -11.3012, 41.3792, -13.1771, 27.6424, -12.4158, 23.8155, -8.73276, 19.3277, -3.17706, 17.6424)
+polygon_curve = SubResource("Curve2D_2kfnd")
+holes = Array[PackedVector2Array]([PackedVector2Array(38.7837, 142.937, 40.2984, 143.853, 39.7859, 143.179, 38.1112, 141.553)])
+hole_curves = Array[Curve2D]([])
+
+[sub_resource type="Curve2D" id="Curve2D_0lhv1"]
+bake_interval = 20.0
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 86.4122, 30.0243, 0, 0, 0, 0, 97.5505, 31.3041, 0, 0, 0, 0, 105.039, 34.1181, 0, 0, 0, 0, 113.257, 41.775, 0, 0, 0, 0, 113.94, 50.2199, 0, 0, 0, 0, 111.821, 57.1825, 0, 0, 0, 0, 108.897, 63.6055, 0, 0, 0, 0, 102.242, 69.9898, 0, 0, 0, 0, 92.7934, 71.3163, 0, 0, 0, 0, 77.4927, 68.341, 0, 0, 0, 0, 69.2786, 65.1413, 0, 0, 0, 0, 65.0341, 60.0923, 0, 0, 0, 0, 63.7116, 47.2855, 0, 0, 0, 0, 66.5193, 40.0461, 0, 0, 0, 0, 75.497, 32.9956, 0, 0, 0, 0, 86.0586, 29.9895)
+}
+point_count = 16
+
+[sub_resource type="Resource" id="Resource_iopg3"]
+script = ExtResource("2_e4cdw")
+color = Color(0.803922, 0.521569, 0.247059, 1)
+polygon = PackedVector2Array(86.4122, 30.0243, 97.5505, 31.3041, 105.039, 34.1181, 113.257, 41.775, 113.94, 50.2199, 111.821, 57.1825, 108.897, 63.6055, 102.242, 69.9898, 92.7934, 71.3163, 77.4927, 68.341, 69.2786, 65.1413, 65.0341, 60.0923, 63.7116, 47.2855, 66.5193, 40.0461, 75.497, 32.9956, 86.0586, 29.9895)
+polygon_curve = SubResource("Curve2D_0lhv1")
+holes = Array[PackedVector2Array]([])
+hole_curves = Array[Curve2D]([])
+
+[sub_resource type="Curve2D" id="Curve2D_0gbvp"]
+bake_interval = 20.0
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 206.88, 103.142, 0, 0, 0, 0, 210.629, 104.007, 0, 0, 0, 0, 207.493, 107.879, 0, 0, 0, 0, 204.023, 107.316, 0, 0, 0, 0, 206.688, 103.055)
+}
+point_count = 5
+
+[sub_resource type="Curve2D" id="Curve2D_25xly"]
+bake_interval = 20.0
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 218.649, 83.1782, 0, 0, 0, 0, 225.432, 86.2656, 0, 0, 0, 0, 230.386, 85.8283, 0, 0, 0, 0, 235.988, 92.4635, 0, 0, 0, 0, 236.477, 97.1703, 0, 0, 0, 0, 234.777, 101.147, 0, 0, 0, 0, 235.988, 113.231, 0, 0, 0, 0, 232.821, 115.224, 0, 0, 0, 0, 229.94, 114.264, 0, 0, 0, 0, 226.964, 109.234, 0, 0, 0, 0, 226.936, 102.855, 0, 0, 0, 0, 222.825, 102.429, 0, 0, 0, 0, 220.094, 103.439, 0, 0, 0, 0, 217.823, 108.503, 0, 0, 0, 0, 211.609, 115.493, 0, 0, 0, 0, 197.223, 114.566, 0, 0, 0, 0, 195.535, 112.04, 0, 0, 0, 0, 195.535, 107.685, 0, 0, 0, 0, 201.74, 94.4691, 0, 0, 0, 0, 212.867, 88.2321, 0, 0, 0, 0, 214.621, 83.8332, 0, 0, 0, 0, 218.509, 83.1644)
+}
+point_count = 22
+
+[sub_resource type="Resource" id="Resource_e7eoq"]
+script = ExtResource("2_e4cdw")
+color = Color(0.803922, 0.521569, 0.247059, 1)
+polygon = PackedVector2Array(203.001, 78.1336, 210.664, 80.9539, 222.163, 80.9367, 233.662, 80.9195, 236.469, 82.0818, 241.555, 95.3585, 241.483, 110.356, 239.275, 116.317, 236.12, 117.964, 224.121, 119.163, 210.371, 118.021, 196.621, 116.878, 196.383, 113.309, 195.535, 112.04, 195.535, 107.685, 195.948, 106.805, 195.459, 99.48, 196.658, 81.3076, 199.031, 78.4154, 202.795, 78.1133)
+polygon_curve = SubResource("Curve2D_25xly")
+holes = Array[PackedVector2Array]([])
+hole_curves = Array[Curve2D]([SubResource("Curve2D_0gbvp")])
+
+[sub_resource type="Curve2D" id="Curve2D_nwfsf"]
+bake_interval = 20.0
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 127.242, 102.323, 0, 0, 0, 0, 130.436, 106.215, 0, 0, 0, 0, 127.242, 110.107, 0, 0, 0, 0, 81.0076, 111.867, 0, 0, 0, 0, 77.1153, 108.673, 0, 0, 0, 0, 77.7079, 105.132, 0, 0, 0, 0, 80.2334, 103.445, 0, 0, 0, 0, 126.467, 102.246)
+}
+point_count = 8
+
+[sub_resource type="Resource" id="Resource_acmd5"]
+script = ExtResource("2_e4cdw")
+color = Color(0.803922, 0.521569, 0.247059, 1)
+polygon = PackedVector2Array(128.364, 86.608, 131.256, 88.9816, 132.671, 100.321, 132.379, 106.611, 131.507, 107.194, 131.482, 110.918, 128.364, 114.036, 117.496, 112.363, 107.677, 110.852, 104.125, 110.987, 88.2316, 111.592, 82.9328, 111.794, 82.6511, 112.321, 79.0426, 112.979, 75.3953, 111.266, 73.4125, 107.733, 73.2282, 105.908, 73.1867, 105.867, 73.1867, 105.497, 72.0192, 93.9326, 72.1603, 93.4592, 73.1867, 93.1939, 73.1867, 91.971, 74.9507, 89.3286, 75.3953, 88.2554, 75.7711, 88.0997, 75.9966, 87.7618, 77.0058, 87.5883, 78.2014, 87.093, 85.9183, 87.0053, 102.896, 86.8124, 119.873, 86.6195, 127.59, 86.5318)
+polygon_curve = SubResource("Curve2D_nwfsf")
+holes = Array[PackedVector2Array]([])
+hole_curves = Array[Curve2D]([])
+
+[sub_resource type="GDScript" id="GDScript_oqsra"]
+script/source = "extends CharacterBody2D
+
+
+const SPEED = 300.0
+const JUMP_VELOCITY = -400.0
+
+# Get the gravity from the project settings to be synced with RigidBody nodes.
+var gravity = ProjectSettings.get_setting(\"physics/2d/default_gravity\")
+
+
+func _physics_process(delta):
+	# Add the gravity.
+	if not is_on_floor():
+		velocity.y += gravity * delta
+
+	# Handle jump.
+	if Input.is_action_just_pressed(\"ui_accept\") and is_on_floor():
+		velocity.y = JUMP_VELOCITY
+
+	# Get the input direction and handle the movement/deceleration.
+	# As good practice, you should replace UI actions with custom gameplay actions.
+	var direction = Input.get_axis(\"ui_left\", \"ui_right\")
+	if direction:
+		velocity.x = direction * SPEED
+	else:
+		velocity.x = move_toward(velocity.x, 0, SPEED)
+
+	move_and_slide()
+"
+
+[sub_resource type="Curve2D" id="Curve2D_v6qgj"]
+bake_interval = 20.0
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 2.89843, -35.8056, 0, 0, 0, 0, 10.268, -35.8176, 0, 0, 0, 0, 15.4739, -32.8209, 0, 0, 0, 0, 16.9398, -29.8861, 0, 0, 0, 0, 16.9377, -21.9065, 0, 0, 0, 0, 11.5852, -16.5077, 0, 0, 0, 0, 10.9273, -13.7626, 0, 0, 0, 0, 2.38216, -13.7357, 0, 0, 0, 0, -6.66758, -18.263, 0, 0, 0, 0, -5.11951, -26.2893, 0, 0, 0, 0, -7.43086, -29.8817, 0, 0, 0, 0, -4.4381, -35.8108, 0, 0, 0, 0, 2.32258, -35.8623)
+}
+point_count = 13
+
+[sub_resource type="Curve2D" id="Curve2D_h0ca3"]
+bake_interval = 20.0
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 12.0408, -43.7276, 0, 0, 0, 0, 20.0864, -40.0772, 0, 0, 0, 0, 22.9294, -35.5556, 0, 0, 0, 0, 24.8367, -31.0656, 0, 0, 0, 0, 24.5446, -18.7774, 0, 0, 0, 0, 18.8253, -12.6925, 0, 0, 0, 0, 18.1846, -9.10149, 0, 0, 0, 0, 14.1608, -5.91573, 0, 0, 0, 0, 0.62593, -5.91573, 0, 0, 0, 0, -8.70323, -10.3616, 0, 0, 0, 0, -5.19657, -3.03647, 0, 0, 0, 0, -7.57316, -0.14675, 0, 0, 0, 0, -10.6105, -0.14993, 0, 0, 0, 0, -18.9734, -10.5321, 0, 0, 0, 0, -18.7476, -29.3063, 0, 0, 0, 0, -7.61011, -43.4405, 0, 0, 0, 0, 11.8883, -43.7426)
+}
+point_count = 17
+
+[sub_resource type="Resource" id="Resource_xps2x"]
+script = ExtResource("2_e4cdw")
+color = Color(0.247059, 0.572609, 0.803922, 1)
+polygon = PackedVector2Array(12.0408, -43.7276, 20.0864, -40.0772, 22.9294, -35.5556, 24.8367, -31.0656, 24.5446, -18.7774, 18.8253, -12.6925, 18.1846, -9.10149, 14.1608, -5.91573, 11.3602, -5.91573, 11.348, 10.7535, 26.1473, 7.27608, 29.2653, 10.3941, 28.1792, 15.4728, 14.261, 18.1158, 8.16764, 22.5521, 5.18865, 21.9595, 3.50118, 19.434, 3.47155, 7.48094, 3.44193, -4.47216, -4.97376, -7.37527, -5.38104, 4.49724, -5.78832, 16.3698, -9.08801, 18.1335, -23.8806, 16.9711, -24.9667, 13.3908, -23.2792, 10.8653, -13.0452, 10.2287, -13.0127, -1.67504, -13.0088, -3.12724, -18.9734, -10.5321, -18.7476, -29.3063, -7.61011, -43.4405, 11.8883, -43.7426)
+polygon_curve = SubResource("Curve2D_h0ca3")
+holes = Array[PackedVector2Array]([PackedVector2Array(2.89843, -35.8056, 10.268, -35.8176, 15.4739, -32.8209, 16.9398, -29.8861, 16.9377, -21.9065, 11.5852, -16.5077, 10.9273, -13.7626, 4.96954, -13.7439, 0.37684, -14.7389, -6.66758, -18.263, -5.11951, -26.2893, -7.43086, -29.8817, -4.4381, -35.8108, 2.32258, -35.8623)])
+hole_curves = Array[Curve2D]([SubResource("Curve2D_v6qgj")])
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ql1q5"]
+
+[node name="PixelArt" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(4, 4)
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
+handle_input_locally = false
+size = Vector2i(288, 162)
+render_target_update_mode = 4
+
+[node name="Brush2D" type="Node2D" parent="SubViewportContainer/SubViewport"]
+show_behind_parent = true
+script = ExtResource("1_wf78h")
+stroke_data = [SubResource("Resource_duyvh"), SubResource("Resource_iopg3"), SubResource("Resource_e7eoq"), SubResource("Resource_acmd5")]
+physics_mode = 1
+bounciness = 0.0
+
+[node name="CharacterBody2D" type="CharacterBody2D" parent="SubViewportContainer/SubViewport"]
+position = Vector2(36.98, 88.6)
+script = SubResource("GDScript_oqsra")
+
+[node name="Brush2D" type="Node2D" parent="SubViewportContainer/SubViewport/CharacterBody2D"]
+show_behind_parent = true
+script = ExtResource("1_wf78h")
+stroke_data = [SubResource("Resource_xps2x")]
+bounciness = 0.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SubViewportContainer/SubViewport/CharacterBody2D"]
+shape = SubResource("RectangleShape2D_ql1q5")

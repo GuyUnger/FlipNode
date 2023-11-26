@@ -19,6 +19,10 @@ config/icon="res://icon.svg"
 
 Goolash="*res://addons/goolash/goolash.gd"
 
+[display]
+
+window/stretch/mode="canvas_items"
+
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/goolash/plugin.cfg", "res://addons/insta_complete/plugin.cfg")
@@ -26,6 +30,11 @@ enabled=PackedStringArray("res://addons/goolash/plugin.cfg", "res://addons/insta
 [goolash]
 
 animation/default_fps=12
+rendering/boiling=false
+
+[rendering]
+
+environment/defaults/default_clear_color=Color(0.180392, 0.180392, 0.180392, 1)
 
 [shader_globals]
 

@@ -52,6 +52,9 @@ func _ready():
 		_update_frame_count()
 		if layers.size() == 0:
 			_create_layer()
+		for layer: BrushLayer2D in layers:
+			if layer.keyframes.size() == 0:
+				layer.add_keyframe()
 		stop()
 	else:
 		if auto_play:
