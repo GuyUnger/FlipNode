@@ -1,0 +1,17 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://ctr5c5ki1j120"]
+
+[sub_resource type="Shader" id="Shader_cj0lw"]
+code = "shader_type canvas_item;
+render_mode blend_mix;
+
+uniform sampler2D screen_texture : hint_screen_texture, repeat_disable, filter_nearest;
+
+void fragment() {
+	vec2 uv = SCREEN_UV / SCREEN_PIXEL_SIZE * 0.3 + TIME * 0.5;
+	float checker = abs(smoothstep(-0.2, 0.2, sin(uv.x)) - smoothstep(-0.2, 0.2, sin(uv.y)));
+	COLOR.rgb = vec3(checker * 0.5 + 0.5);
+	COLOR.a = texture(screen_texture, SCREEN_UV).r;
+}"
+
+[resource]
+shader = SubResource("Shader_cj0lw")

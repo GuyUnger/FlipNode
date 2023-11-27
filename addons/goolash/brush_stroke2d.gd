@@ -1,7 +1,7 @@
 @tool
 extends CanvasGroup
 
-func draw(stroke):
+func draw(stroke: BrushStrokeData):
 	self_modulate = stroke.color
 	
 	var polygon_count = stroke.holes.size() + 1
@@ -21,3 +21,9 @@ func draw(stroke):
 		node = get_child(i + 1)
 		node.modulate = Color(0.0, 0.0, 0.0, a)
 		node.polygon = stroke.holes[i]
+	
+	if Engine.is_editor_hint():
+		if stroke._erasing:
+			material = GoolashEditor.StrokeEraseMaterial
+		else:
+			material = GoolashEditor.StrokeRegularMaterial

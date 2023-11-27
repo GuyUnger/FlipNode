@@ -1,4 +1,4 @@
-[gd_scene load_steps=77 format=3 uid="uid://bgirhyd6vj5my"]
+[gd_scene load_steps=78 format=3 uid="uid://bgirhyd6vj5my"]
 
 [ext_resource type="Script" path="res://addons/goolash/brush_clip2d.gd" id="1_kilw2"]
 [ext_resource type="Script" path="res://addons/goolash/brush_layer2d.gd" id="2_omsrh"]
@@ -521,6 +521,13 @@ polygon_curve = SubResource("Curve2D_yu07f")
 holes = Array[PackedVector2Array]([PackedVector2Array(458.816, 291.336, 465.917, 294.115, 474.49, 302.022, 476.602, 307.12, 476.838, 313.551, 473.823, 321.74, 468.586, 326.977, 463.488, 329.088, 455.722, 329.324, 449.867, 327.671, 448.583, 328.322, 446.819, 327.077, 437.041, 320.172, 435.741, 317.542, 435.744, 312.241, 442.91, 294.999, 443.698, 294.999, 447.976, 292.141, 456.057, 291.064)])
 hole_curves = Array[Curve2D]([])
 
+[sub_resource type="Resource" id="Resource_ieey6"]
+script = ExtResource("4_cmco8")
+color = Color(0.803922, 0.521569, 0.247059, 1)
+polygon = PackedVector2Array(1459.43, 223.29, 1459.43, 223.29, 1459.43, 223.29, 1459.43, 223.29, 1459.43, 223.29, 1459.43, 223.29, 1459.43, 223.29, 1459.43, 223.29, 1459.43, 223.29, 1459.43, 223.29, 1459.43, 223.29, 1459.43, 223.29, 1459.43, 223.29, 1459.43, 223.29, 1459.43, 223.29, 1459.43, 223.29, 1459.43, 223.29, 1459.43, 223.29, 1459.43, 223.29, 1459.43, 223.29, 1459.43, 223.29, 1459.43, 223.29, 1459.43, 223.29, 1459.43, 223.29, 1459.43, 223.29, 1459.43, 223.29, 1459.43, 223.29, 1459.43, 223.29, 1459.43, 223.29, 1459.43, 223.29, 1459.43, 223.29, 1459.43, 223.29, 1459.43, 223.29, 1459.43, 223.29, 1459.43, 223.29, 1459.43, 223.29, 1459.43, 223.29, 1459.43, 223.29, 1459.43, 223.29, 1459.43, 223.29)
+holes = Array[PackedVector2Array]([])
+hole_curves = Array[Curve2D]([])
+
 [node name="Node2D" type="Node2D"]
 
 [node name="Animation" type="Node2D" parent="."]
@@ -558,4 +565,5 @@ bounciness = 0.7
 [node name="Brush2D" type="Node2D" parent="."]
 show_behind_parent = true
 script = ExtResource("6_ibm72")
+stroke_data = [SubResource("Resource_ieey6")]
 bounciness = 0.0

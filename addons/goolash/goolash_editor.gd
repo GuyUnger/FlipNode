@@ -10,6 +10,8 @@ static var editor: GoolashEditor
 
 const TextureEyedropper = preload("res://addons/goolash/icons/ColorPick.svg")
 const TextureFill = preload("res://addons/goolash/icons/CursorBucket.svg")
+const StrokeEraseMaterial = preload("res://addons/goolash/brush_erase_material.tres")
+const StrokeRegularMaterial = preload("res://addons/goolash/brush_stroke_material.tres")
 
 static var KEYFRAME_SCRIPT
 static var KEYFRAME_SCRIPT_CUSTOM
@@ -30,7 +32,7 @@ static var timeline
 
 var _current_action: int
 var _action_position_previous: Vector2
-var _action_alt := false
+var _action_rmb := false
 var _editing_layer_num: int: 
 	get:
 		if editing_brush:
@@ -469,14 +471,14 @@ func _on_mouse_motion(mouse_position):
 func _on_lmb_pressed(mouse_position: Vector2):
 	if _current_action != ACTION_NONE:
 		return
-	_action_alt = false
+	_action_rmb = false
 	_action_start(mouse_position, false)
 
 
 func _on_rmb_pressed(mouse_position: Vector2):
 	if _current_action != ACTION_NONE:
 		return
-	_action_alt = true
+	_action_rmb = true
 	_action_start(mouse_position, true)
 
 
@@ -489,7 +491,7 @@ func _on_rmb_released():
 
 
 func _action_start(mouse_position, alt):
-	_action_alt = alt
+	_action_rmb = alt
 	match _get_current_tool():
 		TOOL_SELECT:
 			if action_warp_try(mouse_position):
@@ -551,12 +553,12 @@ func _draw_custom_cursor():
 	var cursor_position = hud.get_local_mouse_position()
 	match _get_current_tool():
 		TOOL_PAINT:
-			if not (_current_action == ACTION_PAINT and _action_alt):
+			if not (_current_action == ACTION_PAINT and _action_rmb):
 				_draw_circle_outline(hud, cursor_position, _action_paint_size * zoom, Color.BLACK, 1.0)
 				_draw_circle_outline(hud, cursor_position, _action_paint_size * zoom + 2.0, Color.WHITE, 1.0)
 			else:
 				_draw_circle_outline(hud, cursor_position, _action_paint_erase_size * zoom, Color.BLACK, 1.0, true)
-			if not (_current_action == ACTION_PAINT and not _action_alt):
+			if not (_current_action == ACTION_PAINT and not _action_rmb):
 				_draw_circle_outline(hud, cursor_position, _action_paint_erase_size * zoom, Color(1.0, 1.0, 1.0, 0.2), 1.0, true)
 			
 			hud.draw_circle(cursor_position, 2.0, Color.WHITE)
@@ -698,7 +700,7 @@ func action_warp_process(action_position):
 	_get_editing_brush().draw()
 
 func _warp_ease(t):
-	if _action_alt:
+	if _action_rmb:
 		return ease(t, 2.0)
 	else:
 		return ease(t, -1.5)
@@ -778,6 +780,7 @@ func action_fill_try(action_position: Vector2):
 			if Geometry2D.is_point_in_polygon(action_position, stroke.holes[i]):
 				undo_redo_strokes_start()
 				if stroke.color == current_color:
+					
 					stroke.holes.remove_at(i)
 				else:
 					var polygon = stroke.holes[i].duplicate()
@@ -798,9 +801,10 @@ func action_paint_start(action_position: Vector2):
 	
 	var brush = _get_editing_brush()
 	
-	
-	var color = Color.WHITE if _action_alt else current_color
+	var color = Color.WHITE if _action_rmb else current_color
 	_action_paint_stroke = BrushStrokeData.new([], [], color)
+	if _action_rmb:
+		_action_paint_stroke._erasing = true
 	brush.add_stroke(_action_paint_stroke)
 	
 	action_paint_process(action_position)
@@ -808,7 +812,7 @@ func action_paint_start(action_position: Vector2):
 
 func action_paint_complete():
 	_action_paint_stroke.optimize()
-	if _action_alt:
+	if _action_rmb:
 		_action_brush_subtract_complete()
 		_get_editing_brush().edited.emit()
 	else:
@@ -865,7 +869,7 @@ func _action_brush_subtract_complete():
 
 
 func action_paint_process(action_position: Vector2):
-	var brush_size = _action_paint_erase_size if _action_alt else _action_paint_size
+	var brush_size = _action_paint_erase_size if _action_rmb else _action_paint_size
 	var brush_polygon = _create_polygon_circle(_action_position_previous, action_position, brush_size)
 	_action_paint_stroke.union_polygon(brush_polygon)
 	_action_position_previous = action_position
@@ -900,7 +904,7 @@ func action_oval_draw(brush):
 			Input.is_key_pressed(KEY_ALT),
 			0.0
 	)
-	brush.draw_polygon(polygon, [Color.WHITE if _action_alt else current_color])
+	brush.draw_polygon(polygon, [Color.WHITE if _action_rmb else current_color])
 
 
 func action_oval_complete(action_position):
@@ -913,7 +917,7 @@ func action_oval_complete(action_position):
 	)
 	var stroke := BrushStrokeData.new(polygon, [], current_color)
 	
-	if _action_alt:
+	if _action_rmb:
 		subtract_stroke(stroke)
 		undo_redo_strokes_complete("Oval brush erase")
 	else:
@@ -967,7 +971,7 @@ func action_rect_draw(brush):
 			Input.is_key_pressed(KEY_ALT),
 			0.0
 	)
-	brush.draw_polygon(polygon, [Color.WHITE if _action_alt else current_color])
+	brush.draw_polygon(polygon, [Color.WHITE if _action_rmb else current_color])
 
 
 func action_rect_complete(action_position):
@@ -980,7 +984,7 @@ func action_rect_complete(action_position):
 	)
 	var stroke := BrushStrokeData.new(polygon, [], current_color)
 	
-	if _action_alt:
+	if _action_rmb:
 		subtract_stroke(stroke)
 		undo_redo_strokes_complete("Rect brush erase")
 	else:
@@ -1035,7 +1039,9 @@ func action_shape_start(action_position):
 	
 	_current_action = ACTION_SHAPE
 	_action_position_previous = action_position
-	_action_paint_stroke = BrushStrokeData.new([], [], Color.WHITE if _action_alt else current_color)
+	_action_paint_stroke = BrushStrokeData.new([], [], Color.WHITE if _action_rmb else current_color)
+	if _action_rmb:
+		_action_paint_stroke._erasing = true
 	_get_editing_brush().add_stroke(_action_paint_stroke)
 
 func action_shape_process(action_position):
@@ -1049,7 +1055,7 @@ func action_shape_process(action_position):
 
 
 func action_shape_complete():
-	if _action_alt:
+	if _action_rmb:
 		_action_brush_subtract_complete()
 		undo_redo_strokes_complete("Shape brush erase")
 	else:

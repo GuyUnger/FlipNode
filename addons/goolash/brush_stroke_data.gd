@@ -8,6 +8,8 @@ extends Resource
 @export var holes:  Array[PackedVector2Array]
 @export var hole_curves: Array[Curve2D]
 
+var _erasing := false
+
 func _init(polygon := PackedVector2Array(), holes: Array[PackedVector2Array] = [], color: Color = Color.WHITE):
 	self.polygon = polygon
 	self.holes = holes
@@ -124,9 +126,7 @@ func subtract_stroke(stroke: BrushStrokeData) -> Array:
 							var clip = Geometry2D.clip_polygons(result, hole_a)
 							if clip.size() > 0:
 								result = clip[0]
-								printt("yah")
 				strokes.push_back(create_stroke(result, shape_holes))
-	
 	
 	if Geometry2D.clip_polygons(subtract_polygon, polygon).size() == 0:
 		## hole added
