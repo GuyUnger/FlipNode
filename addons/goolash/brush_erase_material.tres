@@ -6,10 +6,16 @@ render_mode blend_mix;
 
 uniform sampler2D screen_texture : hint_screen_texture, repeat_disable, filter_nearest;
 
+varying vec4 modulate;
+
+void vertex() {
+	modulate = COLOR;
+}
+
 void fragment() {
-	vec2 uv = SCREEN_UV / SCREEN_PIXEL_SIZE * 0.3 + TIME * 0.5;
+	vec2 uv = SCREEN_UV / SCREEN_PIXEL_SIZE * 0.3 + TIME;
 	float checker = abs(smoothstep(-0.2, 0.2, sin(uv.x)) - smoothstep(-0.2, 0.2, sin(uv.y)));
-	COLOR.rgb = vec3(checker * 0.5 + 0.5);
+	COLOR.rgb = vec3(checker * 0.1 + 0.9) * modulate.rgb * 1.1;
 	COLOR.a = texture(screen_texture, SCREEN_UV).r;
 }"
 

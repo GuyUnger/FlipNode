@@ -49,16 +49,20 @@ func _validate_property(property):
 func _ready():
 	_find_layers()
 	if Engine.is_editor_hint():
-		_update_frame_count()
-		if layers.size() == 0:
-			_create_layer()
-		for layer: BrushLayer2D in layers:
-			if layer.keyframes.size() == 0:
-				layer.add_keyframe()
+		init()
 		stop()
 	else:
 		if auto_play:
 			play()
+
+func init():
+	if layers.size() == 0:
+		_create_layer()
+	for layer: BrushLayer2D in layers:
+		layer.find_keyframes()
+		if layer.keyframes.size() == 0:
+			layer.set_keyframe(BrushKeyframe2D.new(), 0)
+	_update_frame_count()
 
 
 func draw():

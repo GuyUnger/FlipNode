@@ -4,11 +4,23 @@ extends Resource
 
 @export var color: Color
 @export var polygon: PackedVector2Array
-@export var polygon_curve: Curve2D
 @export var holes:  Array[PackedVector2Array]
-@export var hole_curves: Array[Curve2D]
+
+## Curves
+@export var polygon_curve: Curve2D:
+	get:
+		if _curves_dirty:
+			create_curves()
+		return polygon_curve
+@export var hole_curves: Array[Curve2D]:
+	get:
+		if _curves_dirty:
+			create_curves()
+		return hole_curves
+@export var _curves_dirty := true
 
 var _erasing := false
+
 
 func _init(polygon := PackedVector2Array(), holes: Array[PackedVector2Array] = [], color: Color = Color.WHITE):
 	self.polygon = polygon
@@ -56,6 +68,7 @@ func union_stroke(stroke: BrushStrokeData):
 	
 	polygon = merged_polygon
 	holes = merged_holes
+	_curves_dirty = true
 
 
 func union_polygon(with_polygon: PackedVector2Array):
@@ -81,6 +94,7 @@ func union_polygon(with_polygon: PackedVector2Array):
 				i += 1
 		else:
 			i += 1
+	_curves_dirty = true
 
 
 func subtract_stroke(stroke: BrushStrokeData) -> Array:
@@ -88,7 +102,7 @@ func subtract_stroke(stroke: BrushStrokeData) -> Array:
 		return [self]
 	
 	## Goes over all holes and "collects" overlapping ones into one stroke, adds the hole back at the end
-	var subtract_polygon = stroke.polygon
+	var subtract_polygon = stroke.polygon.duplicate()
 	
 	var subtracted_holes: Array[PackedVector2Array]
 	var strokes := []
@@ -105,7 +119,6 @@ func subtract_stroke(stroke: BrushStrokeData) -> Array:
 					strokes.push_back(create_stroke(result_polygon))
 				else:
 					subtract_polygon = result_polygon
-					
 		else:
 			subtracted_holes.push_back(hole)
 		
@@ -158,43 +171,44 @@ func subtract_stroke(stroke: BrushStrokeData) -> Array:
 					seperated_stroke.holes.push_back(hole)
 			strokes.push_back(seperated_stroke)
 	
+	_curves_dirty = true
 	return strokes
 
-#func subtract_polygon(with_polygon: PackedVector2Array):
-	#var i := 0
-	#
-	###💡 Merge with holes
-	#var merged_polygon = polygon
+#func subtract_polygon(subtracting_polygon: PackedVector2Array):
+	#var strokes := []
 	#var hole_merged := false
-	#while i < holes.size():
-		#var hole = holes[i]
-		#if Geometry2D.intersect_polygons(hole, merged_polygon).size() > 0:
-			#holes.remove_at(i)
-			#var merged = Geometry2D.merge_polygons(hole, merged_polygon)
-			#for polygon in merged:
-				#if Geometry2D.is_polygon_clockwise(polygon):
-					#parent.add_stroke(create_stroke(polygon))
-				#else:
-					#hole_merged = true
-					#merged_polygon = polygon
-		#else:
-			#i += 1
-	#if hole_merged:
-		#holes.push_back(merged_polygon)
+	#var merged_holes: Array[PackedVector2Array]
 	#
-	###💡 Subtract brush from strokes
-	#if Geometry2D.intersect_polygons(polygon, merged_polygon).size() > 0:
-		#var clipped_polygons = Geometry2D.clip_polygons(polygon, merged_polygon)
-		#for p in clipped_polygons:
-			#parent.add_stroke(create_stroke(p))
-		#parent.remove_stroke(self)
+	#for hole in holes:
+		#if Geometry2D.intersect_polygons(hole, subtracting_polygon).size() > 0:
+			#subtracting_polygon = Geometry2D.merge_polygons(hole, subtracting_polygon)[0]
+		#else:
+			#merged_holes.push_back(hole)
+	#
+	#if Geometry2D.clip_polygons(subtracting_polygon, polygon).size() == 0:
+		#holes = merged_holes
+		#holes.push_back(subtracting_polygon)
+		#return [self]
+	#else:
+		#var results = Geometry2D.clip_polygons(polygon, subtracting_polygon)
+		#if results.size() > 0:
+		#
+			#for p in results:
+				#for hole in merged_holes:
+					#var holes: Array[PackedVector2Array]
+					#if Geometry2D.intersect_polygons(p, subtracting_polygon).size() > 0:
+						#holes.push_back(hole)
+						#merged_holes.erase(hole)
+				#strokes.push_back(BrushStrokeData.new(p, holes))
+		#
+	#return strokes
 
 
 func translate(offset: Vector2):
 	polygon = _translate_polygon(polygon, offset)
 	for hole in holes:
 		hole = _translate_polygon(hole, offset)
-
+	_curves_dirty = true
 
 func _translate_polygon(polygon: PackedVector2Array, offset: Vector2) -> PackedVector2Array:
 	for i in polygon.size():
@@ -253,7 +267,9 @@ func _is_point_inside_hole(point: Vector2) -> bool:
 
 
 func optimize(tolerance := 1.0) -> void:
-	polygon_curve = polygon_to_curve(GoolashEditor.douglas_peucker(polygon, tolerance), tolerance)
+	_curves_dirty = false
+	polygon = GoolashEditor.douglas_peucker(polygon, tolerance)
+	polygon_curve = polygon_to_curve(polygon, tolerance)
 	polygon = polygon_curve.get_baked_points()
 	hole_curves = []
 	for i in holes.size():
@@ -263,6 +279,7 @@ func optimize(tolerance := 1.0) -> void:
 
 
 func create_curves():
+	_curves_dirty = false
 	polygon_curve = polygon_to_curve(polygon, 1.0)
 	hole_curves = []
 	for i in holes.size():
@@ -273,8 +290,8 @@ func create_curves():
 func polygon_to_curve(polygon: PackedVector2Array, bake_interval: float) -> Curve2D:
 	var curve := Curve2D.new()
 	curve.bake_interval = bake_interval * 20.0
-	for p in polygon:
-		curve.add_point(p)
+	for vertex in polygon:
+		curve.add_point(vertex)
 	return curve
 
 func is_polygon_valid(polygon):

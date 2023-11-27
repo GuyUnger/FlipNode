@@ -15,11 +15,10 @@ extends Brush2D
 
 @export var has_custom_script := false
 
-#func copy() -> Keyframe2D:
-	#var frame = Keyframe.new()
-	### todo: check if deep is necessary
-	#sprite_data.duplicate()
-	#return frame
+func copy() -> BrushKeyframe2D:
+	var frame = BrushKeyframe2D.new()
+	frame.stroke_data = stroke_data.duplicate()
+	return frame
 
 func _ready():
 	if Engine.is_editor_hint():

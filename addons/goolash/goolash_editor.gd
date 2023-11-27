@@ -67,13 +67,15 @@ var button_select_mode: Button
 
 var _strokes_before := []
 
+var shader_anti_alias := false
+var shader_boil := false
+
 func _enter_tree():
 	editor = self
-	
 	set_process(false)
 	
 	_init_project_settings()
-	_load_project_settings()
+	_load_project_settings(true)
 	
 	add_custom_type("BrushClip2D", "Node2D", load("res://addons/goolash/brush_clip2d.gd"), null)
 	
@@ -105,7 +107,7 @@ func _enter_tree():
 	
 	KEYFRAME_SCRIPT = preload("res://addons/goolash/brush_keyframe2d.gd")
 	KEYFRAME_SCRIPT_CUSTOM = preload("res://addons/goolash/frame_script.gd")
-	
+
 
 func _on_mode_changed():
 	is_editing = is_instance_valid(editing_brush) and button_select_mode.button_pressed
@@ -131,16 +133,19 @@ func add_project_setting(name: String, default_value) -> void:
 	ProjectSettings.set_initial_value(name, default_value)
 
 
-func _load_project_settings():
+func _load_project_settings(init := false):
 	Goolash.default_fps = ProjectSettings.get_setting_with_override("goolash/animation/default_fps")
 	onion_skin_enabled = ProjectSettings.get_setting_with_override("goolash/animation/onion_skin_enabled")
 	onion_skin_frames = ProjectSettings.get_setting_with_override("goolash/animation/onion_skin_frames")
 	current_color = ProjectSettings.get_setting_with_override("goolash/painting/default_color")
 	
-	var anti_alias = ProjectSettings.get_setting_with_override("goolash/rendering/anti-alias")
-	var boiling = ProjectSettings.get_setting_with_override("goolash/rendering/boiling")
-	
-	write_shader(anti_alias, boiling)
+	var shader_anti_alias_setting = ProjectSettings.get_setting_with_override("goolash/rendering/anti-alias")
+	var shader_boil_setting = ProjectSettings.get_setting_with_override("goolash/rendering/boiling")
+	if shader_anti_alias != shader_anti_alias_setting or shader_boil != shader_boil_setting:
+		shader_anti_alias = shader_anti_alias_setting
+		shader_boil = shader_boil_setting
+		if not init:
+			write_shader(shader_anti_alias, shader_boil)
 
 func _on_settings_changed():
 	_load_project_settings()
@@ -210,8 +215,8 @@ func _on_selection_changed():
 		EditorInterface.get_editor_main_screen().get_child(2).visible = false
 
 
-func select_brush(sprite):
-	_edit_brush_start(sprite)
+func select_brush(brush):
+	_edit_brush_start(brush)
 	is_editing = button_select_mode.button_pressed
 
 
@@ -227,16 +232,26 @@ func select_brush_clip(clip):
 
 func _edit_brush_start(brush):
 	editing_brush = brush
+	_get_editing_brush()._selected_highlight = 1.0
 	
 	hud.visible = true
 	set_process(is_editable(editing_brush))
 
 
 func _edit_brush_complete():
-	var brush = editing_brush
+	var brush = _get_editing_brush()
+	var i := 0
+	while i < brush.stroke_data.size():
+		var stroke: BrushStrokeData = brush.stroke_data[i]
+		if stroke.polygon.size() < 4:
+			brush.stroke_data.remove_at(i)
+		else:
+			i += 1
+	
+	var previous_editing = editing_brush
 	queue_redraw()
 	editing_brush = null
-	brush.draw()
+	previous_editing.draw()
 	hud.visible = false
 	set_process(false)
 
@@ -316,14 +331,7 @@ func _on_key_pressed(event: InputEventKey) -> bool:
 			return true
 		key_add_script:
 			if selected_keyframe:
-				if selected_keyframe.has_custom_script:
-					pass
-				else:
-					selected_keyframe.set_script(KEYFRAME_SCRIPT_CUSTOM.duplicate())
-					selected_keyframe.has_custom_script = true
-					selected_keyframe.edited.emit()
-				EditorInterface.edit_script(selected_keyframe.get_script(), 5, 1)
-				EditorInterface.get_editor_main_screen().get_child(2).visible = true
+				add_custom_script_to_keyframe(selected_keyframe)
 				
 		key_decrease:
 			_action_paint_erase_size *= 1 / (2.0 ** (1.0 / 6.0))
@@ -559,6 +567,7 @@ func _draw_custom_cursor():
 			else:
 				_draw_circle_outline(hud, cursor_position, _action_paint_erase_size * zoom, Color.BLACK, 1.0, true)
 			if not (_current_action == ACTION_PAINT and not _action_rmb):
+				_draw_circle_outline(hud, cursor_position, _action_paint_erase_size * zoom, Color.BLACK, 1.0, true)
 				_draw_circle_outline(hud, cursor_position, _action_paint_erase_size * zoom, Color(1.0, 1.0, 1.0, 0.2), 1.0, true)
 			
 			hud.draw_circle(cursor_position, 2.0, Color.WHITE)
@@ -660,8 +669,6 @@ func _warp_stroke_try(stroke: BrushStrokeData, action_postion: Vector2, range: f
 
 
 func _is_hovering_edge(stroke, mouse_position):
-	if not stroke.polygon_curve:
-		stroke.create_curves()
 	var closest_point = stroke.polygon_curve.get_closest_point(mouse_position)
 	return closest_point.distance_to(mouse_position) < 10.0
 
@@ -749,6 +756,12 @@ func action_move_try(action_position: Vector2) -> bool:
 	return false
 
 
+func action_move_process(action_position: Vector2):
+	moving_stroke.translate(action_position - _action_position_previous)
+	_action_position_previous = action_position
+	_get_editing_brush().draw()
+
+
 func action_move_complete():
 	merge_stroke(moving_stroke)
 	moving_stroke = null
@@ -756,12 +769,6 @@ func action_move_complete():
 	if editing_brush is BrushClip2D:
 		editing_brush.edited.emit()
 	undo_redo_strokes_complete("Move Stroke")
-
-
-func action_move_process(action_position: Vector2):
-	moving_stroke.translate(action_position - _action_position_previous)
-	_action_position_previous = action_position
-	_get_editing_brush().draw()
 
 
 ## ACTION FILL
@@ -779,13 +786,16 @@ func action_fill_try(action_position: Vector2):
 		for i in stroke.holes.size():
 			if Geometry2D.is_point_in_polygon(action_position, stroke.holes[i]):
 				undo_redo_strokes_start()
-				if stroke.color == current_color:
-					
+				
+				if stroke.color.to_html() == current_color.to_html():
 					stroke.holes.remove_at(i)
 				else:
 					var polygon = stroke.holes[i].duplicate()
 					polygon.reverse()
-					brush.add_stroke(BrushStrokeData.new(polygon, [], current_color))
+					var fill_stroke = BrushStrokeData.new(polygon, [], current_color)
+					for stroke_inside in brush.stroke_data:
+						fill_stroke = fill_stroke.subtract_stroke(stroke_inside)[0]
+					brush.add_stroke(fill_stroke)
 				brush.draw()
 				brush.edited.emit()
 				undo_redo_strokes_complete("Bucket fill hole")
@@ -801,7 +811,11 @@ func action_paint_start(action_position: Vector2):
 	
 	var brush = _get_editing_brush()
 	
-	var color = Color.WHITE if _action_rmb else current_color
+	var color = (
+		ProjectSettings.get_setting("rendering/environment/defaults/default_clear_color", Color.WHITE)
+	if _action_rmb else
+		current_color
+	)
 	_action_paint_stroke = BrushStrokeData.new([], [], color)
 	if _action_rmb:
 		_action_paint_stroke._erasing = true
@@ -904,7 +918,13 @@ func action_oval_draw(brush):
 			Input.is_key_pressed(KEY_ALT),
 			0.0
 	)
-	brush.draw_polygon(polygon, [Color.WHITE if _action_rmb else current_color])
+	
+	var color = (
+		ProjectSettings.get_setting("rendering/environment/defaults/default_clear_color", Color.WHITE)
+	if _action_rmb else
+		current_color
+	)
+	brush.draw_polygon(polygon, [color])
 
 
 func action_oval_complete(action_position):
@@ -971,7 +991,13 @@ func action_rect_draw(brush):
 			Input.is_key_pressed(KEY_ALT),
 			0.0
 	)
-	brush.draw_polygon(polygon, [Color.WHITE if _action_rmb else current_color])
+	
+	var color = (
+		ProjectSettings.get_setting("rendering/environment/defaults/default_clear_color", Color.WHITE)
+	if _action_rmb else
+		current_color
+	)
+	brush.draw_polygon(polygon, [color])
 
 
 func action_rect_complete(action_position):
@@ -1039,7 +1065,13 @@ func action_shape_start(action_position):
 	
 	_current_action = ACTION_SHAPE
 	_action_position_previous = action_position
-	_action_paint_stroke = BrushStrokeData.new([], [], Color.WHITE if _action_rmb else current_color)
+	
+	var color = (
+		ProjectSettings.get_setting("rendering/environment/defaults/default_clear_color", Color.WHITE)
+	if _action_rmb else
+		current_color
+	)
+	_action_paint_stroke = BrushStrokeData.new([], [], color)
 	if _action_rmb:
 		_action_paint_stroke._erasing = true
 	_get_editing_brush().add_stroke(_action_paint_stroke)
@@ -1077,10 +1109,11 @@ func subtract_stroke(stroke):
 
 
 func _get_editing_brush() -> Brush2D:
-	if editing_brush is Brush2D:
-		return editing_brush
-	else:
+	if editing_brush is BrushClip2D:
+		editing_brush.init()
 		return editing_brush.layers[_editing_layer_num].get_frame(editing_brush.current_frame)
+	else:
+		return editing_brush
 
 
 func _get_current_layer():
@@ -1096,14 +1129,29 @@ func _get_current_tool() -> int:
 func queue_redraw():
 	hud.queue_redraw()
 	if _get_editing_brush():
+		_get_editing_brush()._forward_draw_requested = true
 		_get_editing_brush().queue_redraw()
+
+
+
+func add_custom_script_to_keyframe(keyframe):
+	if keyframe.has_custom_script:
+		pass
+	else:
+		keyframe.set_script(KEYFRAME_SCRIPT_CUSTOM.duplicate())
+		keyframe.has_custom_script = true
+		keyframe.edited.emit()
+	await get_tree().process_frame
+	EditorInterface.edit_resource(keyframe.get_script())
+	EditorInterface.edit_script(keyframe.get_script(), 5, 1)
+	EditorInterface.get_editor_main_screen().get_child(2).visible = true
 
 
 static func is_editable(node):
 	return node.scene_file_path == "" or node.get_tree().edited_scene_root == node
 
 
-static func douglas_peucker(points: PackedVector2Array, tolerance := 1.0) -> PackedVector2Array:
+static func douglas_peucker(points: PackedVector2Array, tolerance := 1.0, level := 0) -> PackedVector2Array:
 	if points.size() < 3:
 		return points
 	
@@ -1118,6 +1166,7 @@ static func douglas_peucker(points: PackedVector2Array, tolerance := 1.0) -> Pac
 		## Calculate the perpendicular distance between point and line segment point1-point2 
 		var dx = point2.x - point1.x
 		var dy = point2.y - point1.y
+		
 		if dx == 0 and dy == 0:
 			## Point1 and point2 are the same point
 			d = point1.distance_to(point)
@@ -1143,8 +1192,9 @@ static func douglas_peucker(points: PackedVector2Array, tolerance := 1.0) -> Pac
 	
 	## If the maximum distance is greater than the tolerance, recursively simplify
 	if dmax > tolerance:
-		var results1 = douglas_peucker(points.slice(0, index+1), tolerance)
-		var results2 = douglas_peucker(points.slice(index), tolerance)
+		var results1 = douglas_peucker(points.slice(0, index+1), tolerance, level + 1)
+		var results2 = douglas_peucker(points.slice(index), tolerance, level + 1)
+		
 		return results1 + results2.slice(1)
 	else:
 		return PackedVector2Array([points[0], points[points.size() - 1]])

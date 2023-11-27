@@ -30,6 +30,9 @@ var bounciness := 0.0
 		collision_mask = value
 		notify_property_list_changed()
 
+var _forward_draw_requested := false
+var _selected_highlight := 0.0
+
 func _validate_property(property):
 	match property.name:
 		"bounciness":
@@ -47,7 +50,9 @@ func _validate_property(property):
 func _ready():
 	show_behind_parent = true
 	
-	if not Engine.is_editor_hint():
+	if Engine.is_editor_hint():
+		draw()
+	else:
 		if stroke_data.size() == 0:
 			return
 		match physics_mode:
@@ -58,8 +63,6 @@ func _ready():
 				draw()
 			PhysicsMode.RIGID:
 				call_deferred("_generate_rigid_body")
-	else:
-		draw()
 
 
 func add_stroke(stroke: BrushStrokeData):
@@ -122,6 +125,7 @@ func _generate_rigid_body():
 		rigidbody.add_child(stroke)
 		stroke.draw(BrushStrokeData.new(polygon, [], stroke_data[0].color))
 
+
 func get_islands():
 	var islands := []
 	for stroke in stroke_data:
@@ -142,9 +146,43 @@ func get_islands():
 	
 	return islands
 
+
+func _process(delta):
+	queue_redraw()
+	if Engine.is_editor_hint() and GoolashEditor.editor._get_editing_brush() == self:
+		_selected_highlight = move_toward(_selected_highlight, 0.0, delta / 0.5)
+	else:
+		_selected_highlight = 0.0
+
+
 func _draw():
-	if Engine.is_editor_hint():
+	if _forward_draw_requested:
 		GoolashEditor.editor._forward_draw_brush(self)
+	
+	if Engine.is_editor_hint():
+		if _selected_highlight > 0.0:
+			for stroke: BrushStrokeData in stroke_data:
+				if stroke.polygon.size() < 3 or stroke._erasing:
+					continue
+				draw_stroke_outline(stroke, 2.0, ease(_selected_highlight, 0.2))
+		
+		for stroke: BrushStrokeData in stroke_data:
+			if stroke._erasing:
+				draw_stroke_outline(stroke, 1.0, 0.1)
+
+
+func draw_stroke_outline(stroke, thickness := 1.0, alpha := 1.0):
+	thickness /= get_viewport().get_screen_transform().get_scale().x
+	draw_polygon_outline(stroke.polygon, thickness, alpha)
+	for hole in stroke.holes:
+		draw_polygon_outline(hole, thickness, alpha)
+
+
+func draw_polygon_outline(polygon, thickness := 1.0, alpha := 1.0):
+	var polygon_offsetted = Geometry2D.offset_polygon(polygon, 1.0)
+	polygon.push_back(polygon[0])
+	draw_polyline(polygon, Color(1.0, 1.0, 1.0, alpha), thickness, true)
+
 
 func get_strokes_duplicate() -> Array:
 	var strokes_duplicate = []
