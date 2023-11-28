@@ -12,7 +12,7 @@
 
 
 # Shortcuts and how to use
-
+*Shortcuts can be edited in project settings*
 Use <kbd>LMB</kbd> to draw and <kbd>RMB</kbd> to erase
 
 - 🖱️ **Select** <kbd>Q</kbd>
@@ -66,6 +66,7 @@ Navigating and editing timeline
   - [ ] Copy/paste
 - [ ] Allow filling holes between different colored strokes
 - [ ] Layer tweening
+- [ ] Brush modes (normal, behind, fill)
 - [ ] Rigid bodies
 
 *Lower priority:*
