@@ -47,6 +47,7 @@ var _editing_layer_num: int:
 			editing_node._editing_layer_num = value
 			selection_changed.emit()
 var _action_paint_stroke: BrushStrokeData
+var _action_brush_inside: BrushStrokeData
 
 var current_tool := -1
 var current_tool_override := -1
@@ -60,6 +61,7 @@ static var onion_skin_enabled := true
 static var onion_skin_frames := 1
 
 var editing_node
+var _editing_brush
 var selected_keyframe: BrushKeyframe2D
 var is_editing := false
 
@@ -279,8 +281,8 @@ func select_brush_clip(clip):
 
 func _edit_start(node):
 	editing_node = node
-	var editing_brush = _get_editing_brush()
-	editing_brush._selected_highlight = 1.0
+	_editing_brush = _get_editing_brush()
+	_editing_brush._selected_highlight = 1.0
 	
 	hud.visible = true
 	hud._update_used_colors()
@@ -288,12 +290,11 @@ func _edit_start(node):
 
 
 func _edit_brush_complete():
-	var brush = _get_editing_brush()
 	var i := 0
-	while i < brush.stroke_data.size():
-		var stroke: BrushStrokeData = brush.stroke_data[i]
+	while i < _editing_brush.stroke_data.size():
+		var stroke: BrushStrokeData = _editing_brush.stroke_data[i]
 		if stroke.polygon.size() < 4:
-			brush.stroke_data.remove_at(i)
+			_editing_brush.stroke_data.remove_at(i)
 		else:
 			i += 1
 	
@@ -863,13 +864,13 @@ func action_move_complete():
 
 func action_fill_try(action_position: Vector2):
 	var brush = _get_editing_brush()
-	for stroke: BrushStrokeData in brush.stroke_data:
-		if stroke.is_point_inside(action_position):
-			undo_redo_strokes_start()
-			stroke.color = current_color
-			merge_stroke(stroke)
-			undo_redo_strokes_complete("Bucket fill recolor")
-			return
+	var stroke_under_mouse = get_stroke_at_position(brush, action_position)
+	if stroke_under_mouse:
+		undo_redo_strokes_start()
+		stroke_under_mouse.color = current_color
+		merge_stroke(stroke_under_mouse)
+		undo_redo_strokes_complete("Bucket fill recolor")
+		return
 	for stroke: BrushStrokeData in brush.stroke_data:
 		for i in stroke.holes.size():
 			if Geometry2D.is_point_in_polygon(action_position, stroke.holes[i]):
@@ -911,17 +912,27 @@ func action_paint_start(action_position: Vector2):
 		_action_paint_stroke._erasing = true
 	brush.add_stroke(_action_paint_stroke)
 	
+	if true:
+		_action_brush_inside = get_stroke_at_position(brush, action_position)
+	
 	action_paint_process(action_position)
 
 
 func action_paint_complete():
+	var brush = _get_editing_brush()
 	_action_paint_stroke.optimize()
+	
 	if _action_rmb:
 		_action_brush_subtract_complete()
-		_get_editing_brush().edited.emit()
 	else:
-		_action_brush_add_complete()
-		_get_editing_brush().edited.emit()
+		if _action_brush_inside:
+			brush.stroke_data.erase(_action_paint_stroke)
+			var strokes = _action_paint_stroke.mask_stroke(_action_brush_inside)
+			for stroke in strokes:
+				merge_stroke(stroke)
+		else:
+			_action_brush_add_complete()
+	brush.edited.emit()
 	if editing_node is BrushClip2D:
 		editing_node.edited.emit()
 
@@ -1193,6 +1204,8 @@ func action_shape_complete():
 
 
 func merge_stroke(stroke):
+	if not _editing_brush.stroke_data.has(stroke):
+		_editing_brush.stroke_data.push_back(stroke)
 	_action_paint_stroke = stroke
 	_action_brush_add_complete()
 
@@ -1217,6 +1230,13 @@ func _get_current_tool() -> int:
 	if current_tool_override != -1:
 		return current_tool_override
 	return current_tool
+
+
+func get_stroke_at_position(brush, action_position):
+	for stroke: BrushStrokeData in brush.stroke_data:
+		if stroke.is_point_inside(action_position):
+			return stroke
+	return null
 
 
 func queue_redraw():

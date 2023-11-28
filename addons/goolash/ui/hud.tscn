@@ -236,6 +236,7 @@ max_length = 3
 [node name="Button" type="Button" parent="Tools/MarginContainer/VBoxContainer/PropertiesPaint"]
 layout_mode = 2
 tooltip_text = "The size of the brush is the same pixel size, independent of view zoom."
+toggle_mode = true
 text = "🎥"
 
 [node name="PropertiesFill" type="VBoxContainer" parent="Tools/MarginContainer/VBoxContainer"]

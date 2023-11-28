@@ -204,6 +204,24 @@ func subtract_polygon(subtracting_polygon: PackedVector2Array):
 	return strokes
 
 
+func mask_stroke(stroke: BrushStrokeData):
+	var strokes := []
+	
+	var results = Geometry2D.intersect_polygons(polygon, stroke.polygon)
+	for result_polygon in results:
+		if Geometry2D.is_polygon_clockwise(result_polygon):
+			continue
+		var result_holes: Array[PackedVector2Array]
+		for hole in holes:
+			if Geometry2D.intersect_polygons(result_polygon, hole).size() > 0:
+				result_holes.push_back(hole)
+		for hole in stroke.holes:
+			# todo maybe this should check if the hole is inside a hole?
+			if Geometry2D.intersect_polygons(result_polygon, hole).size() > 0:
+				result_holes.push_back(hole)
+		strokes.push_back(create_stroke(result_polygon, result_holes))
+	return strokes
+
 func translate(offset: Vector2):
 	polygon = _translate_polygon(polygon, offset)
 	for hole in holes:
