@@ -20,12 +20,16 @@ var key_add_frame := KEY_5
 var key_add_keyframe := KEY_6
 var key_add_keyframe_blank := KEY_7
 var key_add_script := KEY_9
-var key_paint := KEY_B
+var key_tool_select_paint_brush := KEY_B
+var key_tool_select_oval_brush := KEY_O
+var key_tool_select_rectangle_brush := KEY_M
+var key_tool_select_shape_brush := KEY_Y
+var key_tool_select_fill := KEY_G
 var key_play := KEY_S
 var key_frame_next := KEY_D
 var key_frame_previous := KEY_A
-var key_decrease := KEY_BRACKETLEFT
-var key_increase := KEY_BRACKETRIGHT
+var key_tool_size_decrease := KEY_BRACKETLEFT
+var key_tool_size_increase := KEY_BRACKETRIGHT
 
 static var hud
 static var timeline
@@ -126,6 +130,30 @@ func _init_project_settings():
 	add_project_setting("goolash/painting/default_color", Color.PERU)
 	add_project_setting("goolash/rendering/anti-alias", true)
 	add_project_setting("goolash/rendering/boiling", true)
+	
+	add_keybind("tools", "paint_brush_tool", "key_tool_select_paint_brush", KEY_B)
+	add_keybind("tools", "oval_brush_tool", "key_tool_select_oval_brush", KEY_O)
+	add_keybind("tools", "rectangle_brush_tool", "key_tool_select_rectangle_brush", KEY_M)
+	add_keybind("tools", "shape_brush_tool", "key_tool_select_shape_brush", KEY_Y)
+	add_keybind("tools", "fill_tool", "key_tool_select_fill", KEY_G)
+	add_keybind("tools", "incease_tool_size", "key_tool_size_decrease", KEY_BRACKETLEFT)
+	add_keybind("tools", "decrease_tool_size", "key_tool_size_increase", KEY_BRACKETRIGHT)
+	add_keybind("timeline", "play_pause", "key_play", KEY_S)
+	add_keybind("timeline", "next_frame", "key_frame_next", KEY_D)
+	add_keybind("timeline", "previous_frame", "key_frame_previous", KEY_A)
+	add_keybind("timeline", "insert_frame", "key_add_frame", KEY_5)
+	add_keybind("timeline", "add_keyframe", "key_add_keyframe", KEY_6)
+	add_keybind("timeline", "add_blank_keyframe", "key_add_keyframe_blank", KEY_7)
+	add_keybind("timeline", "add_script_to_keyframe", "key_add_script", KEY_9)
+
+var keybind_settings: Dictionary
+
+func add_keybind(section: String, alias: String, variable: String, default_key: int):
+	var path = "goolash/keybinds/%s/%s" % [section, alias]
+	var character = char(default_key)
+	
+	add_project_setting(path, character)
+	keybind_settings[variable] = path
 
 
 func add_project_setting(name: String, default_value) -> void:
@@ -148,6 +176,23 @@ func _load_project_settings(init := false):
 		shader_boil = shader_boil_setting
 		if not init:
 			write_shader(shader_anti_alias, shader_boil)
+	
+	for variable in keybind_settings.keys():
+		var path = str("goolash/shortcuts/", variable)
+		var value: String = ProjectSettings.get_setting_with_override(path)
+		
+		var value_changed := false
+		if value != value.to_upper():
+			value = value.to_upper()
+			value_changed = true
+		if value.length() > 1:
+			value_changed = true
+			value = value[value.length()-1]
+		if value_changed:
+			ProjectSettings.set_setting(path, value)
+		var keycode = value.unicode_at(0)
+		self[variable] = keycode
+
 
 func _on_settings_changed():
 	_load_project_settings()
@@ -300,19 +345,19 @@ func _on_key_pressed(event: InputEventKey) -> bool:
 		KEY_Q:
 			set_tool(GoolashEditor.TOOL_SELECT)
 			return true
-		key_paint:
+		key_tool_select_paint_brush:
 			set_tool(GoolashEditor.TOOL_PAINT)
 			return true
-		KEY_M:
+		key_tool_select_rectangle_brush:
 			set_tool(GoolashEditor.TOOL_RECT)
 			return true
-		KEY_G:
+		key_tool_select_fill:
 			set_tool(GoolashEditor.TOOL_FILL)
 			return true
-		KEY_O:
+		key_tool_select_oval_brush:
 			set_tool(GoolashEditor.TOOL_OVAL)
 			return true
-		KEY_P:
+		key_tool_select_shape_brush:
 			set_tool(GoolashEditor.TOOL_SHAPE)
 			return true
 		key_add_frame:
@@ -337,11 +382,11 @@ func _on_key_pressed(event: InputEventKey) -> bool:
 			if selected_keyframe:
 				add_custom_script_to_keyframe(selected_keyframe)
 				
-		key_decrease:
+		key_tool_size_decrease:
 			_action_paint_erase_size *= 1 / (2.0 ** (1.0 / 6.0))
 			_action_paint_size *= 1 / (2.0 ** (1.0 / 6.0))
 			return true
-		key_increase:
+		key_tool_size_increase:
 			_action_paint_erase_size *= 2.0 ** (1.0 / 6.0)
 			_action_paint_size *= 2.0 ** (1.0 / 6.0)
 			
