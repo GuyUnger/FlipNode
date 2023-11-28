@@ -13,9 +13,9 @@ void vertex() {
 }
 
 void fragment() {
-	vec2 uv = SCREEN_UV / SCREEN_PIXEL_SIZE * 0.3 + TIME;
+	vec2 uv = SCREEN_UV / SCREEN_PIXEL_SIZE / 5.0 + TIME;
 	float checker = abs(smoothstep(-0.2, 0.2, sin(uv.x)) - smoothstep(-0.2, 0.2, sin(uv.y)));
-	COLOR.rgb = vec3(checker * 0.1 + 0.9) * modulate.rgb * 1.1;
+	COLOR.rgb = vec3(checker * 0.2 + 0.8) * modulate.rgb * 1.25 + 0.25;
 	COLOR.a = texture(screen_texture, SCREEN_UV).r;
 }"
 

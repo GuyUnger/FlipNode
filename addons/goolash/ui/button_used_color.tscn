@@ -1,4 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://dbnwg2psnoj0f"]
+[gd_scene load_steps=3 format=3 uid="uid://dbnwg2psnoj0f"]
+
+[ext_resource type="Script" path="res://addons/goolash/ui/button_used_color.gd" id="1_akg50"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1fh0c"]
 bg_color = Color(1, 1, 1, 1)
@@ -10,3 +12,6 @@ corner_radius_bottom_left = 6
 [node name="ButtonUsedColor" type="Button"]
 custom_minimum_size = Vector2(20, 20)
 theme_override_styles/normal = SubResource("StyleBoxFlat_1fh0c")
+script = ExtResource("1_akg50")
+
+[connection signal="pressed" from="." to="." method="_on_pressed"]

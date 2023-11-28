@@ -9,7 +9,8 @@ void vertex() {
 	modulate = COLOR;
 }
 void fragment() {
-	COLOR.rgb = modulate.rgb;	vec2 uv = SCREEN_UV;
+	COLOR.rgb = modulate.rgb;
+	vec2 uv = SCREEN_UV;
 	float a = 0.0;
 	a += texture(screen_texture, uv).r * 2.0;
 	for (float i = 0.0; i < 1.0; i += 1.0 / 3.0) {

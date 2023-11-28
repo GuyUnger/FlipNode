@@ -166,9 +166,9 @@ func _draw():
 					continue
 				draw_stroke_outline(stroke, 2.0, ease(_selected_highlight, 0.2))
 		
-		for stroke: BrushStrokeData in stroke_data:
-			if stroke._erasing:
-				draw_stroke_outline(stroke, 1.0, 0.1)
+		#for stroke: BrushStrokeData in stroke_data:
+			#if stroke._erasing:
+				#draw_stroke_outline(stroke, 1.0, 0.1)
 
 
 func draw_stroke_outline(stroke, thickness := 1.0, alpha := 1.0):
@@ -179,7 +179,7 @@ func draw_stroke_outline(stroke, thickness := 1.0, alpha := 1.0):
 
 
 func draw_polygon_outline(polygon, thickness := 1.0, alpha := 1.0):
-	var polygon_offsetted = Geometry2D.offset_polygon(polygon, 1.0)
+	polygon = polygon.duplicate()#Geometry2D.offset_polygon(polygon, 0.0)
 	polygon.push_back(polygon[0])
 	draw_polyline(polygon, Color(1.0, 1.0, 1.0, alpha), thickness, true)
 
@@ -187,5 +187,5 @@ func draw_polygon_outline(polygon, thickness := 1.0, alpha := 1.0):
 func get_strokes_duplicate() -> Array:
 	var strokes_duplicate = []
 	for stroke in stroke_data:
-		strokes_duplicate.push_back(stroke.duplicate())
+		strokes_duplicate.push_back(stroke.copy())
 	return strokes_duplicate

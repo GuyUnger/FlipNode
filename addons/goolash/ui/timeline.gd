@@ -72,7 +72,7 @@ func _on_brush_clip_edited():
 
 
 func update_timeline_length():
-	%FrameIndicator.position.x = GoolashEditor.editor.editing_brush.current_frame * FRAME_WIDTH + FRAME_WIDTH * 0.5
+	%FrameIndicator.position.x = GoolashEditor.editor.editing_node.current_frame * FRAME_WIDTH + FRAME_WIDTH * 0.5
 	var end_pos = brush_clip.total_frames * FRAME_WIDTH
 	%AreaActive.size.x = end_pos
 	%AreaInactive.position.x = end_pos
@@ -80,21 +80,21 @@ func update_timeline_length():
 
 
 func _on_button_previous_frame_pressed():
-	if GoolashEditor.editor.editing_brush:
-		GoolashEditor.editor.editing_brush.previous_frame()
+	if GoolashEditor.editor.editing_node:
+		GoolashEditor.editor.editing_node.previous_frame()
 
 
 func _on_button_play_pressed():
-	if GoolashEditor.editor.editing_brush:
-		if GoolashEditor.editor.editing_brush.is_playing:
-			GoolashEditor.editor.editing_brush.stop()
+	if GoolashEditor.editor.editing_node:
+		if GoolashEditor.editor.editing_node.is_playing:
+			GoolashEditor.editor.editing_node.stop()
 		else:
-			GoolashEditor.editor.editing_brush.play()
+			GoolashEditor.editor.editing_node.play()
 
 
 func _on_button_next_frame_pressed():
-	if GoolashEditor.editor.editing_brush:
-		GoolashEditor.editor.editing_brush.next_frame()
+	if GoolashEditor.editor.editing_node:
+		GoolashEditor.editor.editing_node.next_frame()
 
 
 
@@ -107,7 +107,7 @@ func _clear_layers():
 
 
 func _load_layers():
-	for layer in GoolashEditor.editor.editing_brush.layers:
+	for layer in GoolashEditor.editor.editing_node.layers:
 		_add_layer(layer)
 
 
@@ -149,7 +149,7 @@ func _parse_fps(input: String):
 			_set_fps(int(result))
 
 func _set_fps(value: int):
-	GoolashEditor.editor.editing_brush.fps_override = value
+	GoolashEditor.editor.editing_node.fps_override = value
 	%LineEditFPS.text = str(value)
 
 

@@ -34,7 +34,7 @@ rendering/boiling=false
 
 [rendering]
 
-environment/defaults/default_clear_color=Color(0.345098, 0.160784, 0.196078, 1)
+environment/defaults/default_clear_color=Color(0.270588, 0.262745, 0.235294, 1)
 
 [shader_globals]
 

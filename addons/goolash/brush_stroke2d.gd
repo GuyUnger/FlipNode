@@ -11,15 +11,13 @@ func draw(stroke: BrushStrokeData):
 	while get_child_count() > polygon_count:
 		remove_child(get_child(0))
 	
-	var a = 1.0
-	
 	var node = get_child(0)
-	node.modulate = Color(1.0, 1.0, 1.0, a)
+	node.modulate = Color.WHITE
 	node.polygon = stroke.polygon
 	
 	for i in stroke.holes.size():
 		node = get_child(i + 1)
-		node.modulate = Color(0.0, 0.0, 0.0, a)
+		node.modulate = Color.BLACK
 		node.polygon = stroke.holes[i]
 	
 	if Engine.is_editor_hint():
