@@ -8,6 +8,9 @@ enum {ACTION_NONE, ACTION_WARP, ACTION_PAINT, ACTION_OVAL, ACTION_RECT, ACTION_S
 
 static var editor: GoolashEditor
 
+static var godot_accent_color = EditorInterface.get_editor_settings().get_setting("interface/theme/accent_color")
+static var godot_selection_color = EditorInterface.get_editor_settings().get_setting("text_editor/theme/highlighting/selection_color")
+
 const TextureEyedropper = preload("res://addons/goolash/icons/ColorPick.svg")
 const TextureFill = preload("res://addons/goolash/icons/CursorBucket.svg")
 const StrokeEraseMaterial = preload("res://addons/goolash/brush_erase_material.tres")
@@ -151,7 +154,7 @@ func _init_project_settings():
 var keybind_settings: Dictionary
 
 func _add_keybind(section: String, alias: String, variable: String, default_key: int):
-	var path = "goolash/keybinds/%s/%s" % [section, alias]
+	var path = "goolash/shortcuts/%s/%s" % [section, alias]
 	var character = char(default_key)
 	
 	_add_project_setting(path, character)
@@ -180,7 +183,7 @@ func _load_project_settings(init := false):
 			write_shader(shader_anti_alias, shader_boil)
 	
 	for variable in keybind_settings.keys():
-		var path = str("goolash/shortcuts/", variable)
+		var path = keybind_settings[variable]
 		var value: String = ProjectSettings.get_setting_with_override(path)
 		
 		var value_changed := false
@@ -286,7 +289,7 @@ func _edit_start(node):
 	
 	hud.visible = true
 	hud._update_used_colors()
-	set_process(_is_editable(editing_node))
+	set_process(is_editable(editing_node))
 
 
 func _edit_brush_complete():
@@ -600,18 +603,22 @@ func _forward_draw_brush(brush):
 	
 	match _current_action:
 		ACTION_OVAL:
-			action_oval_draw(brush)
+			_action_oval_draw(brush)
 			return
 		ACTION_RECT:
-			action_rect_draw(brush)
+			_action_rect_draw(brush)
+			return
+		ACTION_WARP:
+			_action_warp_draw(brush)
 			return
 	
 	match current_tool:
 		TOOL_SELECT:
-			var zoom = _get_brush_zoom()
-			for stroke: BrushStrokeData in brush.stroke_data:
-				if is_instance_valid(stroke) and _is_hovering_edge(stroke, cursor_position):
-					brush.draw_polygon_outline(stroke.polygon, 1.0 / zoom)
+			if _current_action == ACTION_NONE:
+				var zoom = _get_brush_zoom()
+				for stroke: BrushStrokeData in brush.stroke_data:
+					if is_instance_valid(stroke) and _is_hovering_edge(stroke, cursor_position):
+						brush.draw_polygon_outline(stroke.polygon, 1.0 / zoom, godot_selection_color, 0.8)
 
 
 func _forward_draw_hud():
@@ -677,21 +684,21 @@ func action_warp_try(action_position: Vector2) -> bool:
 
 
 func _warp_stroke_try(stroke: BrushStrokeData, action_postion: Vector2, range: float):
-	var zoom: float = _get_brush_zoom()
-	var closest_vertex_i: int = -1
-	var closest_distance: float = 10.0 / zoom
+	var closest_point_on_edge = stroke.polygon_curve.get_closest_point(action_postion)
+	var distance_to_edge = closest_point_on_edge.distance_to(action_postion)
+	
+	if distance_to_edge > 10.0 / _get_brush_zoom():
+		return
 	
 	var polygon = stroke.polygon
 	var l = polygon.size()
-	
+	var closest_vertex_i: int = -1
+	var closest_distance: float = 999.0
 	for vertex_i in l:
-		var dist = action_postion.distance_to(polygon[vertex_i])
+		var dist = closest_point_on_edge.distance_to(polygon[vertex_i])
 		if dist < closest_distance:
 			closest_distance = dist
 			closest_vertex_i = vertex_i
-	
-	if closest_vertex_i == -1:
-		return
 	
 	undo_redo_strokes_start()
 	
@@ -753,6 +760,11 @@ func action_warp_process(action_position):
 	_editing_brush.draw()
 
 
+func _action_warp_draw(brush):
+	for selection: ActionWarpSelection in action_warp_selections:
+		brush.draw_polygon_outline(selection.stroke.polygon, 1.0 / _get_brush_zoom(), Color.WHITE, 0.8)
+
+
 func _warp_ease(t):
 	if _action_rmb:
 		return ease(t, 2.0)
@@ -768,7 +780,7 @@ func action_warp_complete():
 	for selection: ActionWarpSelection in action_warp_selections:
 		if Geometry2D.is_polygon_clockwise(selection.stroke.polygon):
 			selection.stroke.polygon.reverse()
-		var invert_fix_results = Geometry2D.offset_polygon(selection.stroke.polygon, 0.0, Geometry2D.JOIN_ROUND)
+		var invert_fix_results = Geometry2D.offset_polygon(selection.stroke.polygon, -0.01, Geometry2D.JOIN_ROUND)
 		
 		var holes = selection.stroke.holes
 		
@@ -836,6 +848,8 @@ func action_move_try(action_position: Vector2) -> bool:
 		if stroke.is_point_inside(action_position):
 			undo_redo_strokes_start()
 			action_move_stroke = stroke
+			_editing_brush.stroke_data.erase(action_move_stroke)
+			_editing_brush.stroke_data.push_back(action_move_stroke)
 			_action_position_previous = action_position
 			_current_action = ACTION_MOVE
 			return true
@@ -862,7 +876,17 @@ func action_move_complete():
 #region ACTION FILL
 
 func action_fill_try(action_position: Vector2):
-	var stroke_under_mouse = get_stroke_at_position(_editing_brush, action_position)
+	if _action_rmb:
+		var stroke = get_stroke_at_position(action_position)
+		if stroke:
+			undo_redo_strokes_start()
+			_editing_brush.stroke_data.erase(stroke)
+			_editing_brush.draw()
+			_editing_brush.edited.emit()
+			undo_redo_strokes_complete("Bucket clear")
+		return
+	
+	var stroke_under_mouse = get_stroke_at_position(action_position)
 	if stroke_under_mouse:
 		undo_redo_strokes_start()
 		stroke_under_mouse.color = current_color
@@ -909,7 +933,7 @@ func action_paint_start(action_position: Vector2):
 	_editing_brush.add_stroke(_action_stroke)
 	
 	if true:
-		_action_brush_inside = get_stroke_at_position(_editing_brush, action_position)
+		_action_brush_inside = get_stroke_at_position(action_position)
 	
 	action_paint_process(action_position)
 
@@ -925,8 +949,13 @@ func action_paint_complete():
 			_editing_brush.stroke_data.erase(_action_stroke)
 			var strokes = _action_stroke.mask_stroke(_action_brush_inside)
 			for stroke in strokes:
-				stroke.polygon = Geometry2D.offset_polygon(stroke.polygon, 0.1)[0]
+				stroke.polygon = Geometry2D.offset_polygon(stroke.polygon, 0.01)[0]
 				_merge_stroke(stroke)
+		elif true:
+			_editing_brush.stroke_data.erase(_action_stroke)
+			_editing_brush.stroke_data.push_front(_action_stroke)
+			_editing_brush.draw()
+			_editing_brush.edited.emit()
 		else:
 			_merge_stroke(_action_stroke)
 		undo_redo_strokes_complete("Paint brush draw")
@@ -964,7 +993,7 @@ func action_oval_start(action_position):
 	undo_redo_strokes_start()
 
 
-func action_oval_draw(brush):
+func _action_oval_draw(brush):
 	var polygon = get_oval_tool_shape(
 			_action_position_previous,
 			brush.get_local_mouse_position(),
@@ -974,9 +1003,9 @@ func action_oval_draw(brush):
 	)
 	
 	var color = (
-		ProjectSettings.get_setting("rendering/environment/defaults/default_clear_color", Color.WHITE)
-	if _action_rmb else
-		current_color
+			_get_erase_color()
+		if _action_rmb else
+			current_color
 	)
 	brush.draw_polygon(polygon, [color])
 
@@ -1037,7 +1066,7 @@ func action_rect_start(action_position):
 	undo_redo_strokes_start()
 
 
-func action_rect_draw(brush):
+func _action_rect_draw(brush):
 	var polygon = get_rect_tool_shape(
 			_action_position_previous,
 			brush.get_local_mouse_position(),
@@ -1101,6 +1130,7 @@ func create_rect_polygon(center: Vector2, size: Vector2, noise := 0.01) -> Packe
 	polygon.append_array(create_line_polygon(bl, tl, vertices_per_side, noise * size))
 	return PackedVector2Array(polygon)
 
+
 func create_line_polygon(from, to, vertices_per_side, noise: Vector2):
 	var polygon = []
 	for i in vertices_per_side:
@@ -1129,6 +1159,7 @@ func action_shape_start(action_position):
 	if _action_rmb:
 		_action_stroke._erasing = true
 	_editing_brush.add_stroke(_action_stroke)
+
 
 func action_shape_process(action_position):
 	if Input.is_key_pressed(KEY_ALT) and _action_stroke.polygon.size() > 0:
@@ -1175,6 +1206,7 @@ func _merge_stroke(merging_stroke):
 	_editing_brush.draw()
 	_editing_brush.edited.emit()
 
+
 func _subtract_stroke(subtracting_stroke):
 	var strokes := []
 	_editing_brush.stroke_data.erase(subtracting_stroke)
@@ -1212,7 +1244,13 @@ func _get_brush_zoom() -> float:
 	return editing_node.get_viewport().get_screen_transform().get_scale().x
 
 
-func get_stroke_at_position(brush, action_position):
+func _get_erase_color() -> Color:
+	return ProjectSettings.get_setting("rendering/environment/defaults/default_clear_color", Color.WHITE)
+
+
+func get_stroke_at_position(action_position, brush = null):
+	if brush == null:
+		brush = _editing_brush
 	for stroke: BrushStrokeData in brush.stroke_data:
 		if stroke.is_point_inside(action_position):
 			return stroke
@@ -1270,10 +1308,9 @@ render_mode unshaded;
 uniform sampler2D screen_texture : hint_screen_texture, repeat_disable, filter_nearest;\n
 varying vec4 modulate;
 "
-	if boiling:
-		shader_source += "
-global uniform sampler2D goolash_boil_noise : repeat_enable;
-global uniform float goolash_frame;
+	shader_source += "
+uniform sampler2D goolash_boil_noise : repeat_enable;
+uniform float goolash_frame;
 "
 	shader_source += "
 void vertex() {
@@ -1285,7 +1322,7 @@ void fragment() {
 	if boiling:
 		shader_source += "
 	vec2 uv = SCREEN_UV;
-	vec2 noise_uv = UV / 6.0;
+	vec2 noise_uv = UV / 8.0;
 	float frame = floor(goolash_frame / 4.0);
 	noise_uv += vec2(frame * 0.05, frame * PI);
 	uv += (texture(goolash_boil_noise, noise_uv).rg - 0.5) * 0.001;"
@@ -1295,14 +1332,19 @@ void fragment() {
 	if anti_alias:
 		shader_source += "
 	float a = 0.0;
-	a += texture(screen_texture, uv).r * 2.0;
-	for (float i = 0.0; i < 1.0; i += 1.0 / 3.0) {
-		a += texture(screen_texture, uv + vec2(sin(i * TAU + 0.8), cos(i * TAU + 0.8)) * 1.5 * SCREEN_PIXEL_SIZE).r;
-		a += texture(screen_texture, uv + vec2(sin(i * TAU), cos(i * TAU)) * 1.0 * SCREEN_PIXEL_SIZE).r;
+	float directions = 10.0;
+	float quality = 8.0;
+	float size = 7.0;
+	for (float angle = 0.0; angle < TAU; angle += TAU / directions) {
+		vec2 offset = vec2(cos(angle), sin(angle));
+		for (float i = 0.0; i < 1.0; i += 1.0 / quality) {
+			a += texture(screen_texture, uv + offset * i * size * SCREEN_PIXEL_SIZE).r;
+		}
 	}
-	a = smoothstep(0.2, 0.6, a / 8.0);\n
+	a /= directions * quality;
+	a = smoothstep(0.25, 0.5, a);
 	
-	COLOR.a = a * modulate.a;\n"
+	COLOR.a = a * modulate.a;"
 	else:
 		shader_source += "
 	COLOR.a = texture(screen_texture, SCREEN_UV).r;"
@@ -1316,7 +1358,7 @@ void fragment() {
 #endregion
 
 
-static func _is_editable(node):
+static func is_editable(node):
 	return node.scene_file_path == "" or node.get_tree().edited_scene_root == node
 
 

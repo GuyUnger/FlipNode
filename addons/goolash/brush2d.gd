@@ -148,40 +148,43 @@ func get_islands():
 
 
 func _process(delta):
-	queue_redraw()
-	if Engine.is_editor_hint() and GoolashEditor.editor._get_editing_brush() == self:
-		_selected_highlight = move_toward(_selected_highlight, 0.0, delta / 0.5)
-	else:
-		_selected_highlight = 0.0
+	if Engine.is_editor_hint():
+		queue_redraw()
+		if is_instance_valid(GoolashEditor.editor) and GoolashEditor.editor._get_editing_brush() == self:
+			_selected_highlight = move_toward(_selected_highlight, 0.0, delta / 0.5)
+		else:
+			_selected_highlight = 0.0
 
 
 func _draw():
-	if _forward_draw_requested:
-		GoolashEditor.editor._forward_draw_brush(self)
-	
 	if Engine.is_editor_hint():
+		if _forward_draw_requested:
+			_forward_draw_requested = false
+			GoolashEditor.editor._forward_draw_brush(self)
+		
 		if _selected_highlight > 0.0:
 			for stroke: BrushStrokeData in stroke_data:
 				if stroke.polygon.size() < 3 or stroke._erasing:
 					continue
-				draw_stroke_outline(stroke, 2.0, ease(_selected_highlight, 0.2))
+				draw_stroke_outline(stroke, 1.0, GoolashEditor.godot_selection_color, ease(_selected_highlight, 0.2))
 		
 		#for stroke: BrushStrokeData in stroke_data:
 			#if stroke._erasing:
 				#draw_stroke_outline(stroke, 1.0, 0.1)
 
 
-func draw_stroke_outline(stroke, thickness := 1.0, alpha := 1.0):
+func draw_stroke_outline(stroke, thickness := 1.0, color: Color = Color.WHITE, alpha := 1.0):
 	thickness /= get_viewport().get_screen_transform().get_scale().x
-	draw_polygon_outline(stroke.polygon, thickness, alpha)
+	draw_polygon_outline(stroke.polygon, thickness, color, alpha)
 	for hole in stroke.holes:
-		draw_polygon_outline(hole, thickness, alpha)
+		draw_polygon_outline(hole, thickness, color, alpha)
 
 
-func draw_polygon_outline(polygon, thickness := 1.0, alpha := 1.0):
-	polygon = polygon.duplicate()#Geometry2D.offset_polygon(polygon, 0.0)
+func draw_polygon_outline(polygon, thickness := 1.0, color: Color = Color.WHITE, alpha := 1.0):
+	polygon = polygon.duplicate()
 	polygon.push_back(polygon[0])
-	draw_polyline(polygon, Color(1.0, 1.0, 1.0, alpha), thickness, true)
+	color.a = alpha
+	draw_polyline(polygon, color, thickness, true)
 
 
 func get_strokes_duplicate() -> Array:

@@ -30,19 +30,8 @@ enabled=PackedStringArray("res://addons/goolash/plugin.cfg", "res://addons/insta
 [goolash]
 
 animation/default_fps=12
-rendering/boiling=false
+rendering/boiling=true
 
 [rendering]
 
 environment/defaults/default_clear_color=Color(0.270588, 0.262745, 0.235294, 1)
-
-[shader_globals]
-
-goolash_frame={
-"type": "float",
-"value": 0.0
-}
-goolash_boil_noise={
-"type": "sampler2D",
-"value": "res://addons/goolash/goolash_boil_noise_texture.png"
-}

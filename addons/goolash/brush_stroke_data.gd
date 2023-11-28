@@ -174,6 +174,7 @@ func subtract_stroke(stroke: BrushStrokeData) -> Array:
 	_curves_dirty = true
 	return strokes
 
+
 func subtract_polygon(subtracting_polygon: PackedVector2Array):
 	var strokes := []
 	var hole_merged := false
@@ -222,11 +223,13 @@ func mask_stroke(stroke: BrushStrokeData):
 		strokes.push_back(create_stroke(result_polygon, result_holes))
 	return strokes
 
+
 func translate(offset: Vector2):
 	polygon = _translate_polygon(polygon, offset)
 	for hole in holes:
 		hole = _translate_polygon(hole, offset)
 	_curves_dirty = true
+
 
 func _translate_polygon(polygon: PackedVector2Array, offset: Vector2) -> PackedVector2Array:
 	for i in polygon.size():
@@ -312,7 +315,9 @@ func polygon_to_curve(polygon: PackedVector2Array, bake_interval: float) -> Curv
 		curve.add_point(vertex)
 	return curve
 
+
 func is_polygon_valid(polygon):
+	return  polygon.size() > 2
 	if polygon.size() > 16:
 		return true
 	var bounds_min := Vector2.ONE * 999999

@@ -12,7 +12,7 @@ var brush_clip: BrushClip2D
 var scrubbing := false
 
 func _ready():
-	%FrameIndicator.modulate = EditorInterface.get_editor_settings().get_setting("interface/theme/accent_color")
+	%FrameIndicator.modulate = GoolashEditor.godot_accent_color
 	
 	%LabelNoBrushClip.visible = true
 	%Timeline.visible = false
