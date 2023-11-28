@@ -12,6 +12,7 @@
 
 
 # Shortcuts and how to use
+*Shortcuts can be edited in project settings*
 
 Use <kbd>LMB</kbd> to draw and <kbd>RMB</kbd> to erase
 
@@ -42,7 +43,7 @@ Creates nodes for all layers and frames. These can all be accessed through the t
 
 ### Timeline
 Here you can:
-- Set a custom `fps` for this BrushClip, if left empty it will use the project default value
+- Set a custom fps for this BrushClip, if left empty it will use the project default value
 - Enable onion skinning to see next/previous frames
 - Add/delete layers
 
@@ -66,6 +67,7 @@ Navigating and editing timeline
   - [ ] Copy/paste
 - [ ] Allow filling holes between different colored strokes
 - [ ] Layer tweening
+- [ ] Brush modes (normal, behind, fill)
 - [ ] Rigid bodies
 
 *Lower priority:*
