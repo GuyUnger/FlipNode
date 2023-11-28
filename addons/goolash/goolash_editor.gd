@@ -126,39 +126,39 @@ func _on_mode_changed():
 
 
 func _init_project_settings():
-	add_project_setting("goolash/animation/default_fps", 12)
-	add_project_setting("goolash/animation/onion_skin_enabled", true)
-	add_project_setting("goolash/animation/onion_skin_frames", 2)
-	add_project_setting("goolash/painting/default_color", Color.PERU)
-	add_project_setting("goolash/rendering/anti-alias", true)
-	add_project_setting("goolash/rendering/boiling", true)
+	_add_project_setting("goolash/animation/default_fps", 12)
+	_add_project_setting("goolash/animation/onion_skin_enabled", true)
+	_add_project_setting("goolash/animation/onion_skin_frames", 2)
+	_add_project_setting("goolash/painting/default_color", Color.PERU)
+	_add_project_setting("goolash/rendering/anti-alias", true)
+	_add_project_setting("goolash/rendering/boiling", true)
 	
-	add_keybind("tools", "paint_brush_tool", "key_tool_select_paint_brush", KEY_B)
-	add_keybind("tools", "oval_brush_tool", "key_tool_select_oval_brush", KEY_O)
-	add_keybind("tools", "rectangle_brush_tool", "key_tool_select_rectangle_brush", KEY_M)
-	add_keybind("tools", "shape_brush_tool", "key_tool_select_shape_brush", KEY_Y)
-	add_keybind("tools", "fill_tool", "key_tool_select_fill", KEY_G)
-	add_keybind("tools", "incease_tool_size", "key_tool_size_decrease", KEY_BRACKETLEFT)
-	add_keybind("tools", "decrease_tool_size", "key_tool_size_increase", KEY_BRACKETRIGHT)
-	add_keybind("timeline", "play_pause", "key_play", KEY_S)
-	add_keybind("timeline", "next_frame", "key_frame_next", KEY_D)
-	add_keybind("timeline", "previous_frame", "key_frame_previous", KEY_A)
-	add_keybind("timeline", "insert_frame", "key_add_frame", KEY_5)
-	add_keybind("timeline", "add_keyframe", "key_add_keyframe", KEY_6)
-	add_keybind("timeline", "add_blank_keyframe", "key_add_keyframe_blank", KEY_7)
-	add_keybind("timeline", "add_script_to_keyframe", "key_add_script", KEY_9)
+	_add_keybind("tools", "paint_brush_tool", "key_tool_select_paint_brush", KEY_B)
+	_add_keybind("tools", "oval_brush_tool", "key_tool_select_oval_brush", KEY_O)
+	_add_keybind("tools", "rectangle_brush_tool", "key_tool_select_rectangle_brush", KEY_M)
+	_add_keybind("tools", "shape_brush_tool", "key_tool_select_shape_brush", KEY_Y)
+	_add_keybind("tools", "fill_tool", "key_tool_select_fill", KEY_G)
+	_add_keybind("tools", "incease_tool_size", "key_tool_size_decrease", KEY_BRACKETLEFT)
+	_add_keybind("tools", "decrease_tool_size", "key_tool_size_increase", KEY_BRACKETRIGHT)
+	_add_keybind("timeline", "play_pause", "key_play", KEY_S)
+	_add_keybind("timeline", "next_frame", "key_frame_next", KEY_D)
+	_add_keybind("timeline", "previous_frame", "key_frame_previous", KEY_A)
+	_add_keybind("timeline", "insert_frame", "key_add_frame", KEY_5)
+	_add_keybind("timeline", "add_keyframe", "key_add_keyframe", KEY_6)
+	_add_keybind("timeline", "add_blank_keyframe", "key_add_keyframe_blank", KEY_7)
+	_add_keybind("timeline", "add_script_to_keyframe", "key_add_script", KEY_9)
 
 var keybind_settings: Dictionary
 
-func add_keybind(section: String, alias: String, variable: String, default_key: int):
+func _add_keybind(section: String, alias: String, variable: String, default_key: int):
 	var path = "goolash/keybinds/%s/%s" % [section, alias]
 	var character = char(default_key)
 	
-	add_project_setting(path, character)
+	_add_project_setting(path, character)
 	keybind_settings[variable] = path
 
 
-func add_project_setting(name: String, default_value) -> void:
+func _add_project_setting(name: String, default_value) -> void:
 	if ProjectSettings.has_setting(name):
 		return
 	ProjectSettings.set_setting(name, default_value)
@@ -245,7 +245,7 @@ func _on_selection_changed():
 			selected_keyframe = frame
 			return
 		elif selected_nodes[0] is Brush2D:
-			select_brush(selected_nodes[0])
+			_select_brush(selected_nodes[0])
 			return
 		elif selected_nodes[0] is BrushLayer2D:
 			var layer: BrushLayer2D = selected_nodes[0]
@@ -264,7 +264,7 @@ func _on_selection_changed():
 		EditorInterface.get_editor_main_screen().get_child(2).visible = false
 
 
-func select_brush(brush):
+func _select_brush(brush):
 	_edit_start(brush)
 	is_editing = button_select_mode.button_pressed
 
@@ -286,7 +286,7 @@ func _edit_start(node):
 	
 	hud.visible = true
 	hud._update_used_colors()
-	set_process(is_editable(editing_node))
+	set_process(_is_editable(editing_node))
 
 
 func _edit_brush_complete():
@@ -299,7 +299,7 @@ func _edit_brush_complete():
 			i += 1
 	
 	var previous_editing = editing_node
-	queue_redraw()
+	_queue_redraw()
 	editing_node = null
 	previous_editing.draw()
 	hud.visible = false
@@ -307,6 +307,7 @@ func _edit_brush_complete():
 
 
 #region INPUT
+
 func _forward_canvas_gui_input(event: InputEvent) -> bool:
 	if not editing_node:
 		return false
@@ -397,9 +398,9 @@ func _on_key_pressed(event: InputEventKey) -> bool:
 
 
 func _on_input_key_alt_pressed() -> bool:
-	if current_tool == TOOL_PAINT or current_tool == TOOL_FILL:
+	if [TOOL_PAINT, TOOL_OVAL, TOOL_RECT, TOOL_SHAPE, TOOL_FILL].has(current_tool):
 		current_tool_override = TOOL_EYEDROPPER
-		queue_redraw()
+		_queue_redraw()
 	return false
 
 
@@ -424,7 +425,7 @@ func _input_mouse(event: InputEventMouse) -> bool:
 
 
 func _on_mouse_motion(mouse_position):
-	queue_redraw()
+	_queue_redraw()
 	match _current_action:
 		ACTION_WARP:
 			action_warp_process(mouse_position)
@@ -451,11 +452,11 @@ func _on_rmb_pressed(mouse_position: Vector2):
 
 
 func _on_lmb_released():
-	current_action_complete(editing_node.get_local_mouse_position())
+	_current_action_complete(editing_node.get_local_mouse_position())
 
 
 func _on_rmb_released():
-	current_action_complete(editing_node.get_local_mouse_position())
+	_current_action_complete(editing_node.get_local_mouse_position())
 
 
 #endregion
@@ -470,7 +471,7 @@ func _process(delta):
 		return
 	if get_viewport().canvas_transform != canvas_transform_previous:
 		canvas_transform_previous = editing_node.get_viewport().get_screen_transform()
-		queue_redraw()
+		_queue_redraw()
 	
 	allow_hide_cursor = (
 			EditorInterface.get_editor_main_screen().get_child(0).visible and
@@ -491,7 +492,7 @@ func _process(delta):
 	
 	if current_tool_override == TOOL_EYEDROPPER and not Input.is_key_pressed(KEY_ALT):
 		current_tool_override = -1
-		queue_redraw()
+		_queue_redraw()
 
 
 func _insert_frame():
@@ -575,7 +576,7 @@ func _action_start(mouse_position, alt):
 			action_shape_start(mouse_position)
 
 
-func current_action_complete(mouse_position):
+func _current_action_complete(mouse_position):
 	match _current_action:
 		ACTION_WARP:
 			action_warp_complete()
@@ -924,6 +925,7 @@ func action_paint_complete():
 			_editing_brush.stroke_data.erase(_action_stroke)
 			var strokes = _action_stroke.mask_stroke(_action_brush_inside)
 			for stroke in strokes:
+				stroke.polygon = Geometry2D.offset_polygon(stroke.polygon, 0.1)[0]
 				_merge_stroke(stroke)
 		else:
 			_merge_stroke(_action_stroke)
@@ -1158,7 +1160,7 @@ func _merge_stroke(merging_stroke):
 	while _editing_brush.stroke_data.size() > 0:
 		var stroke = _editing_brush.stroke_data.pop_front()
 		if merging_stroke.is_stroke_overlapping(stroke):
-			if merging_stroke.color == stroke.color:
+			if merging_stroke.color.to_html() == stroke.color.to_html():
 				merging_stroke.union_stroke(stroke)
 			else:
 				strokes.append_array(stroke.subtract_stroke(merging_stroke))
@@ -1217,7 +1219,7 @@ func get_stroke_at_position(brush, action_position):
 	return null
 
 
-func queue_redraw():
+func _queue_redraw():
 	hud.queue_redraw()
 	if _editing_brush:
 		_editing_brush._forward_draw_requested = true
@@ -1314,7 +1316,7 @@ void fragment() {
 #endregion
 
 
-static func is_editable(node):
+static func _is_editable(node):
 	return node.scene_file_path == "" or node.get_tree().edited_scene_root == node
 
 

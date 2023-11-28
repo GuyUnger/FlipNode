@@ -36,18 +36,18 @@ func _update_used_colors():
 		for layer in GoolashEditor.editor.editing_node.layers:
 			for keyframe in layer.keyframes:
 				for stroke in keyframe.stroke_data:
-					if not _used_colors.has(stroke.color):
-						_add_used_color(stroke.color)
+					if not _used_colors.has(stroke.color.to_html()):
+						_add_used_color(stroke.color.to_html())
 	else:
 		for stroke in GoolashEditor.editor.editing_node.stroke_data:
-			if not _used_colors.has(stroke.color):
-				_add_used_color(stroke.color)
+			if not _used_colors.has(stroke.color.to_html()):
+				_add_used_color(stroke.color.to_html())
 
 
 func _add_used_color(color):
 	_used_colors.push_back(color)
 	var button = ButtonUsedColor.instantiate()
-	button.set_color(color)
+	button.set_color(Color(color))
 	%UsedColors.add_child(button)
 
 
