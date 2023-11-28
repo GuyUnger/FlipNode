@@ -78,8 +78,7 @@ Navigating and editing timeline
 - [ ] Editing multiple brushes with multi-select?
 
 ### 🪲 Known issues:
-- [ ] Filling a hole removes strokes inside it
-- [ ] Holes in erasing shapes are ignored
-- [ ] Sometimes strokes dont properly merge
 - [ ] Sometimes mouse is hidden
-- [ ] All times things break:(
+- [ ] Erasing has some issues
+- [ ] Can't warp holes
+- [ ] Warping edges is glitchy
