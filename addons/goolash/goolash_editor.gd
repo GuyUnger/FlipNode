@@ -46,7 +46,7 @@ var _editing_layer_num: int:
 		if editing_node:
 			editing_node._editing_layer_num = value
 			selection_changed.emit()
-var _action_paint_stroke: BrushStrokeData
+var _action_stroke: BrushStrokeData
 var _action_brush_inside: BrushStrokeData
 
 var current_tool := -1
@@ -761,7 +761,7 @@ func _warp_ease(t):
 
 func action_warp_complete():
 	for selection: ActionWarpSelection in action_warp_selections:
-		merge_stroke(selection.stroke)
+		_merge_stroke(selection.stroke)
 	for selection: ActionWarpSelection in action_warp_selections:
 		selection.stroke.optimize()
 	for selection: ActionWarpSelection in action_warp_selections:
@@ -848,7 +848,7 @@ func action_move_process(action_position: Vector2):
 
 
 func action_move_complete():
-	merge_stroke(action_move_stroke)
+	_merge_stroke(action_move_stroke)
 	action_move_stroke = null
 	_editing_brush.edited.emit()
 	if editing_node is BrushClip2D:
@@ -865,7 +865,7 @@ func action_fill_try(action_position: Vector2):
 	if stroke_under_mouse:
 		undo_redo_strokes_start()
 		stroke_under_mouse.color = current_color
-		merge_stroke(stroke_under_mouse)
+		_merge_stroke(stroke_under_mouse)
 		undo_redo_strokes_complete("Bucket fill recolor")
 		return
 	for stroke: BrushStrokeData in _editing_brush.stroke_data:
@@ -902,10 +902,10 @@ func action_paint_start(action_position: Vector2):
 	if _action_rmb else
 		current_color
 	)
-	_action_paint_stroke = BrushStrokeData.new([], [], color)
+	_action_stroke = BrushStrokeData.new([], [], color)
 	if _action_rmb:
-		_action_paint_stroke._erasing = true
-	_editing_brush.add_stroke(_action_paint_stroke)
+		_action_stroke._erasing = true
+	_editing_brush.add_stroke(_action_stroke)
 	
 	if true:
 		_action_brush_inside = get_stroke_at_position(_editing_brush, action_position)
@@ -914,67 +914,28 @@ func action_paint_start(action_position: Vector2):
 
 
 func action_paint_complete():
-	_action_paint_stroke.optimize()
+	_action_stroke.optimize()
 	
 	if _action_rmb:
-		_action_brush_subtract_complete()
+		_subtract_stroke(_action_stroke)
 		undo_redo_strokes_complete("Paint brush erase")
 	else:
 		if _action_brush_inside:
-			_editing_brush.stroke_data.erase(_action_paint_stroke)
-			var strokes = _action_paint_stroke.mask_stroke(_action_brush_inside)
+			_editing_brush.stroke_data.erase(_action_stroke)
+			var strokes = _action_stroke.mask_stroke(_action_brush_inside)
 			for stroke in strokes:
-				merge_stroke(stroke)
+				_merge_stroke(stroke)
 		else:
-			_action_brush_add_complete()
+			_merge_stroke(_action_stroke)
 		undo_redo_strokes_complete("Paint brush draw")
 	_editing_brush.edited.emit()
 	if editing_node is BrushClip2D:
 		editing_node.edited.emit()
 
-
-func _action_brush_add_complete():
-	var strokes := []
-	while _editing_brush.stroke_data.size() > 0:
-		var stroke = _editing_brush.stroke_data.pop_front()
-		if stroke == _action_paint_stroke:
-			continue
-		if _action_paint_stroke.is_stroke_overlapping(stroke):
-			if _action_paint_stroke.color == stroke.color:
-				_action_paint_stroke.union_stroke(stroke)
-			else:
-				strokes.append_array(stroke.subtract_stroke(_action_paint_stroke))
-		else:
-			strokes.push_back(stroke)
-	
-	strokes.push_back(_action_paint_stroke)
-	
-	for stroke in strokes:
-		_editing_brush.add_stroke(stroke)
-	
-	_action_paint_stroke = null
-	_editing_brush.draw()
-	_editing_brush.edited.emit()
-
-func _action_brush_subtract_complete():
-	var strokes := []
-	_editing_brush.stroke_data.erase(_action_paint_stroke)
-	while _editing_brush.stroke_data.size() > 0:
-		var stroke: BrushStrokeData = _editing_brush.stroke_data.pop_front()
-		strokes.append_array(stroke.subtract_stroke(_action_paint_stroke))
-	
-	for stroke in strokes:
-		_editing_brush.add_stroke(stroke)
-	
-	_action_paint_stroke = null
-	_editing_brush.draw()
-	_editing_brush.edited.emit()
-
-
 func action_paint_process(action_position: Vector2):
 	var brush_size = _action_paint_erase_size if _action_rmb else _action_paint_size
 	var brush_polygon = _create_polygon_circle(_action_position_previous, action_position, brush_size)
-	_action_paint_stroke.union_polygon(brush_polygon)
+	_action_stroke.union_polygon(brush_polygon)
 	_action_position_previous = action_position
 	_editing_brush.draw()
 
@@ -1028,10 +989,10 @@ func action_oval_complete(action_position):
 	var stroke := BrushStrokeData.new(polygon, [], current_color)
 	
 	if _action_rmb:
-		subtract_stroke(stroke)
+		_subtract_stroke(stroke)
 		undo_redo_strokes_complete("Oval brush erase")
 	else:
-		merge_stroke(stroke)
+		_merge_stroke(stroke)
 		undo_redo_strokes_complete("Oval brush draw")
 
 
@@ -1101,10 +1062,10 @@ func action_rect_complete(action_position):
 	var stroke := BrushStrokeData.new(polygon, [], current_color)
 	
 	if _action_rmb:
-		subtract_stroke(stroke)
+		_subtract_stroke(stroke)
 		undo_redo_strokes_complete("Rect brush erase")
 	else:
-		merge_stroke(stroke)
+		_merge_stroke(stroke)
 		undo_redo_strokes_complete("Rect brush draw")
 
 
@@ -1162,42 +1123,70 @@ func action_shape_start(action_position):
 	if _action_rmb else
 		current_color
 	)
-	_action_paint_stroke = BrushStrokeData.new([], [], color)
+	_action_stroke = BrushStrokeData.new([], [], color)
 	if _action_rmb:
-		_action_paint_stroke._erasing = true
-	_editing_brush.add_stroke(_action_paint_stroke)
+		_action_stroke._erasing = true
+	_editing_brush.add_stroke(_action_stroke)
 
 func action_shape_process(action_position):
-	if Input.is_key_pressed(KEY_ALT) and _action_paint_stroke.polygon.size() > 0:
-		_action_paint_stroke.polygon[_action_paint_stroke.polygon.size() - 1] = action_position
+	if Input.is_key_pressed(KEY_ALT) and _action_stroke.polygon.size() > 0:
+		_action_stroke.polygon[_action_stroke.polygon.size() - 1] = action_position
 		_editing_brush.draw()
 		return
 	
-	_action_paint_stroke.polygon.push_back(action_position)
+	_action_stroke.polygon.push_back(action_position)
 	_editing_brush.draw()
 
 
 func action_shape_complete():
 	if _action_rmb:
-		_action_brush_subtract_complete()
+		_subtract_stroke(_action_stroke)
 		undo_redo_strokes_complete("Shape brush erase")
 	else:
-		_action_brush_add_complete()
+		_merge_stroke(_action_stroke)
 		undo_redo_strokes_complete("Shape brush draw")
 
 #endregion
 
 
-func merge_stroke(stroke):
-	if not _editing_brush.stroke_data.has(stroke):
-		_editing_brush.stroke_data.push_back(stroke)
-	_action_paint_stroke = stroke
-	_action_brush_add_complete()
+#region BRUSH OPERATIONS
 
+func _merge_stroke(merging_stroke):
+	_editing_brush.strokes.erase(merging_stroke)
+	
+	var strokes := []
+	while _editing_brush.stroke_data.size() > 0:
+		var stroke = _editing_brush.stroke_data.pop_front()
+		if merging_stroke.is_stroke_overlapping(stroke):
+			if merging_stroke.color == stroke.color:
+				merging_stroke.union_stroke(stroke)
+			else:
+				strokes.append_array(stroke.subtract_stroke(merging_stroke))
+		else:
+			strokes.push_back(stroke)
+	
+	strokes.push_back(merging_stroke)
+	
+	for stroke in strokes:
+		_editing_brush.add_stroke(stroke)
+	
+	_editing_brush.draw()
+	_editing_brush.edited.emit()
 
-func subtract_stroke(stroke):
-	_action_paint_stroke = stroke
-	_action_brush_subtract_complete()
+func _subtract_stroke(subtracting_stroke):
+	var strokes := []
+	_editing_brush.stroke_data.erase(subtracting_stroke)
+	while _editing_brush.stroke_data.size() > 0:
+		var stroke: BrushStrokeData = _editing_brush.stroke_data.pop_front()
+		strokes.append_array(stroke.subtract_stroke(subtracting_stroke))
+	
+	for stroke in strokes:
+		_editing_brush.add_stroke(stroke)
+	
+	_editing_brush.draw()
+	_editing_brush.edited.emit()
+
+#endregion
 
 
 func _get_editing_brush() -> Brush2D:
