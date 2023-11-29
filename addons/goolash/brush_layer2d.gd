@@ -36,6 +36,7 @@ func find_keyframes():
 func update_keyframe_endpoints():
 	keyframes.sort_custom(_compare_keyframes)
 	for i in keyframes.size():
+		move_child(keyframes[i], i)
 		var keyframe = keyframes[i]
 		if i == keyframes.size() - 1:
 			keyframe.frame_end_num = frame_count - 1

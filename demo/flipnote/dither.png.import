@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://b67qx0l61s731"
-path="res://.godot/imported/bayer16tile2.png-47558d914c248db377d8b9a4e029b822.ctex"
+path="res://.godot/imported/dither.png-9535d885797d50a2b23be66eaeb2c3ab.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://demo/bubbamation/bayer16tile2.png"
-dest_files=["res://.godot/imported/bayer16tile2.png-47558d914c248db377d8b9a4e029b822.ctex"]
+source_file="res://demo/flipnote/dither.png"
+dest_files=["res://.godot/imported/dither.png-9535d885797d50a2b23be66eaeb2c3ab.ctex"]
 
 [params]
 

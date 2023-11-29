@@ -22,6 +22,8 @@ func copy() -> BrushKeyframe2D:
 	return frame
 
 func _ready():
+	if get_clip().material:
+		material = get_clip().material
 	if Engine.is_editor_hint():
 		has_custom_script = get_script().source_code != GoolashEditor.KEYFRAME_SCRIPT.source_code
 		update_name()
