@@ -30,6 +30,8 @@ Use <kbd>LMB</kbd> to draw and <kbd>RMB</kbd> to erase
 
 Hold <kbd>ALT</kbd> for quick color picking
 
+Hold <kbd>CTRL</kbd> for quick fill bucket
+
 <kbd>[</kbd> and <kbd>]</kbd> to shrink/grow brush size
 
 ## Brush2D
