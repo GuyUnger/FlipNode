@@ -1,0 +1,35 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://cqxcoj786ejow"]
+
+[sub_resource type="Shader" id="Shader_qfg54"]
+code = "shader_type canvas_item;
+render_mode unshaded;
+
+uniform sampler2D screen_texture : hint_screen_texture, repeat_disable, filter_nearest;
+
+varying vec4 modulate;
+
+void vertex() {
+	modulate = COLOR;
+}
+
+void fragment() {
+	COLOR.rgb = modulate.rgb;
+	vec2 uv = SCREEN_UV;
+	vec2 pixel_dist = SCREEN_PIXEL_SIZE;
+	float a = texture(screen_texture, uv).r;
+	
+	//float l = texture(screen_texture, uv + vec2(-1, 0) * pixel_dist).r;
+	//float r = texture(screen_texture, uv + vec2(1, 0) * pixel_dist).r;
+	//float u = texture(screen_texture, uv + vec2(0, -1) * pixel_dist).r;
+	//float d = texture(screen_texture, uv + vec2(0, 1) * pixel_dist).r;
+	//COLOR.rgb *= a;
+	//a = max(a, l);
+	//a = max(a, r);
+	//a = max(a, u);
+	//a = max(a, d);
+	
+	COLOR.a = a * modulate.a;
+}"
+
+[resource]
+shader = SubResource("Shader_qfg54")

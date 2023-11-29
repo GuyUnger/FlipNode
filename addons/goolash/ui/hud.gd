@@ -137,8 +137,11 @@ func _input(event):
 			GoolashEditor.allow_custom_cursor = false
 		if %Colors.get_rect().has_point(get_local_mouse_position()):
 			GoolashEditor.allow_custom_cursor = false
+		
+		if %MenuPaintMode.visible:
+			if %MenuPaintMode.get_rect().has_point(%MenuPaintMode.get_parent().get_local_mouse_position()):
+				GoolashEditor.allow_custom_cursor = false
 	
-	if %MenuPaintMode.visible:
 		if event is InputEventMouseButton:
 			if not event.is_pressed() and event.button_index == MOUSE_BUTTON_LEFT:
 				if allow_paintmode_close:

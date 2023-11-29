@@ -317,7 +317,7 @@ func polygon_to_curve(polygon: PackedVector2Array, bake_interval: float) -> Curv
 
 
 func is_polygon_valid(polygon):
-	if polygon.size() > 16:
+	if polygon.size() > 8:
 		return true
 	var bounds_min := Vector2.ONE * 999999
 	var bounds_max := Vector2.ONE * -999999
@@ -334,7 +334,7 @@ func is_polygon_valid(polygon):
 		if not is_nan(ar):
 			area += ar
 	
-	return area > 64.0
+	return area > 16.0
 
 
 func copy():

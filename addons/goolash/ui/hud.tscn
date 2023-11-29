@@ -274,6 +274,7 @@ icon_alignment = 1
 
 [node name="MenuPaintMode" type="Panel" parent="Tools/MarginContainer/VBoxContainer/PropertiesPaint/Control"]
 unique_name_in_owner = true
+visible = false
 layout_mode = 1
 anchors_preset = 6
 anchor_left = 1.0

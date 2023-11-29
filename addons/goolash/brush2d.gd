@@ -73,19 +73,21 @@ func add_stroke(stroke: BrushStrokeData):
 func draw():
 	var stroke_count = stroke_data.size()
 	
+	## Remove unused strokes
 	while strokes.size() > stroke_count:
 		remove_child(strokes[strokes.size() - 1])
 		strokes.pop_back()
 	
+	## Add amount of strokes needed
 	while strokes.size() < stroke_count:
 		var stroke = BrushStroke2D.instantiate()
 		add_child(stroke)
+		stroke.material = material
 		strokes.push_back(stroke)
 	
 	for i in stroke_data.size():
 		strokes[i].self_modulate.a = alpha
 		strokes[i].draw(stroke_data[i])
-	
 
 
 func _generate_static_body():
@@ -154,6 +156,9 @@ func get_islands():
 func _process(delta):
 	if Engine.is_editor_hint():
 		queue_redraw()
+	for stroke in strokes:
+		if material:
+			stroke.material = material
 
 
 func _draw():

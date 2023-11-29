@@ -62,6 +62,7 @@ var current_paint_mode := PAINT_MODE_FRONT
 var _action_paint_size := 10.0
 var _action_paint_erase_size := 20.0
 var _action_warp_size := 60.0
+var _action_warp_cut_angle := deg_to_rad(30.0)
 
 static var onion_skin_enabled := true
 static var onion_skin_frames := 1
@@ -332,12 +333,13 @@ func _forward_canvas_gui_input(event: InputEvent) -> bool:
 
 
 func _on_key_pressed(event: InputEventKey) -> bool:
-	if Input.is_key_pressed(KEY_CTRL):
-		return false
+	#if Input.is_key_pressed(KEY_CTRL):
+		#return false
 	
 	match event.keycode:
 		KEY_CTRL:
 			_on_input_key_ctrl_pressed()
+			return false
 		KEY_ALT:
 			_on_input_key_alt_pressed()
 		key_play:
@@ -426,7 +428,7 @@ func _on_input_key_alt_pressed() -> bool:
 
 func _on_input_key_ctrl_pressed() -> bool:
 	if [TOOL_PAINT, TOOL_OVAL, TOOL_RECT, TOOL_SHAPE].has(current_tool):
-		current_tool_override = TOOL_EYEDROPPER
+		current_tool_override = TOOL_FILL
 		_queue_redraw()
 	return false
 
@@ -503,7 +505,9 @@ func _process(delta):
 			EditorInterface.get_editor_main_screen().get_child(0).visible and
 			hud.get_rect().has_point(hud.get_local_mouse_position()) and
 			allow_custom_cursor and 
-			DisplayServer.window_is_focused()
+			DisplayServer.window_is_focused() and
+			not Input.is_key_pressed(KEY_SPACE) and
+			not Input.is_mouse_button_pressed(MOUSE_BUTTON_MIDDLE)
 	)
 	if (current_tool == TOOL_PAINT or current_tool == TOOL_FILL) and allow_hide_cursor:
 		##todo: this needs more checks
@@ -512,6 +516,10 @@ func _process(delta):
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	
 	if current_tool_override == TOOL_EYEDROPPER and not Input.is_key_pressed(KEY_ALT):
+		current_tool_override = -1
+		_queue_redraw()
+	
+	if current_tool_override == TOOL_FILL and not Input.is_key_pressed(KEY_CTRL):
 		current_tool_override = -1
 		_queue_redraw()
 	
@@ -651,7 +659,7 @@ func _forward_draw_brush(brush):
 						_draw_warp_selection(selection)
 	
 	if _selected_highlight > 0.0:
-		for stroke: BrushStrokeData in _editing_brush.stroke_data:
+		for stroke: BrushStrokeData in brush.stroke_data:
 			if stroke.polygon.size() < 3 or stroke._erasing:
 				continue
 			_editing_brush.draw_stroke_outline(stroke, 1.0, godot_selection_color, ease(_selected_highlight, 0.2))
@@ -682,7 +690,7 @@ func _forward_draw_hud():
 
 
 func _draw_custom_cursor():
-	if not _editing_brush:
+	if not _editing_brush or Input.is_key_pressed(KEY_SPACE) or Input.is_mouse_button_pressed(MOUSE_BUTTON_MIDDLE):
 		return
 	var zoom = _get_brush_zoom()
 	
@@ -743,123 +751,6 @@ func action_warp_try(action_position: Vector2) -> bool:
 	return false
 
 
-#func _warp_stroke_try(stroke: BrushStrokeData, action_postion: Vector2, range: float):
-	#var closest_point_on_edge = stroke.polygon_curve.get_closest_point(action_postion)
-	#var distance_to_edge = closest_point_on_edge.distance_to(action_postion)
-	#
-	#if distance_to_edge > 10.0 / _get_brush_zoom():
-		#return
-	#
-	#var polygon = stroke.polygon
-	#var l = polygon.size()
-	#var closest_vertex_i: int = -1
-	#var closest_distance: float = 999.0
-	#for vertex_i in l:
-		#var dist = closest_point_on_edge.distance_to(polygon[vertex_i])
-		#if dist < closest_distance:
-			#closest_distance = dist
-			#closest_vertex_i = vertex_i
-	#
-	#undo_redo_strokes_start()
-	#
-	#var selection := ActionWarpSelection.new(stroke)
-	#action_warp_selections.push_back(selection)
-	#
-	#selection.add_vertex(closest_vertex_i, 1.0)
-	#
-	### travel clockwise of dragging point 👉
-	#var total_dist := 0.0
-	#for i in int(l * 0.5) - 1:
-		#var vertex_i = (closest_vertex_i + i + 1) % l
-		#var vertex_i_prev = (closest_vertex_i + i) % l
-		#var dist = polygon[vertex_i].distance_to(polygon[vertex_i_prev])
-		#
-		#total_dist += dist
-		#if total_dist > range:
-			### passed range, stop looking ✋
-			#break
-		#
-		#var weight = 1.0 - (total_dist / range)
-		#weight = _warp_ease(weight)
-		#selection.add_vertex(vertex_i, weight)
-	#
-	### travel counterclockwise of dragging point 👈
-	#total_dist = 0.0
-	#for i in int(l * 0.5) - 1:
-		#var vertex_i = (closest_vertex_i - i - 1 + l) % l
-		#var vertex_i_prev = (closest_vertex_i - i + l) % l
-		#var dist = polygon[vertex_i].distance_to(polygon[vertex_i_prev])
-		#
-		#total_dist += dist
-		#if total_dist > range:
-			### passed range, stop looking ✋
-			#break
-		#
-		#var weight = 1.0 - (total_dist / range)
-		#weight = _warp_ease(weight)
-		#selection.add_vertex(vertex_i, weight)
-
-
-func _get_warp_selection(stroke: BrushStrokeData, action_postion: Vector2, range: float) -> ActionWarpSelection:
-	var closest_point_on_edge = stroke.polygon_curve.get_closest_point(action_postion)
-	var distance_to_edge = closest_point_on_edge.distance_to(action_postion)
-	
-	if distance_to_edge > 10.0 / _get_brush_zoom():
-		return null
-	
-	var polygon = stroke.polygon
-	var l = polygon.size()
-	var closest_vertex_i: int = -1
-	var closest_distance: float = 999.0
-	for vertex_i in l:
-		var dist = closest_point_on_edge.distance_to(polygon[vertex_i])
-		if dist < closest_distance:
-			closest_distance = dist
-			closest_vertex_i = vertex_i
-	
-	var selection := ActionWarpSelection.new(stroke)
-	action_warp_selections.push_back(selection)
-	
-	selection.add_vertex(closest_vertex_i, 1.0)
-	
-	## travel clockwise of dragging point 👉
-	var total_dist := 0.0
-	for i in int(l * 0.5) - 1:
-		var vertex_i = (closest_vertex_i + i + 1) % l
-		var vertex_i_prev = (closest_vertex_i + i) % l
-		var dist = polygon[vertex_i].distance_to(polygon[vertex_i_prev])
-		
-		total_dist += dist
-		if total_dist > range:
-			## passed range, stop looking ✋
-			break
-		
-		var weight = 1.0 - (total_dist / range)
-		weight = _warp_ease(weight)
-		selection.add_vertex(vertex_i, weight)
-	
-	## this is just so the preview line can be drawn in a straight line
-	selection.vertex_indexes.reverse()
-	selection.vertex_weights.reverse()
-	
-	## travel counterclockwise of dragging point 👈
-	total_dist = 0.0
-	for i in int(l * 0.5) - 1:
-		var vertex_i = (closest_vertex_i - i - 1 + l) % l
-		var vertex_i_prev = (closest_vertex_i - i + l) % l
-		var dist = polygon[vertex_i].distance_to(polygon[vertex_i_prev])
-		
-		total_dist += dist
-		if total_dist > range:
-			## passed range, stop looking ✋
-			break
-		
-		var weight = 1.0 - (total_dist / range)
-		weight = _warp_ease(weight)
-		selection.add_vertex(vertex_i, weight)
-	return selection
-
-
 func action_warp_process(action_position):
 	var move_delta = action_position - _action_position_previous
 	_action_position_previous = action_position
@@ -909,6 +800,80 @@ func action_warp_complete():
 	undo_redo_strokes_complete("Warp Stroke")
 
 
+func _get_warp_selection(stroke: BrushStrokeData, action_postion: Vector2, range: float) -> ActionWarpSelection:
+	var closest_point_on_edge = stroke.polygon_curve.get_closest_point(action_postion)
+	var distance_to_edge = closest_point_on_edge.distance_to(action_postion)
+	
+	if distance_to_edge > 10.0 / _get_brush_zoom():
+		return null
+	
+	var polygon = stroke.polygon
+	var l = polygon.size()
+	var closest_vertex_i: int = -1
+	var closest_distance: float = 999.0
+	for vertex_i in l:
+		var dist = closest_point_on_edge.distance_to(polygon[vertex_i])
+		if dist < closest_distance:
+			closest_distance = dist
+			closest_vertex_i = vertex_i
+	
+	var selection := ActionWarpSelection.new(stroke)
+	action_warp_selections.push_back(selection)
+	
+	selection.add_vertex(closest_vertex_i, 1.0)
+	
+	## travel clockwise of dragging point 👉
+	var total_dist := 0.0
+	for i in int(l * 0.5):
+		var vertex_i = (closest_vertex_i + i + 1) % l
+		var vertex_i_prev = (closest_vertex_i + i) % l
+		#var vertex_i_next = (closest_vertex_i + i + 1) % l
+		
+		#var angle_prev = polygon[vertex_i_prev].angle_to_point(polygon[vertex_i])
+		#var angle_next = polygon[vertex_i].angle_to_point(polygon[vertex_i_next])
+		#if (angle_difference(angle_prev, angle_next)) > _action_warp_cut_angle:
+			#break
+		
+		var dist = polygon[vertex_i].distance_to(polygon[vertex_i_prev])
+		
+		total_dist += dist
+		if total_dist > range:
+			## passed range, stop looking ✋
+			break
+		
+		var weight = 1.0 - (total_dist / range)
+		weight = _warp_ease(weight)
+		selection.add_vertex(vertex_i, weight)
+	
+	## this is just so the preview line can be drawn in a straight line
+	selection.vertex_indexes.reverse()
+	selection.vertex_weights.reverse()
+	
+	## travel counterclockwise of dragging point 👈
+	total_dist = 0.0
+	for i in int(l * 0.5):
+		var vertex_i = (closest_vertex_i - i - 1 + l) % l
+		var vertex_i_prev = (closest_vertex_i - i + l) % l
+		#var vertex_i_next = (closest_vertex_i + l - i + 1) % l
+		
+		#var angle_prev = polygon[vertex_i_prev].angle_to_point(polygon[vertex_i])
+		#var angle_next = polygon[vertex_i].angle_to_point(polygon[vertex_i_next])
+		#if abs(angle_difference(angle_prev, angle_next)) > _action_warp_cut_angle:
+			#break
+		
+		var dist = polygon[vertex_i].distance_to(polygon[vertex_i_prev])
+		
+		total_dist += dist
+		if total_dist > range:
+			## passed range, stop looking ✋
+			break
+		
+		var weight = 1.0 - (total_dist / range)
+		weight = _warp_ease(weight)
+		selection.add_vertex(vertex_i, weight)
+	return selection
+
+
 func _action_warp_draw(brush):
 	for selection: ActionWarpSelection in action_warp_selections:
 		_draw_warp_selection(selection)
@@ -924,7 +889,7 @@ func _is_hovering_edge(stroke, mouse_position):
 
 func _warp_ease(t):
 	if _action_rmb:
-		return ease(t, 2.0)
+		return ease(t, 3.0)
 	else:
 		return ease(t, -1.5)
 
@@ -943,12 +908,11 @@ class ActionWarpSelection:
 		var i = vertex_indexes.find(index)
 		if i != -1:
 			## already has this vertex, use the heighest weight
-			vertex_weights = max(vertex_weights[i], weight)
+			weight = max(vertex_weights[i], weight)
 			return
 		
 		vertex_indexes.push_back(index)
 		vertex_weights.push_back(weight)
-	
 	
 	func vertex_count():
 		return vertex_indexes.size()
@@ -1072,6 +1036,7 @@ func action_paint_complete():
 			for stroke in strokes:
 				stroke.polygon = Geometry2D.offset_polygon(stroke.polygon, 0.01)[0]
 				_merge_stroke(stroke)
+			_action_brush_inside = null
 		elif current_paint_mode == PAINT_MODE_INSIDE or current_paint_mode == PAINT_MODE_BEHIND:
 			_editing_brush.stroke_data.erase(_action_stroke)
 			_editing_brush.stroke_data.push_front(_action_stroke)
