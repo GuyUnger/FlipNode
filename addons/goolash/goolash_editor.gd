@@ -1364,6 +1364,8 @@ func _get_current_tool() -> int:
 
 
 func _get_brush_zoom() -> float:
+	if not is_instance_valid(editing_node):
+		return 1.0
 	return editing_node.get_viewport().get_screen_transform().get_scale().x
 
 
