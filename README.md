@@ -67,7 +67,7 @@ Navigating and editing timeline
   - [ ] Copy/paste
 - [ ] Allow filling holes between different colored strokes
 - [ ] Layer tweening
-- [ ] Brush modes (normal, behind, fill)
+- [ ] Moving frames by dragging them
 - [ ] Rigid bodies
 
 *Lower priority:*
@@ -84,3 +84,4 @@ Navigating and editing timeline
 - [ ] Erasing has some issues
 - [ ] Can't warp holes
 - [ ] Warping edges is glitchy
+- [ ] Undo/redo doesn't work for editing frames
