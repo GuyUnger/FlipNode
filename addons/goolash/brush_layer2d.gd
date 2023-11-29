@@ -45,6 +45,7 @@ func update_keyframe_endpoints():
 
 func display_frame(frame_num):
 	if Engine.is_editor_hint():
+		GoolashEditor.editor._get_editing_brush()
 		var onion_skin_frames := 0
 		if (
 				GoolashEditor.onion_skin_enabled and

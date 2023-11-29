@@ -137,3 +137,40 @@ func _input(event):
 			GoolashEditor.allow_custom_cursor = false
 		if %Colors.get_rect().has_point(get_local_mouse_position()):
 			GoolashEditor.allow_custom_cursor = false
+	
+	if %MenuPaintMode.visible:
+		if event is InputEventMouseButton:
+			if not event.is_pressed() and event.button_index == MOUSE_BUTTON_LEFT:
+				if allow_paintmode_close:
+					%MenuPaintMode.visible = false
+				else:
+					allow_paintmode_close = true
+
+var allow_paintmode_close := false
+
+func _on_button_paint_mode_button_down():
+	%MenuPaintMode.visible = true
+	allow_paintmode_close = false
+
+@onready var paint_mode_textures = [
+	preload("res://addons/goolash/icons/paint_mode_front.svg"),
+	preload("res://addons/goolash/icons/paint_mode_behind.svg"),
+	preload("res://addons/goolash/icons/paint_mode_inside.svg"),
+]
+func set_paint_mode(paint_mode):
+	%ButtonPaintMode.icon = paint_mode_textures[paint_mode]
+
+
+func _on_button_pain_mode_front_button_up():
+	GoolashEditor.set_paint_mode(GoolashEditor.PAINT_MODE_FRONT)
+	%MenuPaintMode.visible = false
+
+
+func _on_button_pain_mode_behind_button_up():
+	GoolashEditor.set_paint_mode(GoolashEditor.PAINT_MODE_BEHIND)
+	%MenuPaintMode.visible = false
+
+
+func _on_button_pain_mode_inside_button_up():
+	GoolashEditor.set_paint_mode(GoolashEditor.PAINT_MODE_INSIDE)
+	%MenuPaintMode.visible = false

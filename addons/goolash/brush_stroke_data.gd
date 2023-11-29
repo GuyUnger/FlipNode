@@ -317,7 +317,6 @@ func polygon_to_curve(polygon: PackedVector2Array, bake_interval: float) -> Curv
 
 
 func is_polygon_valid(polygon):
-	return  polygon.size() > 2
 	if polygon.size() > 16:
 		return true
 	var bounds_min := Vector2.ONE * 999999

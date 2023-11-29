@@ -31,7 +31,8 @@ var bounciness := 0.0
 		notify_property_list_changed()
 
 var _forward_draw_requested := false
-var _selected_highlight := 0.0
+
+var alpha := 1.0
 
 func _validate_property(property):
 	match property.name:
@@ -82,7 +83,10 @@ func draw():
 		strokes.push_back(stroke)
 	
 	for i in stroke_data.size():
+		strokes[i].self_modulate.a = alpha
 		strokes[i].draw(stroke_data[i])
+	
+
 
 func _generate_static_body():
 	var body = StaticBody2D.new()
@@ -150,10 +154,6 @@ func get_islands():
 func _process(delta):
 	if Engine.is_editor_hint():
 		queue_redraw()
-		if is_instance_valid(GoolashEditor.editor) and GoolashEditor.editor._get_editing_brush() == self:
-			_selected_highlight = move_toward(_selected_highlight, 0.0, delta / 0.5)
-		else:
-			_selected_highlight = 0.0
 
 
 func _draw():
@@ -161,16 +161,6 @@ func _draw():
 		if _forward_draw_requested:
 			_forward_draw_requested = false
 			GoolashEditor.editor._forward_draw_brush(self)
-		
-		if _selected_highlight > 0.0:
-			for stroke: BrushStrokeData in stroke_data:
-				if stroke.polygon.size() < 3 or stroke._erasing:
-					continue
-				draw_stroke_outline(stroke, 1.0, GoolashEditor.godot_selection_color, ease(_selected_highlight, 0.2))
-		
-		#for stroke: BrushStrokeData in stroke_data:
-			#if stroke._erasing:
-				#draw_stroke_outline(stroke, 1.0, 0.1)
 
 
 func draw_stroke_outline(stroke, thickness := 1.0, color: Color = Color.WHITE, alpha := 1.0):

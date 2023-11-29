@@ -15,6 +15,7 @@ extends Brush2D
 
 @export var has_custom_script := false
 
+
 func copy() -> BrushKeyframe2D:
 	var frame = BrushKeyframe2D.new()
 	frame.stroke_data = stroke_data.duplicate()
