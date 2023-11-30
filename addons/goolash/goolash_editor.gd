@@ -958,7 +958,7 @@ func action_move_try(action_position: Vector2) -> bool:
 			_action_position_previous = action_position
 			_current_action = ACTION_MOVE
 			return true
-	return false
+	return true
 
 
 func action_move_process(action_position: Vector2):

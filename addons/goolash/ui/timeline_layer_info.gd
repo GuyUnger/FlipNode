@@ -42,7 +42,7 @@ func _on_button_visible_toggled(toggled_on):
 	set_visibility(not toggled_on)
 
 
-func set_visibility(value):
+func set_visibility(value: bool):
 	%ButtonVisible.button_pressed = not value
 	%ButtonVisible.icon = IconVisibilityVisible if value else IconVisibilityHidden
 	layer.visible = value
