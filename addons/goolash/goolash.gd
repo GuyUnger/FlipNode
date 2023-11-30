@@ -8,4 +8,4 @@ var frame := 0.0
 
 func _process(delta):
 	frame += delta * default_fps
-	material.set_shader_parameter("goolash_frame", floor(frame))
+	material.set_shader_parameter("goolash_frame", fmod(floor(frame), 1000.0) )
