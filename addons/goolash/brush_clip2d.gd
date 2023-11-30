@@ -41,10 +41,12 @@ var next_frame_delay := 0.0
 
 var _editing_layer_num := 0 #Stored here so it can be remembered during the session 
 
+
 func _validate_property(property):
 	var hidden = ["labels", "_frame_count"]
 	if hidden.has(property.name):
 		property.usage = PROPERTY_USAGE_STORAGE
+
 
 func _ready():
 	_find_layers()
@@ -55,8 +57,10 @@ func _ready():
 		if auto_play:
 			play()
 
+
 func init():
 	if layers.size() == 0:
+		await get_tree().process_frame
 		_create_layer()
 	for layer: BrushLayer2D in layers:
 		layer.find_keyframes()
