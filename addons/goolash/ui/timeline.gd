@@ -187,7 +187,7 @@ func _process(delta):
 		var tl_node = %FrameCounts
 		var to_frame = int(floor((get_local_mouse_position().x - tl_node.position.x + 1) / FRAME_WIDTH))
 		to_frame = clamp(to_frame, 0, brush_clip.total_frames - 1)
-		brush_clip.goto(to_frame)
+		brush_clip.goto_and_stop(to_frame)
 
 
 func _on_button_loop_toggled(toggled_on):

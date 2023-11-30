@@ -13,7 +13,7 @@ signal edited
 		if looping:
 			value %= _frame_count
 		else:
-			value = clamp(value, 0, _frame_count)
+			value = clamp(value, 0, _frame_count - 1)
 		if current_frame == value:
 			return
 		current_frame = value
