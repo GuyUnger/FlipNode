@@ -48,7 +48,6 @@ func set_visibility(value):
 	layer.visible = value
 
 
-
 func _on_line_edit_name_focus_entered():
 	EditorInterface.inspect_object(null)
 	EditorInterface.inspect_object(layer)

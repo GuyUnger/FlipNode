@@ -89,4 +89,4 @@ icon_alignment = 1
 [connection signal="focus_entered" from="HBoxContainer/Control/LineEditName" to="." method="_on_line_edit_name_focus_entered"]
 [connection signal="focus_exited" from="HBoxContainer/Control/LineEditName" to="HBoxContainer" method="_on_line_edit_name_focus_exited"]
 [connection signal="text_submitted" from="HBoxContainer/Control/LineEditName" to="HBoxContainer" method="_on_line_edit_name_text_submitted"]
-[connection signal="toggled" from="HBoxContainer/HBoxContainer/ButtonVisible" to="HBoxContainer" method="_on_button_visible_toggled"]
+[connection signal="toggled" from="HBoxContainer/HBoxContainer/ButtonVisible" to="." method="_on_button_visible_toggled"]
