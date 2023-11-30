@@ -162,7 +162,10 @@ func is_keyframe(frame_num):
 
 
 func get_clip() -> BrushClip2D:
-	return get_parent()
+	var parent = get_parent()
+	if parent is BrushClip2D:
+		return parent
+	return null
 
 
 class LayerTransformKeyframe:

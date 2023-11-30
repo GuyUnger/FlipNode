@@ -47,3 +47,8 @@ func set_visibility(value):
 	%ButtonVisible.icon = IconVisibilityVisible if value else IconVisibilityHidden
 	layer.visible = value
 
+
+
+func _on_line_edit_name_focus_entered():
+	EditorInterface.inspect_object(null)
+	EditorInterface.inspect_object(layer)

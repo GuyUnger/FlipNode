@@ -19,9 +19,3 @@ func draw(stroke: BrushStrokeData):
 		node = get_child(i + 1)
 		node.modulate = Color.BLACK
 		node.polygon = stroke.holes[i]
-	
-	if Engine.is_editor_hint():
-		if stroke._erasing:
-			material = GoolashEditor.StrokeEraseMaterial
-		else:
-			material = GoolashEditor.StrokeRegularMaterial

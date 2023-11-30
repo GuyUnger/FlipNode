@@ -22,8 +22,6 @@ func copy() -> BrushKeyframe2D:
 	return frame
 
 func _ready():
-	if get_clip().material:
-		material = get_clip().material
 	if Engine.is_editor_hint():
 		has_custom_script = get_script().source_code != GoolashEditor.KEYFRAME_SCRIPT.source_code
 		update_name()
@@ -62,3 +60,14 @@ func update_name():
 
 func is_blank() -> bool:
 	return stroke_data.size() == 0
+
+
+func get_override_material(stroke):
+	if stroke._erasing:
+		return GoolashEditor.StrokeEraseMaterial
+	else:
+		var clip = get_clip()
+		if clip.material:
+			return clip.material
+		else:
+			super.get_override_material(stroke)

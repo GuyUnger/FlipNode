@@ -34,6 +34,7 @@ var key_frame_next := KEY_D
 var key_frame_previous := KEY_A
 var key_tool_size_decrease := KEY_BRACKETLEFT
 var key_tool_size_increase := KEY_BRACKETRIGHT
+var key_erase_mode := KEY_X
 
 static var hud
 static var timeline
@@ -66,6 +67,7 @@ var _action_warp_cut_angle := deg_to_rad(30.0)
 
 static var onion_skin_enabled := true
 static var onion_skin_frames := 1
+static var erase_mode := false
 
 var editing_node
 var _editing_brush
@@ -235,8 +237,8 @@ func _exit_tree() -> void:
 
 
 func _handles(object) -> bool:
-	if not button_select_mode.button_pressed:
-		return false
+	#if not button_select_mode.button_pressed:
+		#return false
 	if object is BrushClip2D or object is BrushKeyframe2D or object is Brush2D:
 		return true
 	return false
@@ -262,7 +264,8 @@ func _on_selection_changed():
 		elif selected_nodes[0] is BrushLayer2D:
 			var layer: BrushLayer2D = selected_nodes[0]
 			select_brush_clip(layer.get_clip())
-			editing_node._editing_layer_num = layer.layer_num
+			_editing_layer_num = layer.layer_num
+			return
 	
 	if editing_node:
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
@@ -329,19 +332,18 @@ func _forward_canvas_gui_input(event: InputEvent) -> bool:
 	elif event is InputEventKey:
 		if event.is_pressed():
 			return _on_key_pressed(event)
+		else:
+			return _on_key_released(event)
 	return false
 
 
 func _on_key_pressed(event: InputEventKey) -> bool:
-	#if Input.is_key_pressed(KEY_CTRL):
-		#return false
+	if Input.is_key_pressed(KEY_CTRL):
+		if event.keycode == KEY_CTRL:
+			_on_input_key_ctrl_pressed()
+		return false
 	
 	match event.keycode:
-		KEY_CTRL:
-			_on_input_key_ctrl_pressed()
-			return false
-		KEY_ALT:
-			_on_input_key_alt_pressed()
 		key_play:
 			if editing_node is BrushClip2D:
 				if editing_node.is_playing:
@@ -359,24 +361,6 @@ func _on_key_pressed(event: InputEventKey) -> bool:
 				editing_node.stop()
 				if editing_node.next_frame():
 					return true
-		KEY_Q:
-			set_tool(GoolashEditor.TOOL_SELECT)
-			return true
-		key_tool_select_paint_brush:
-			set_tool(GoolashEditor.TOOL_PAINT)
-			return true
-		key_tool_select_rectangle_brush:
-			set_tool(GoolashEditor.TOOL_RECT)
-			return true
-		key_tool_select_fill:
-			set_tool(GoolashEditor.TOOL_FILL)
-			return true
-		key_tool_select_oval_brush:
-			set_tool(GoolashEditor.TOOL_OVAL)
-			return true
-		key_tool_select_shape_brush:
-			set_tool(GoolashEditor.TOOL_SHAPE)
-			return true
 		key_add_frame:
 			if Input.is_key_pressed(KEY_SHIFT):
 				_remove_frame()
@@ -399,6 +383,31 @@ func _on_key_pressed(event: InputEventKey) -> bool:
 			if selected_keyframe:
 				add_custom_script_to_keyframe(selected_keyframe)
 				
+	
+	if not button_select_mode.button_pressed:
+		return false
+	
+	match event.keycode:
+		KEY_ALT:
+			_on_input_key_alt_pressed()
+		KEY_Q:
+			set_tool(TOOL_SELECT)
+			return true
+		key_tool_select_paint_brush:
+			set_tool(TOOL_PAINT)
+			return true
+		key_tool_select_rectangle_brush:
+			set_tool(TOOL_RECT)
+			return true
+		key_tool_select_fill:
+			set_tool(TOOL_FILL)
+			return true
+		key_tool_select_oval_brush:
+			set_tool(TOOL_OVAL)
+			return true
+		key_tool_select_shape_brush:
+			set_tool(TOOL_SHAPE)
+			return true
 		key_tool_size_decrease:
 			if current_tool == TOOL_PAINT:
 				_action_paint_erase_size *= 1 / (2.0 ** (1.0 / 6.0))
@@ -415,8 +424,16 @@ func _on_key_pressed(event: InputEventKey) -> bool:
 			elif current_tool == TOOL_SELECT:
 				_action_warp_size *= 2.0 ** (1.0 / 6.0)
 				return true
+		key_erase_mode:
+			set_erase_mode(true)
 	return false
 
+
+func _on_key_released(event: InputEventKey) -> bool:
+	match event.keycode:
+		key_erase_mode:
+			set_erase_mode(false)
+	return false
 
 
 func _on_input_key_alt_pressed() -> bool:
@@ -434,19 +451,21 @@ func _on_input_key_ctrl_pressed() -> bool:
 
 
 func _input_mouse(event: InputEventMouse) -> bool:
+	if not button_select_mode.button_pressed:
+		return false
 	var mouse_position = editing_node.get_local_mouse_position()
 	if event is InputEventMouseButton:
 		var event_mouse_button: InputEventMouseButton = event
 		if event_mouse_button.button_index == MOUSE_BUTTON_LEFT:
 			if event_mouse_button.pressed:
-				_on_lmb_pressed(mouse_position)
+				return _on_mouse_button_pressed(mouse_position)
 			else:
-				_on_lmb_released()
+				_on_mouse_button__released()
 		elif event_mouse_button.button_index == MOUSE_BUTTON_RIGHT:
 			if event_mouse_button.pressed:
-				_on_rmb_pressed(mouse_position)
+				_on_mouse_button_pressed(mouse_position, true)
 			else:
-				_on_rmb_released()
+				_on_mouse_button__released()
 	elif event is InputEventMouseMotion:
 		_on_mouse_motion(mouse_position)
 	return true
@@ -465,25 +484,16 @@ func _on_mouse_motion(mouse_position):
 			action_move_process(mouse_position)
 
 
-func _on_lmb_pressed(mouse_position: Vector2):
+func _on_mouse_button_pressed(mouse_position: Vector2, right_mouse_button := false) -> bool:
+	if not button_select_mode.button_pressed:
+		return false
 	if _current_action != ACTION_NONE:
-		return
-	_action_rmb = false
-	_action_start(mouse_position, false)
+		return true
+	_action_rmb = right_mouse_button != erase_mode
+	return _action_start(mouse_position)
 
 
-func _on_rmb_pressed(mouse_position: Vector2):
-	if _current_action != ACTION_NONE:
-		return
-	_action_rmb = true
-	_action_start(mouse_position, true)
-
-
-func _on_lmb_released():
-	_current_action_complete(editing_node.get_local_mouse_position())
-
-
-func _on_rmb_released():
+func _on_mouse_button__released():
 	_current_action_complete(editing_node.get_local_mouse_position())
 
 
@@ -584,6 +594,11 @@ func _set_tool(tool):
 		button_select_mode.emit_signal("pressed")
 
 
+static func set_erase_mode(value):
+	erase_mode = value
+	hud.set_erase_mode(value)
+
+
 static func set_paint_mode(paint_mode):
 	editor._set_paint_mode(paint_mode)
 
@@ -593,29 +608,34 @@ func _set_paint_mode(paint_mode):
 	hud.set_paint_mode(paint_mode)
 
 
-func _action_start(mouse_position, alt):
-	_action_rmb = alt
+func _action_start(mouse_position) -> bool:
 	match _get_current_tool():
 		TOOL_SELECT:
 			if action_warp_try(mouse_position):
-				return
-			action_move_try(mouse_position)
+				return true
+			return action_move_try(mouse_position)
 		TOOL_PAINT:
 			action_paint_start(mouse_position)
+			return true
 		TOOL_FILL:
 			action_fill_try(mouse_position)
+			return true
 		TOOL_EYEDROPPER:
 			for stroke: BrushStrokeData in _editing_brush.stroke_data:
 				if stroke.is_point_inside(mouse_position):
 					current_color = stroke.color
 					hud._update_color_picker_color()
+			return true
 		TOOL_OVAL:
 			action_oval_start(mouse_position)
+			return true
 		TOOL_RECT:
 			action_rect_start(mouse_position)
+			return true
 		TOOL_SHAPE:
 			action_shape_start(mouse_position)
-
+			return true
+	return false
 
 func _current_action_complete(mouse_position):
 	match _current_action:
@@ -662,7 +682,7 @@ func _forward_draw_brush(brush):
 		for stroke: BrushStrokeData in brush.stroke_data:
 			if stroke.polygon.size() < 3 or stroke._erasing:
 				continue
-			_editing_brush.draw_stroke_outline(stroke, 1.0, godot_selection_color, ease(_selected_highlight, 0.2))
+			brush.draw_stroke_outline(stroke, 1.0, godot_selection_color, ease(_selected_highlight, 0.2))
 
 
 func _draw_warp_selection(selection: ActionWarpSelection):

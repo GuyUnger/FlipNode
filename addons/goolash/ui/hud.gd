@@ -130,6 +130,7 @@ func set_pressed(button: Button):
 func _draw():
 	GoolashEditor.editor._forward_draw_hud()
 
+
 func _input(event):
 	if event is InputEventMouseMotion:
 		GoolashEditor.allow_custom_cursor = true
@@ -155,11 +156,13 @@ func _on_button_paint_mode_button_down():
 	%MenuPaintMode.visible = true
 	allow_paintmode_close = false
 
+
 @onready var paint_mode_textures = [
 	preload("res://addons/goolash/icons/paint_mode_front.svg"),
 	preload("res://addons/goolash/icons/paint_mode_behind.svg"),
 	preload("res://addons/goolash/icons/paint_mode_inside.svg"),
 ]
+
 func set_paint_mode(paint_mode):
 	%ButtonPaintMode.icon = paint_mode_textures[paint_mode]
 
@@ -177,3 +180,11 @@ func _on_button_pain_mode_behind_button_up():
 func _on_button_pain_mode_inside_button_up():
 	GoolashEditor.set_paint_mode(GoolashEditor.PAINT_MODE_INSIDE)
 	%MenuPaintMode.visible = false
+
+
+func _on_button_erase_mode_toggled(toggled_on):
+	GoolashEditor.erase_mode = toggled_on
+
+
+func set_erase_mode(value: bool):
+	%ButtonEraseMode.button_pressed = value

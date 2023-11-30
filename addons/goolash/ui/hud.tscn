@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://chuytojhypqte"]
+[gd_scene load_steps=16 format=3 uid="uid://chuytojhypqte"]
 
 [ext_resource type="Script" path="res://addons/goolash/ui/hud.gd" id="1_72a5i"]
 [ext_resource type="Texture2D" uid="uid://jnmhbl8m5hy2" path="res://addons/goolash/icons/ToolSelect.svg" id="2_7pmde"]
@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://bfv15hq42cpvg" path="res://addons/goolash/icons/ToolRectangle.svg" id="5_3fhbx"]
 [ext_resource type="Texture2D" uid="uid://cf60f07corl3p" path="res://addons/goolash/icons/ColorPick.svg" id="5_8y7ry"]
 [ext_resource type="Texture2D" uid="uid://bduj3a2iwrk0c" path="res://addons/goolash/icons/Bucket.svg" id="6_83ojh"]
+[ext_resource type="Texture2D" uid="uid://d12ynu7xxfgoe" path="res://addons/goolash/icons/Eraser.svg" id="9_rm6rn"]
 [ext_resource type="Texture2D" uid="uid://bf5ibats8rlf4" path="res://addons/goolash/icons/paint_mode_front.svg" id="9_t0ong"]
 [ext_resource type="Texture2D" uid="uid://2sqtdt3603qw" path="res://addons/goolash/icons/paint_mode_behind.svg" id="10_3a2id"]
 [ext_resource type="Texture2D" uid="uid://bfa3nkxo2umg7" path="res://addons/goolash/icons/paint_mode_inside.svg" id="11_dayuh"]
@@ -58,9 +59,9 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -5.0
+offset_left = -3.0
 offset_top = -3.0
-offset_right = 6.0
+offset_right = 4.0
 offset_bottom = 3.0
 grow_horizontal = 2
 grow_vertical = 2
@@ -208,6 +209,21 @@ icon_alignment = 1
 [node name="HSeparator" type="HSeparator" parent="Tools/MarginContainer/VBoxContainer"]
 layout_mode = 2
 
+[node name="ButtonEraseMode" type="Button" parent="Tools/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+tooltip_text = "Fill Bucket (G)"
+theme_override_styles/disabled = SubResource("StyleBoxFlat_d636o")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_774xs")
+toggle_mode = true
+icon = ExtResource("9_rm6rn")
+flat = true
+icon_alignment = 1
+
+[node name="HSeparator2" type="HSeparator" parent="Tools/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
 [node name="PropertiesSelect" type="VBoxContainer" parent="Tools/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
 visible = false
@@ -341,6 +357,7 @@ horizontal_alignment = 1
 [connection signal="pressed" from="Tools/MarginContainer/VBoxContainer/Tools/ButtonShape" to="." method="_on_button_pen_pressed"]
 [connection signal="pressed" from="Tools/MarginContainer/VBoxContainer/Tools/ButtonEyedropper" to="." method="_on_button_eyedropper_pressed"]
 [connection signal="pressed" from="Tools/MarginContainer/VBoxContainer/Tools/ButtonFill" to="." method="_on_button_fill_pressed"]
+[connection signal="toggled" from="Tools/MarginContainer/VBoxContainer/ButtonEraseMode" to="." method="_on_button_erase_mode_toggled"]
 [connection signal="button_down" from="Tools/MarginContainer/VBoxContainer/PropertiesPaint/Control/ButtonPaintMode" to="." method="_on_button_paint_mode_button_down"]
 [connection signal="button_up" from="Tools/MarginContainer/VBoxContainer/PropertiesPaint/Control/MenuPaintMode/VBoxContainer/ButtonPainModeFront" to="." method="_on_button_pain_mode_front_button_up"]
 [connection signal="button_up" from="Tools/MarginContainer/VBoxContainer/PropertiesPaint/Control/MenuPaintMode/VBoxContainer/ButtonPainModeBehind" to="." method="_on_button_pain_mode_behind_button_up"]

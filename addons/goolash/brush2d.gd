@@ -82,12 +82,13 @@ func draw():
 	while strokes.size() < stroke_count:
 		var stroke = BrushStroke2D.instantiate()
 		add_child(stroke)
-		stroke.material = material
+		
 		strokes.push_back(stroke)
 	
 	for i in stroke_data.size():
 		strokes[i].self_modulate.a = alpha
 		strokes[i].draw(stroke_data[i])
+		strokes[i].material = get_override_material(stroke_data[i])
 
 
 func _generate_static_body():
@@ -156,9 +157,6 @@ func get_islands():
 func _process(delta):
 	if Engine.is_editor_hint():
 		queue_redraw()
-	for stroke in strokes:
-		if material:
-			stroke.material = material
 
 
 func _draw():
@@ -187,3 +185,12 @@ func get_strokes_duplicate() -> Array:
 	for stroke in stroke_data:
 		strokes_duplicate.push_back(stroke.copy())
 	return strokes_duplicate
+
+
+func get_override_material(stroke):
+	if stroke._erasing:
+		return GoolashEditor.StrokeEraseMaterial
+	elif material:
+		return material
+	else:
+		return GoolashEditor.StrokeRegularMaterial
