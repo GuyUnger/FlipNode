@@ -323,26 +323,14 @@ func _edit_brush_complete():
 
 #region INPUT
 
-func _forward_canvas_gui_input(event: InputEvent) -> bool:
-	if not editing_node:
-		return false
-	
-	if event is InputEventMouse:
-		return _input_mouse(event)
-	elif event is InputEventKey:
-		if event.is_pressed():
-			return _on_key_pressed(event)
-		else:
-			return _on_key_released(event)
-	return false
-
-
-func _on_key_pressed(event: InputEventKey) -> bool:
+func _input(event):
 	if Input.is_key_pressed(KEY_CTRL):
-		if event.keycode == KEY_CTRL:
-			_on_input_key_ctrl_pressed()
-		return false
-	
+		return
+	if event is InputEventKey and event.is_pressed():
+		_navigation_input(event)
+
+
+func _navigation_input(event):
 	match event.keycode:
 		key_play:
 			if editing_node is BrushClip2D:
@@ -379,10 +367,27 @@ func _on_key_pressed(event: InputEventKey) -> bool:
 			else:
 				_convert_keyframe_blank()
 			return true
-		key_add_script:
-			if selected_keyframe:
-				add_custom_script_to_keyframe(selected_keyframe)
-				
+
+
+func _forward_canvas_gui_input(event: InputEvent) -> bool:
+	if not editing_node:
+		return false
+	
+	if event is InputEventMouse:
+		return _input_mouse(event)
+	elif event is InputEventKey:
+		if event.is_pressed():
+			return _on_key_pressed(event)
+		else:
+			return _on_key_released(event)
+	return false
+
+
+func _on_key_pressed(event: InputEventKey) -> bool:
+	if Input.is_key_pressed(KEY_CTRL):
+		if event.keycode == KEY_CTRL:
+			_on_input_key_ctrl_pressed()
+		return false
 	
 	if not button_select_mode.button_pressed:
 		return false
@@ -426,6 +431,11 @@ func _on_key_pressed(event: InputEventKey) -> bool:
 				return true
 		key_erase_mode:
 			set_erase_mode(true)
+			return true
+		key_add_script:
+			if selected_keyframe:
+				add_custom_script_to_keyframe(selected_keyframe)
+			return true
 	return false
 
 
