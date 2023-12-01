@@ -8,11 +8,11 @@
   🚲 Fast and easy drawing right inside your scene  
   ✍️ Frame by frame animation  
   🧪 Great for prototyping  
-  ⚽ Draw physics objects, for e.g. quick level design
+  ⚽ Draw physics objects, cool for e.g. quick level design
 
 
 # Shortcuts and how to use
-*Shortcuts can be edited in project settings*
+*Shortcuts can be edited in project settings.*
 
 Use <kbd>LMB</kbd> to Draw and <kbd>RMB</kbd> to Erase. To reverse these you can toggle <kbd>![Eraser](https://github.com/GuyUnger/Goolash/assets/7023847/4fd35a9b-2e60-4d92-91dd-1e3cd6de3ff2)</kbd> Erase Mode from the tool menu or by holding <kbd>X</kbd>, this is useful for drawing with a tablet.
 
@@ -54,7 +54,7 @@ BrushClips can have their own FPS, if left empty it will use the project default
 - ![PageNext](https://github.com/GuyUnger/Goolash/assets/7023847/6ef4e6dd-f462-49f1-8834-12fe982aee57) Next Frame <kbd>D</kbd>
 
 ### Creating and removing Frames/Keyframes:
-*A Keyframe holds a Brush drawing, and can be shown longer by adding more frames after it*
+*A Keyframe holds a Brush drawing, and can be shown longer by adding more frames after it.*
 - Insert Frame <kbd>5</kbd>
 - ![keyframe](https://github.com/GuyUnger/Goolash/assets/7023847/b3622783-b352-4f90-be0d-ca29c53f9f9c) Insert Keyframe <kbd>6</kbd>
 - ![keyframe_blank](https://github.com/GuyUnger/Goolash/assets/7023847/24c50233-57cd-455a-88cf-b5bbaf4274ca) Insert Blank Keyframe <kbd>7</kbd>
@@ -62,7 +62,7 @@ BrushClips can have their own FPS, if left empty it will use the project default
 - Remove Keyframe <kbd>SHIFT+6</kbd> / <kbd>SHIFT+7</kbd>
 
 
-*The <kbd>5</kbd> and <kbd>SHIFT+5</kbd> shortcuts conflict with godot shortcuts, but these are so useless i recommend clearing the godot ones*
+*The <kbd>5</kbd> and <kbd>SHIFT+5</kbd> shortcuts conflict with godot shortcuts, but these are so useless i recommend clearing the godot ones.*
 
 ## To-do
 ### 📝 Not yet implemented/planned features:
@@ -74,15 +74,14 @@ BrushClips can have their own FPS, if left empty it will use the project default
 - [ ] Layer tweening
 - [ ] Moving frames by dragging them
 - [ ] Rigid bodies
+- [ ] Audio on frames
 
 *Lower priority:*
 - [ ] Scripts on frames
-- [ ] Audio on frames
 - [ ] Rectangle rounding
 - [ ] Decouple editor and drawing tools to make in game editing easy to implement
-- [ ] Soft bodies?
-- [ ] 3D support?
-- [ ] Editing multiple brushes with multi-select?
+- [ ] Soft bodies (?)
+- [ ] 3D support (?)
 
 ### 🪲 Known issues:
 - [ ] Sometimes mouse is hidden
