@@ -3,6 +3,7 @@ class_name Timeline
 extends Control
 
 const FRAME_WIDTH = 12
+const LAYER_HEIGHT = 36
 
 const TimelineLayerFrames = preload("res://addons/goolash/ui/timeline_layer_frames.tscn")
 const TimelineLayerInfo = preload("res://addons/goolash/ui/timeline_layer_info.tscn")
@@ -35,6 +36,7 @@ func load_brush_clip(brush_clip: BrushClip2D):
 	%LabelNoBrushClip.visible = not brush_clip_selected
 	if not brush_clip_selected:
 		custom_minimum_size.y = 30.0
+		size.y = 30.0
 		return
 	
 	## FPS
@@ -107,7 +109,8 @@ func _load_layers():
 	for layer in brush_clip.layers:
 		_add_layer(layer)
 	
-	custom_minimum_size.y = 60.0 + brush_clip.layers.size() * 32.0
+	custom_minimum_size.y = 60.0 + brush_clip.layers.size() * LAYER_HEIGHT
+	size.y = max(size.y, custom_minimum_size.y + 20.0)
 
 
 func _add_layer(layer):
@@ -172,10 +175,10 @@ func _input(event) -> void:
 			var mouse_position = get_local_mouse_position()
 			var tl_node = %FrameCounts
 			var rect = Rect2(tl_node.position, get_rect().size - tl_node.position)
-			rect.size.y = tl_node.get_rect().size.y + %LayersInfo.get_child_count() * 32.0
+			rect.size.y = tl_node.get_rect().size.y + %LayersInfo.get_child_count() * LAYER_HEIGHT
 			
 			if rect.has_point(mouse_position):
-				if mouse_position.y < rect.position.y + rect.size.y + 32.0 and mouse_position.x > rect.position.x + rect.size.x - 60.0:
+				if mouse_position.y < rect.position.y + rect.size.y + LAYER_HEIGHT and mouse_position.x > rect.position.x + rect.size.x - 60.0:
 					pass
 				else:
 					scrubbing = true

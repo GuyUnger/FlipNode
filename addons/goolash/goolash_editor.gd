@@ -132,7 +132,7 @@ func _enter_tree():
 func _on_mode_changed():
 	is_editing = is_instance_valid(editing_node) and button_select_mode.button_pressed
 	
-	hud.visible = is_editing
+	#hud.visible = is_editing
 	EditorInterface.inspect_object(editing_node)
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
@@ -237,7 +237,7 @@ func _exit_tree() -> void:
 func _handles(object) -> bool:
 	#if not button_select_mode.button_pressed:
 		#return false
-	if object is BrushClip2D or object is BrushKeyframe2D or object is Brush2D:
+	if object is BrushClip2D or object is BrushKeyframe2D or object is Brush2D or object is Brush3D:
 		return true
 	return false
 
@@ -271,6 +271,9 @@ func _on_selection_changed():
 			select_brush_clip(layer.get_clip())
 			set_editing_layer_num(layer.layer_num)
 			return
+		elif selected_node is Brush3D:
+			_select_brush(selected_node.brush2d)
+			
 	
 	if editing_node:
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
@@ -370,6 +373,10 @@ func _navigation_input(event):
 			return true
 
 
+func _forward_3d_gui_input(viewport_camera, event):
+	pass
+
+
 func _forward_canvas_gui_input(event: InputEvent) -> bool:
 	if not editing_node:
 		return false
@@ -390,10 +397,12 @@ func _on_key_pressed(event: InputEventKey) -> bool:
 			_on_input_key_ctrl_pressed()
 		return false
 	
-	if not button_select_mode.button_pressed:
-		return false
+	#if not button_select_mode.button_pressed:
+		#return false
 	
 	match event.keycode:
+		key_play, key_frame_next, key_frame_previous:
+			return true
 		KEY_ALT:
 			_on_input_key_alt_pressed()
 		KEY_Q:
@@ -464,7 +473,7 @@ func _on_input_key_ctrl_pressed() -> bool:
 func _input_mouse(event: InputEventMouse) -> bool:
 	if not button_select_mode.button_pressed:
 		return false
-	var mouse_position = editing_node.get_local_mouse_position()
+	var mouse_position = _editing_brush.get_local_mouse_position()
 	if event is InputEventMouseButton:
 		var event_mouse_button: InputEventMouseButton = event
 		if event_mouse_button.button_index == MOUSE_BUTTON_LEFT:
@@ -505,7 +514,7 @@ func _on_mouse_button_pressed(mouse_position: Vector2, right_mouse_button := fal
 
 
 func _on_mouse_button__released():
-	_current_action_complete(editing_node.get_local_mouse_position())
+	_current_action_complete(_editing_brush.get_local_mouse_position())
 
 
 #endregion

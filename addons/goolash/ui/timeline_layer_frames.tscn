@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://addons/goolash/ui/timeline_layer_frames.gd" id="1_jjljs"]
 
 [node name="TimelineLayerFrames" type="Control"]
-custom_minimum_size = Vector2(0, 32)
+custom_minimum_size = Vector2(0, 36)
 layout_mode = 3
 anchors_preset = 0
 script = ExtResource("1_jjljs")

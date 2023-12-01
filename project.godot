@@ -34,4 +34,4 @@ rendering/boiling=true
 
 [rendering]
 
-environment/defaults/default_clear_color=Color(0.270588, 0.262745, 0.235294, 1)
+environment/defaults/default_clear_color=Color(0.145098, 0.145098, 0.145098, 1)
