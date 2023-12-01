@@ -65,6 +65,7 @@ func load_brush_clip(brush_clip: BrushClip2D):
 
 func _on_frame_changed():
 	update_timeline_length()
+	GoolashEditor.editor.selected_keyframe = null
 
 
 func _on_brush_clip_edited():

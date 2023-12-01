@@ -252,20 +252,25 @@ func _on_selection_changed():
 	var selected_nodes = selection.get_selected_nodes()
 	selected_keyframe = null
 	if selected_nodes.size() == 1:
-		if selected_nodes[0] is BrushClip2D:
-			select_brush_clip(selected_nodes[0])
+		var selected_node = selected_nodes[0]
+		if selected_node is BrushClip2D:
+			select_brush_clip(selected_node)
 			return
-		elif selected_nodes[0] is BrushKeyframe2D:
-			var frame: BrushKeyframe2D = selected_nodes[0]
-			select_brush_clip(frame.get_clip())
-			frame.get_clip().goto(frame.frame_num)
-			selected_keyframe = frame
+		elif selected_node is BrushKeyframe2D:
+			var keyframe: BrushKeyframe2D = selected_node
+			select_brush_clip(keyframe.get_clip())
+			keyframe.get_clip().goto(keyframe.frame_num)
+			selected_keyframe = keyframe
+			
+			for timeline_keyframe in get_tree().get_nodes_in_group("timeline_keyframes"):
+				if timeline_keyframe.keyframe == keyframe:
+					timeline_keyframe.grab_focus()
 			return
-		elif selected_nodes[0] is Brush2D:
+		elif selected_node is Brush2D:
 			_select_brush(selected_nodes[0])
 			return
-		elif selected_nodes[0] is BrushLayer2D:
-			var layer: BrushLayer2D = selected_nodes[0]
+		elif selected_node is BrushLayer2D:
+			var layer: BrushLayer2D = selected_node
 			select_brush_clip(layer.get_clip())
 			_editing_layer_num = layer.layer_num
 			return
@@ -1094,6 +1099,9 @@ func action_fill_try(action_position: Vector2):
 
 #region ACTION BRUSH
 
+var _action_paint_curve_points := []
+
+
 func action_paint_start(action_position: Vector2):
 	_current_action = ACTION_PAINT
 	_action_position_previous = action_position
@@ -1112,10 +1120,32 @@ func action_paint_start(action_position: Vector2):
 	if current_paint_mode == PAINT_MODE_INSIDE:
 		_action_brush_inside = get_stroke_at_position(action_position)
 	
+	_action_paint_curve_points = []
 	action_paint_process(action_position)
 
 
+func action_paint_process(action_position: Vector2):
+	var brush_size = _action_paint_erase_size if _action_rmb else _action_paint_size
+	
+	_action_paint_curve_points.push_back(action_position)
+	
+	var brush_polygon = _create_polygon_capsule(_action_position_previous, action_position, brush_size)
+	_action_stroke.union_polygon(brush_polygon)
+	_action_position_previous = action_position
+	_editing_brush.draw()
+
+
 func action_paint_complete():
+	if _action_paint_curve_points.size() >= 4:
+		_editing_brush.stroke_data.erase(_action_stroke)
+		_action_stroke = BrushStrokeData.new([], [], current_color)
+		
+		var curve_catmull_rom = catmull_rom_interpolate(_action_paint_curve_points)
+		for i in range(1, curve_catmull_rom.size()):
+			var brush_size = _action_paint_erase_size if _action_rmb else _action_paint_size
+			var brush_polygon = _create_polygon_capsule(curve_catmull_rom[i-1], curve_catmull_rom[i], brush_size)
+			_action_stroke.union_polygon(brush_polygon)
+	
 	_action_stroke.optimize()
 	
 	if _action_rmb:
@@ -1141,15 +1171,40 @@ func action_paint_complete():
 	if editing_node is BrushClip2D:
 		editing_node.edited.emit()
 
-func action_paint_process(action_position: Vector2):
-	var brush_size = _action_paint_erase_size if _action_rmb else _action_paint_size
-	var brush_polygon = _create_polygon_circle(_action_position_previous, action_position, brush_size)
-	_action_stroke.union_polygon(brush_polygon)
-	_action_position_previous = action_position
-	_editing_brush.draw()
+
+func catmull_rom_interpolate(points) -> PackedVector2Array:
+	if points.size() < 4:
+		return PackedVector2Array(points)
+	
+	var interpolated_points = PackedVector2Array()
+	
+	interpolated_points.append(points[0])
+	
+	for i in range(points.size() - 3):
+		var p0 = points[i]
+		var p1 = points[i + 1]
+		var p2 = points[i + 2]
+		var p3 = points[i + 3]
+		
+		var num_segments = ceil(p1.distance_to(p2) / 10.0)
+		for j in range(num_segments):
+			var t = j / float(num_segments)
+			var t2 = t * t
+			var t3 = t2 * t
+			
+			var v = 0.5 * (
+				(2.0 * p1) +
+				(-p0 + p2) * t +
+				(2.0 * p0 - 5.0 * p1 + 4.0 * p2 - p3) * t2 +
+				(-p0 + 3.0 * p1 - 3.0 * p2 + p3) * t3
+			)
+			
+			interpolated_points.append(v)
+	
+	return interpolated_points
 
 
-func _create_polygon_circle(start_position: Vector2, end_position: Vector2, size: float) -> PackedVector2Array:
+func _create_polygon_capsule(start_position: Vector2, end_position: Vector2, size: float) -> PackedVector2Array:
 	var angle = start_position.angle_to_point(end_position)
 	var start_polygon := []
 	var end_polygon := []
@@ -1161,8 +1216,6 @@ func _create_polygon_circle(start_position: Vector2, end_position: Vector2, size
 		start_polygon.push_back(start_position + Vector2.DOWN.rotated(angle + i / points * PI) * size)
 	
 	var middle_points = floor(start_position.distance_to(end_position) / size)
-	#for i in middle_points:
-		#mid_left.push_back()
 	
 	for i in points:
 		end_polygon.push_back(end_position + Vector2.DOWN.rotated(angle + PI + i / points * PI) * size)

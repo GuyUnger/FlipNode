@@ -35,4 +35,5 @@ func draw():
 func _on_pressed():
 	EditorInterface.inspect_object(null)
 	GoolashEditor.editor._editing_layer_num = keyframe.get_layer().layer_num
+	GoolashEditor.editor.selected_keyframe = keyframe
 	EditorInterface.inspect_object(keyframe)

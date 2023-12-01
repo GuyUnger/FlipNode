@@ -36,7 +36,7 @@ corner_radius_bottom_left = 4
 [sub_resource type="SystemFont" id="SystemFont_nfcst"]
 subpixel_positioning = 0
 
-[node name="Frame" type="Button"]
+[node name="Frame" type="Button" groups=["timeline_keyframes"]]
 custom_minimum_size = Vector2(12, 24)
 offset_right = 12.0
 offset_bottom = 24.0
