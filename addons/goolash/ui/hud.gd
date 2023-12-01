@@ -39,7 +39,7 @@ func _update_used_colors():
 					if not _used_colors.has(stroke.color.to_html()):
 						_add_used_color(stroke.color.to_html())
 	else:
-		for stroke in GoolashEditor.editor.editing_node.stroke_data:
+		for stroke in GoolashEditor.editor._editing_brush.stroke_data:
 			if not _used_colors.has(stroke.color.to_html()):
 				_add_used_color(stroke.color.to_html())
 

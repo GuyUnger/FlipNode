@@ -65,7 +65,7 @@ static var onion_skin_frames := 1
 static var erase_mode := false
 
 var editing_node
-var _editing_brush
+var _editing_brush: Brush2D
 static var selected_keyframe: BrushKeyframe2D:
 	set(value):
 		selected_keyframe = value
@@ -273,12 +273,14 @@ func _on_selection_changed():
 			return
 		elif selected_node is Brush3D:
 			_select_brush(selected_node.brush2d)
-			
+			editing_node = selected_node
+			return
 	
 	if editing_node:
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 		timeline.load_brush_clip(null)
 		_edit_brush_complete()
+	
 
 
 func _select_brush(brush):
@@ -374,7 +376,38 @@ func _navigation_input(event):
 
 
 func _forward_3d_gui_input(viewport_camera, event):
-	pass
+	if not editing_node:
+		return false
+	if editing_node is Brush3D:
+		if event is InputEventMouse:
+			var mouse_position = get_mouse_position_on_plane(viewport_camera, event.position, editing_node)
+			if event is InputEventMouseButton:
+				event.position = mouse_position
+				_forward_canvas_gui_input(event)
+				return true
+			if event is InputEventMouseMotion:
+				var event2d = InputEventMouseMotion.new()
+				event2d.position = mouse_position
+				_forward_canvas_gui_input(event2d)
+				if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
+					return true
+	return false
+
+
+func get_mouse_position_on_plane(camera: Camera3D, mouse_pos: Vector2, node: Node3D) -> Vector2:
+	var camera_transform = camera.global_transform
+	
+	var ray_origin = camera.project_ray_origin(mouse_pos)
+	var ray_normal = camera.project_ray_normal(mouse_pos)
+	
+	var local_origin := node.to_local(ray_origin)
+	var local_normal = node.to_local(ray_origin + ray_normal) - local_origin
+	
+	var t = -local_origin.z / local_normal.z  # Use z instead of y
+	var intersection = local_origin + local_normal * t
+	
+	# Return only x and y values
+	return Vector2(intersection.x, -intersection.y) * 100.0
 
 
 func _forward_canvas_gui_input(event: InputEvent) -> bool:
@@ -473,19 +506,24 @@ func _on_input_key_ctrl_pressed() -> bool:
 func _input_mouse(event: InputEventMouse) -> bool:
 	if not button_select_mode.button_pressed:
 		return false
-	var mouse_position = _editing_brush.get_local_mouse_position()
+	
+	#var mouse_position = _editing_brush.get_viewport_transform().affine_inverse() * event.position
+	var mouse_position = event.position + Vector2.ONE * 250.0
+	#printt(mouse_position)
+	
+	#var mouse_position = _editing_brush.get_local_mouse_position()
 	if event is InputEventMouseButton:
 		var event_mouse_button: InputEventMouseButton = event
 		if event_mouse_button.button_index == MOUSE_BUTTON_LEFT:
 			if event_mouse_button.pressed:
 				return _on_mouse_button_pressed(mouse_position)
 			else:
-				_on_mouse_button__released()
+				_on_mouse_button_released(mouse_position)
 		elif event_mouse_button.button_index == MOUSE_BUTTON_RIGHT:
 			if event_mouse_button.pressed:
 				_on_mouse_button_pressed(mouse_position, true)
 			else:
-				_on_mouse_button__released()
+				_on_mouse_button_released(mouse_position)
 	elif event is InputEventMouseMotion:
 		_on_mouse_motion(mouse_position)
 	return true
@@ -513,8 +551,8 @@ func _on_mouse_button_pressed(mouse_position: Vector2, right_mouse_button := fal
 	return _action_start(mouse_position)
 
 
-func _on_mouse_button__released():
-	_current_action_complete(_editing_brush.get_local_mouse_position())
+func _on_mouse_button_released(mouse_position):
+	_current_action_complete(mouse_position)
 
 
 #endregion
@@ -1150,6 +1188,7 @@ func action_paint_process(action_position: Vector2):
 	var brush_size = _action_paint_erase_size if _action_rmb else _action_paint_size
 	
 	_action_paint_curve_points.push_back(action_position)
+	printt(action_position)
 	
 	var brush_polygon = _create_polygon_capsule(_action_position_previous, action_position, brush_size)
 	_action_stroke.union_polygon(brush_polygon)
