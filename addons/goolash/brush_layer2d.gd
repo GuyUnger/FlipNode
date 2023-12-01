@@ -19,6 +19,7 @@ func _ready():
 	find_keyframes()
 	if Engine.is_editor_hint():
 		update_keyframe_endpoints()
+		await get_tree().process_frame
 	for keyframe in keyframes:
 		keyframe.visible = false
 	display_frame(0)
@@ -46,7 +47,6 @@ func update_keyframe_endpoints():
 
 func display_frame(frame_num):
 	if Engine.is_editor_hint():
-		GoolashEditor.editor._get_editing_brush()
 		var onion_skin_frames := 0
 		if (
 				GoolashEditor.onion_skin_enabled and
@@ -55,6 +55,7 @@ func display_frame(frame_num):
 				get_clip().scene_file_path == ""
 		):
 			onion_skin_frames = GoolashEditor.onion_skin_frames
+		
 		for frame in keyframes:
 			if frame_num >= frame.frame_num and frame_num <= frame.frame_end_num:
 				frame.visible = true
@@ -63,10 +64,25 @@ func display_frame(frame_num):
 				frame.z_index = 0
 			elif onion_skin_frames > 0:
 				var distance: float
-				if frame_num < frame.frame_num:
-					distance = abs(frame.frame_num - frame_num)
-				else:
-					distance = abs(frame.frame_end_num - frame_num)
+				
+				var clip := get_clip()
+				
+				distance = min(
+						abs(frame.frame_num - frame_num),
+						abs(frame.frame_end_num - frame_num)
+					)
+				if clip.looping:
+					distance = min(
+							distance,
+							abs(frame.frame_num - clip.frame_count - frame_num),
+							abs(frame.frame_num + clip.frame_count - frame_num),
+							abs(frame.frame_end_num - clip.frame_count - frame_num),
+							abs(frame.frame_end_num + clip.frame_count - frame_num)
+						)
+				#if frame_num < frame.frame_num:
+					#distance = abs(frame.frame_num - frame_num)
+				#else:
+					#distance = abs(frame.frame_end_num - frame_num)
 				
 				frame.visible = distance <= onion_skin_frames
 				if frame.visible:

@@ -14,6 +14,12 @@ func init(keyframe: BrushKeyframe2D):
 	self.keyframe = keyframe
 	keyframe.edited.connect(_on_keyframe_edited)
 	draw()
+	GoolashEditor.editor.selected_keyframe_changed.connect(_on_selected_keyframe_changed)
+	%Selected.modulate = GoolashEditor.godot_accent_color
+
+
+func _on_selected_keyframe_changed():
+	%Selected.visible = GoolashEditor.selected_keyframe == keyframe
 
 
 func _on_keyframe_edited():
@@ -37,5 +43,5 @@ func draw():
 func _on_pressed():
 	EditorInterface.inspect_object(null)
 	GoolashEditor.editor.set_editing_layer_num(keyframe.get_layer().layer_num)
-	GoolashEditor.editor.selected_keyframe = keyframe
+	GoolashEditor.selected_keyframe = keyframe
 	EditorInterface.inspect_object(keyframe)

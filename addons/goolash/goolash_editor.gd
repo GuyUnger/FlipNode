@@ -2,6 +2,7 @@
 class_name GoolashEditor extends EditorPlugin
 
 signal editing_layer_changed
+signal selected_keyframe_changed
 
 enum {TOOL_SELECT, TOOL_PAINT, TOOL_FILL, TOOL_EYEDROPPER, TOOL_OVAL, TOOL_RECT, TOOL_SHAPE}
 enum {ACTION_NONE, ACTION_WARP, ACTION_PAINT, ACTION_OVAL, ACTION_RECT, ACTION_SHAPE, ACTION_MOVE, ACTION_SELECT_RECT}
@@ -65,7 +66,10 @@ static var erase_mode := false
 
 var editing_node
 var _editing_brush
-var selected_keyframe: BrushKeyframe2D
+static var selected_keyframe: BrushKeyframe2D:
+	set(value):
+		selected_keyframe = value
+		editor.selected_keyframe_changed.emit()
 var is_editing := false
 var _selected_highlight := 0.0
 
@@ -337,11 +341,13 @@ func _navigation_input(event):
 		key_frame_previous:
 			if editing_node is BrushClip2D:
 				editing_node.stop()
+				selected_keyframe = null
 				if editing_node.previous_frame():
 					return true
 		key_frame_next:
 			if editing_node is BrushClip2D:
 				editing_node.stop()
+				selected_keyframe = null
 				if editing_node.next_frame():
 					return true
 		key_add_frame:
@@ -545,6 +551,8 @@ func _insert_frame():
 	var undo_redo = get_undo_redo()
 	undo_redo.create_action("Insert Keyframe")
 	for layer in editing_node.layers:
+		if selected_keyframe and layer != selected_keyframe.get_layer():
+			continue
 		undo_redo.add_do_method(layer, "insert_frame", editing_node.current_frame)
 		undo_redo.add_undo_method(layer, "remove_frame", editing_node.current_frame)
 	
@@ -562,6 +570,8 @@ func _remove_frame():
 	undo_redo.create_action("Remove Frame")
 	
 	for layer: BrushLayer2D in editing_node.layers:
+		if selected_keyframe and layer != selected_keyframe.get_layer():
+			continue
 		undo_redo.add_do_method(layer, "remove_frame", editing_node.current_frame)
 		var keyframe = layer.get_keyframe(editing_node.current_frame)
 		if keyframe:
@@ -572,7 +582,9 @@ func _remove_frame():
 	undo_redo.add_do_method(editing_node, "_update_frame_count")
 	undo_redo.add_undo_method(editing_node, "_update_frame_count")
 	
-	if editing_node.current_frame >= editing_node.total_frames - 1:
+	var max_frame = selected_keyframe.get_layer().frame_count - 1 if selected_keyframe else editing_node.frame_count - 1
+	
+	if editing_node.current_frame >= max_frame:
 		undo_redo.add_do_method(editing_node, "goto", editing_node.current_frame - 1)
 		undo_redo.add_undo_method(editing_node, "goto", editing_node.current_frame)
 	
@@ -622,6 +634,8 @@ func _convert_keyframe_blank():
 		undo_redo.add_do_method(editing_node, "_update_frame_count")
 		undo_redo.add_undo_method(editing_node, "_update_frame_count")
 		
+		undo_redo.add_do_method(editing_node, "goto", editing_node.current_frame)
+		undo_redo.add_undo_method(editing_node, "goto", editing_node.current_frame)
 	elif not layer.is_keyframe(editing_node.current_frame + 1):
 		var frame = BrushKeyframe2D.new()
 		undo_redo.add_do_method(layer, "set_keyframe", frame, editing_node.current_frame + 1)
@@ -749,7 +763,7 @@ func _forward_draw_brush(brush):
 					var selection: ActionWarpSelection = _get_warp_selection(stroke, cursor_position, _action_warp_size)
 					if selection:
 						_draw_warp_selection(selection)
-						brush.draw_circle(selection.closest_point, 3.0 * zoom, Color.WHITE)
+						brush.draw_circle(selection.closest_point, 6.0 / zoom, Color.WHITE)
 						
 	
 	if _selected_highlight > 0.0:
@@ -835,6 +849,9 @@ func action_warp_try(action_position: Vector2) -> bool:
 		var selection = _get_warp_selection(stroke, action_position, _action_warp_size)
 		if selection:
 			selections.push_back(selection)
+	for selection in selections:
+		_editing_brush.stroke_data.erase(selection.stroke)
+		_editing_brush.stroke_data.push_back(selection.stroke)
 	
 	if selections.size() > 0:
 		action_warp_selections = selections
@@ -1517,6 +1534,18 @@ func add_custom_script_to_keyframe(keyframe):
 	EditorInterface.get_editor_main_screen().get_child(2).visible = true
 
 
+
+func _is_main_screen_visible(screen: int):
+	return EditorInterface.get_editor_main_screen().get_child(screen).visible
+
+
+static func is_editable(node):
+	return node.scene_file_path == "" or node.get_tree().edited_scene_root == node
+
+
+
+#region Layers
+
 func set_editing_layer_num(value):
 	if editing_node and editing_node is BrushClip2D:
 		editing_node._editing_layer_num = value
@@ -1530,9 +1559,34 @@ func get_editing_layer_num() -> int:
 	return 0
 
 
-func _is_main_screen_visible(screen: int):
-	return EditorInterface.get_editor_main_screen().get_child(screen).visible
+func remove_layer(layer: BrushLayer2D):
+	var clip = layer.get_clip()
+	
+	var undo_redo = get_undo_redo()
+	undo_redo.create_action("Remove Layer")
+	undo_redo.add_do_method(clip, "remove_layer", layer)
+	undo_redo.add_undo_method(clip, "add_layer", layer)
+	undo_redo.add_do_method(timeline, "_on_layer_added_or_removed")
+	undo_redo.add_undo_method(timeline, "_on_layer_added_or_removed")
+	
+	undo_redo.commit_action()
 
+
+func create_layer():
+	if not editing_node or not editing_node is BrushClip2D:
+		return
+	
+	var layer = editing_node._create_layer()
+	var undo_redo = get_undo_redo()
+	undo_redo.create_action("New Layer")
+	undo_redo.add_do_method(editing_node, "add_layer", layer)
+	undo_redo.add_undo_method(editing_node, "remove_layer", layer)
+	undo_redo.add_do_method(timeline, "_on_layer_added_or_removed")
+	undo_redo.add_undo_method(timeline, "_on_layer_added_or_removed")
+	undo_redo.commit_action()
+	
+
+#endregion
 
 #region UNDO/REDO
 
@@ -1618,10 +1672,6 @@ void fragment() {
 	file.close()
 
 #endregion
-
-
-static func is_editable(node):
-	return node.scene_file_path == "" or node.get_tree().edited_scene_root == node
 
 
 static func douglas_peucker(points: PackedVector2Array, tolerance := 1.0, level := 0) -> PackedVector2Array:

@@ -47,16 +47,14 @@ func load_brush_clip(brush_clip: BrushClip2D):
 	%ButtonAutoPlay.button_pressed = brush_clip.auto_play
 	%ButtonLoop.button_pressed = brush_clip.looping
 	
-	_clear_layers()
+	_load_layers()
+	
 	var is_editable = GoolashEditor.is_editable(brush_clip)
-	if is_editable:
-		_load_layers()
-		custom_minimum_size.y = 60.0 + brush_clip.layers.size() * 32.0
-	else:
-		custom_minimum_size.y = 30.0
-		size.y = 30.0
 	%LayersContainer.visible = is_editable
 	%EditorOptions.visible = is_editable
+	if not is_editable:
+		custom_minimum_size.y = 30.0
+		size.y = 30.0
 	
 	brush_clip.frame_changed.connect(_on_frame_changed)
 	brush_clip.edited.connect(_on_brush_clip_edited)
@@ -65,7 +63,6 @@ func load_brush_clip(brush_clip: BrushClip2D):
 
 func _on_frame_changed():
 	update_timeline_length()
-	GoolashEditor.editor.selected_keyframe = null
 
 
 func _on_brush_clip_edited():
@@ -74,7 +71,7 @@ func _on_brush_clip_edited():
 
 func update_timeline_length():
 	%FrameIndicator.position.x = GoolashEditor.editor.editing_node.current_frame * FRAME_WIDTH + FRAME_WIDTH * 0.5
-	var end_pos = brush_clip.total_frames * FRAME_WIDTH
+	var end_pos = brush_clip.frame_count * FRAME_WIDTH
 	%AreaActive.size.x = end_pos
 	%AreaInactive.position.x = end_pos
 	%AreaInactive.size.x = %FrameCounts.size.x - end_pos
@@ -98,35 +95,39 @@ func _on_button_next_frame_pressed():
 		GoolashEditor.editor.editing_node.next_frame()
 
 
-
-func _clear_layers():
+func _load_layers():
 	for layer_options in %LayersInfo.get_children():
 		layer_options.queue_free()
-	
 	for layer_frames in %LayersFrames.get_children():
 		layer_frames.queue_free()
-
-
-func _load_layers():
-	for layer in GoolashEditor.editor.editing_node.layers:
+	
+	if not GoolashEditor.is_editable(brush_clip):
+		return
+	
+	for layer in brush_clip.layers:
 		_add_layer(layer)
+	
+	custom_minimum_size.y = 60.0 + brush_clip.layers.size() * 32.0
 
 
 func _add_layer(layer):
 	var layer_info = TimelineLayerInfo.instantiate()
 	var layer_frames = TimelineLayerFrames.instantiate()
 	%LayersInfo.add_child(layer_info)
+	%LayersInfo.move_child(layer_info, layer.layer_num)
 	layer_info.init(layer)
 	%LayersFrames.add_child(layer_frames)
+	%LayersFrames.move_child(layer_frames, layer.layer_num)
 	layer_frames.init(layer)
 
 
 func _on_button_add_layer_pressed():
-	brush_clip._create_layer()
+	GoolashEditor.editor.create_layer()
 	GoolashEditor.editor.set_editing_layer_num(brush_clip.layers.size() - 1)
-	_clear_layers()
+
+
+func _on_layer_added_or_removed():
 	_load_layers()
-	custom_minimum_size.y = 60.0 + brush_clip.layers.size() * 32.0
 
 
 func _on_line_edit_fps_text_submitted(input: String):
@@ -154,18 +155,12 @@ func _set_fps(value: int):
 	%LineEditFPS.text = str(value)
 
 
-func _on_button_onion_toggled(toggled_on):
-	GoolashEditor.onion_skin_enabled = toggled_on
-	if is_instance_valid(brush_clip):
-		brush_clip.draw()
-
-
 func _on_line_edit_onion_frames_text_submitted(new_text):
 	%LineEditOnionFrames.release_focus()
 
 
 func _on_line_edit_onion_frames_focus_exited():
-	GoolashEditor.onion_skin_enabled = max(int(%LineEditOnionFrames.text), 1)
+	GoolashEditor.onion_skin_frames = max(int(%LineEditOnionFrames.text), 1)
 	brush_clip.draw()
 
 
@@ -174,11 +169,17 @@ func _input(event) -> void:
 		return
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if event.is_pressed():
+			var mouse_position = get_local_mouse_position()
 			var tl_node = %FrameCounts
 			var rect = Rect2(tl_node.position, get_rect().size - tl_node.position)
 			rect.size.y = tl_node.get_rect().size.y + %LayersInfo.get_child_count() * 32.0
-			if rect.has_point(get_local_mouse_position()):
-				scrubbing = true
+			
+			if rect.has_point(mouse_position):
+				if mouse_position.y < rect.position.y + rect.size.y + 32.0 and mouse_position.x > rect.position.x + rect.size.x - 60.0:
+					pass
+				else:
+					scrubbing = true
+					GoolashEditor.editor.selected_keyframe = null
 		else:
 			scrubbing = false
 
@@ -187,13 +188,21 @@ func _process(delta):
 	if scrubbing:
 		var tl_node = %FrameCounts
 		var to_frame = int(floor((get_local_mouse_position().x - tl_node.position.x + 1) / FRAME_WIDTH))
-		to_frame = clamp(to_frame, 0, brush_clip.total_frames - 1)
+		to_frame = clamp(to_frame, 0, brush_clip.frame_count - 1)
 		brush_clip.goto_and_stop(to_frame)
 
 
 func _on_button_loop_toggled(toggled_on):
 	brush_clip.looping = toggled_on
+	if is_instance_valid(brush_clip):
+		brush_clip.draw()
 
 
 func _on_button_auto_play_toggled(toggled_on):
 	brush_clip.auto_play = toggled_on
+
+
+func _on_button_onion_toggled(toggled_on):
+	GoolashEditor.onion_skin_enabled = toggled_on
+	if is_instance_valid(brush_clip):
+		brush_clip.draw()

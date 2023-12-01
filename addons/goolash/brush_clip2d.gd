@@ -14,9 +14,9 @@ signal edited
 			value %= _frame_count
 		else:
 			value = clamp(value, 0, _frame_count - 1)
-		if current_frame == value:
-			return
 		current_frame = value
+		if Engine.is_editor_hint():
+			GoolashEditor.editor._get_editing_brush()
 		draw()
 		frame_changed.emit()
 
@@ -24,7 +24,7 @@ signal edited
 	get:
 		return _frame_count
 
-var total_frames: int: 
+var frame_count: int: 
 	get:
 		return _frame_count
 
@@ -61,7 +61,7 @@ func _ready():
 func init():
 	if layers.size() == 0:
 		await get_tree().process_frame
-		_create_layer()
+		add_layer(_create_layer())
 	for layer: BrushLayer2D in layers:
 		layer.find_keyframes()
 		if layer.keyframes.size() == 0:
@@ -129,13 +129,11 @@ func goto(frame_num_or_label):
 		push_error("goto_and_stop only takes ints (frame number) or strings (label names).")
 
 
-func _create_layer():
+func _create_layer(add_child := true) -> BrushLayer2D:
 	var layer = BrushLayer2D.new()
-	add_child(layer)
 	layer.name = "Layer %s" % (layers.size() + 1)
-	layer.owner = owner
 	layer.set_keyframe(BrushKeyframe2D.new(), 0)
-	_find_layers()
+	return layer
 
 
 func _find_layers():
@@ -160,3 +158,17 @@ func _get_fps():
 	else:
 		return Goolash.default_fps
 
+
+func add_layer(layer: BrushLayer2D):
+	add_child(layer)
+	move_child(layer, layer.layer_num)
+	layer.owner = owner
+	for keyframe in layer.keyframes:
+		keyframe.owner = owner
+	_find_layers()
+
+
+func remove_layer(layer: BrushLayer2D):
+	remove_child(layer)
+	layer.owner = null
+	_find_layers()

@@ -16,8 +16,10 @@ func init(layer: BrushLayer2D):
 
 func draw():
 	_clear()
+	
 	for keyframe in layer.keyframes:
 		var timeline_frame = TimelineKeyframe.instantiate()
 		add_child(timeline_frame)
 		timeline_frame.position.x = keyframe.frame_num * Timeline.FRAME_WIDTH
 		timeline_frame.init(keyframe)
+	custom_minimum_size.x = (layer.frame_count + 1) * Timeline.FRAME_WIDTH

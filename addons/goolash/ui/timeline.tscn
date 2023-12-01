@@ -37,7 +37,6 @@ vertical_alignment = 1
 
 [node name="Timeline" type="VBoxContainer" parent="."]
 unique_name_in_owner = true
-visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -314,11 +313,14 @@ theme_override_constants/separation = 0
 [node name="ScrollContainer" type="ScrollContainer" parent="Timeline/LayersContainer/HBoxContainer/VBoxContainer2"]
 layout_mode = 2
 size_flags_vertical = 3
+horizontal_scroll_mode = 2
+vertical_scroll_mode = 0
 
 [node name="LayersFrames" type="VBoxContainer" parent="Timeline/LayersContainer/HBoxContainer/VBoxContainer2/ScrollContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
+size_flags_horizontal = 3
 theme_override_constants/separation = 2
 
 [connection signal="pressed" from="Timeline/HBoxContainer/LayerOptionsContainer/LayerOptions/ButtonPreviousFrame" to="." method="_on_button_previous_frame_pressed"]
