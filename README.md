@@ -14,7 +14,7 @@
 # Shortcuts and how to use
 *Shortcuts can be edited in project settings.*
 
-Use <kbd>LMB</kbd> to Draw and <kbd>RMB</kbd> to Erase. To reverse these you can toggle <kbd>![Eraser](https://github.com/GuyUnger/Goolash/assets/7023847/4fd35a9b-2e60-4d92-91dd-1e3cd6de3ff2)</kbd> Erase Mode from the tool menu or by holding <kbd>X</kbd>, this is useful for drawing with a tablet.
+Use <kbd>LMB</kbd> to Draw and <kbd>RMB</kbd> to Erase with any tool. To reverse these you can toggle <kbd>![Eraser](https://github.com/GuyUnger/Goolash/assets/7023847/4fd35a9b-2e60-4d92-91dd-1e3cd6de3ff2)</kbd> Erase Mode from the tool menu or by holding <kbd>X</kbd>, this is useful for drawing with a tablet.
 
 - ![ToolSelect](https://github.com/GuyUnger/Goolash/assets/7023847/4eb3842f-a2cc-4115-ba44-3facb1f1e311) **Select** <kbd>Q</kbd>
   - Click and drag strokes to move them
@@ -23,10 +23,10 @@ Use <kbd>LMB</kbd> to Draw and <kbd>RMB</kbd> to Erase. To reverse these you can
 - ![ToolOval](https://github.com/GuyUnger/Goolash/assets/7023847/50b85d2d-c17e-442c-a370-1a2dc92d1e59) **Oval Brush** <kbd>O</kbd>
    - Draw from center <kbd>ALT</kbd>
    - Uniform circles <kbd>SHIFT</kbd>
-- ![ToolRectangle](https://github.com/GuyUnger/Goolash/assets/7023847/677133f1-2f40-4695-bed8-e708ad9c41f0) **Rectangle Brush** <kbd>R</kbd>
+- ![ToolRectangle](https://github.com/GuyUnger/Goolash/assets/7023847/677133f1-2f40-4695-bed8-e708ad9c41f0) **Rectangle Brush** <kbd>M</kbd>
    - Draw from center <kbd>ALT</kbd>
    - Uniform squares <kbd>SHIFT</kbd>
-- ![ToolShape](https://github.com/GuyUnger/Goolash/assets/7023847/81173c1b-10cb-475a-9fcf-0e66319a9318) **Shape Brush** <kbd>R</kbd>
+- ![ToolShape](https://github.com/GuyUnger/Goolash/assets/7023847/81173c1b-10cb-475a-9fcf-0e66319a9318) **Shape Brush** <kbd>Y</kbd>
 - ![Bucket](https://github.com/GuyUnger/Goolash/assets/7023847/d6b8d845-4ad5-457f-832a-2b3f6c1937f0) **Fill Bucket** <kbd>G</kbd>
 
 ![ColorPick](https://github.com/GuyUnger/Goolash/assets/7023847/298b90f9-3bfd-47a9-8da2-e418ea952d99) Hold <kbd>ALT</kbd> for quick Color Picking  
