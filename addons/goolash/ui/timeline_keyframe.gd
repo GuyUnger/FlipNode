@@ -9,6 +9,7 @@ var keyframe: BrushKeyframe2D
 @export var style_filled: StyleBoxFlat
 @export var style_blank: StyleBoxFlat
 
+
 func init(keyframe: BrushKeyframe2D):
 	self.keyframe = keyframe
 	keyframe.edited.connect(_on_keyframe_edited)
@@ -32,8 +33,9 @@ func draw():
 	
 	%Script.visible = keyframe.has_custom_script
 
+
 func _on_pressed():
 	EditorInterface.inspect_object(null)
-	GoolashEditor.editor._editing_layer_num = keyframe.get_layer().layer_num
+	GoolashEditor.editor.set_editing_layer_num(keyframe.get_layer().layer_num)
 	GoolashEditor.editor.selected_keyframe = keyframe
 	EditorInterface.inspect_object(keyframe)

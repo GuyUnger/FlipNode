@@ -123,7 +123,7 @@ func _add_layer(layer):
 
 func _on_button_add_layer_pressed():
 	brush_clip._create_layer()
-	GoolashEditor.editor._editing_layer_num = brush_clip.layers.size() - 1
+	GoolashEditor.editor.set_editing_layer_num(brush_clip.layers.size() - 1)
 	_clear_layers()
 	_load_layers()
 	custom_minimum_size.y = 60.0 + brush_clip.layers.size() * 32.0

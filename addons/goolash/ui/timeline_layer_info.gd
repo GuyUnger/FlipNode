@@ -9,28 +9,23 @@ var layer: BrushLayer2D
 @export var style_normal := StyleBoxEmpty.new()
 @export var style_active: StyleBoxFlat
 
-func _ready():
-	style_active.bg_color = EditorInterface.get_editor_settings().get_setting("interface/theme/accent_color")
-	GoolashEditor.editor.selection_changed.connect(_on_goolash_selection_changed)
-	await get_tree().process_frame
+func init(layer):
+	self.layer = layer
+	GoolashEditor.editor.editing_layer_changed.connect(_on_goolash_editing_layer_changed)
+	%LineEditName.text = str(layer.name)
+	set_visibility(layer.visible)
 	update_style()
 
 
-func _on_goolash_selection_changed():
+func _on_goolash_editing_layer_changed():
 	if not is_instance_valid(layer):
-		GoolashEditor.editor.selection_changed.disconnect(_on_goolash_selection_changed)
+		GoolashEditor.editor.editing_layer_changed.disconnect(_on_goolash_editing_layer_changed)
 		return
 	update_style()
 
 
 func update_style():
-	add_theme_stylebox_override("panel", style_active if GoolashEditor.editor._editing_layer_num == layer.layer_num else style_normal)
-
-
-func init(layer):
-	self.layer = layer
-	%LineEditName.text = str(layer.name)
-	set_visibility(layer.visible)
+	add_theme_stylebox_override("panel", style_active if GoolashEditor.editor.get_editing_layer_num() == layer.layer_num else style_normal)
 
 
 func _on_line_edit_name_text_submitted(new_text):

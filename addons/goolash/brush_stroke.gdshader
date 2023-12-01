@@ -34,7 +34,7 @@ void fragment() {
 		}
 	}
 	a /= directions * quality;
-	a = smoothstep(0.25, 0.5, a);
+	a = smoothstep(0.3, 0.6, a);
 	
 	//a = textureLod(screen_texture, uv, 0.75).r;
 	//a = smoothstep(0.25, 0.5, a);

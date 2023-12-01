@@ -1,7 +1,7 @@
 @tool
 class_name GoolashEditor extends EditorPlugin
 
-signal selection_changed
+signal editing_layer_changed
 
 enum {TOOL_SELECT, TOOL_PAINT, TOOL_FILL, TOOL_EYEDROPPER, TOOL_OVAL, TOOL_RECT, TOOL_SHAPE}
 enum {ACTION_NONE, ACTION_WARP, ACTION_PAINT, ACTION_OVAL, ACTION_RECT, ACTION_SHAPE, ACTION_MOVE, ACTION_SELECT_RECT}
@@ -44,15 +44,6 @@ static var timeline
 var _current_action: int
 var _action_position_previous: Vector2
 var _action_rmb := false
-var _editing_layer_num: int: 
-	get:
-		if editing_node:
-			return editing_node._editing_layer_num
-		return 0
-	set(value):
-		if editing_node:
-			editing_node._editing_layer_num = value
-			selection_changed.emit()
 var _action_stroke: BrushStrokeData
 var _action_brush_inside: BrushStrokeData
 
@@ -265,6 +256,8 @@ func _on_selection_changed():
 			for timeline_keyframe in get_tree().get_nodes_in_group("timeline_keyframes"):
 				if timeline_keyframe.keyframe == keyframe:
 					timeline_keyframe.grab_focus()
+			
+			set_editing_layer_num(keyframe.get_layer().layer_num)
 			return
 		elif selected_node is Brush2D:
 			_select_brush(selected_nodes[0])
@@ -272,7 +265,7 @@ func _on_selection_changed():
 		elif selected_node is BrushLayer2D:
 			var layer: BrushLayer2D = selected_node
 			select_brush_clip(layer.get_clip())
-			_editing_layer_num = layer.layer_num
+			set_editing_layer_num(layer.layer_num)
 			return
 	
 	if editing_node:
@@ -550,7 +543,7 @@ func _process(delta):
 
 func _insert_frame():
 	var undo_redo = get_undo_redo()
-	undo_redo.create_action("Insert keyframe")
+	undo_redo.create_action("Insert Keyframe")
 	for layer in editing_node.layers:
 		undo_redo.add_do_method(layer, "insert_frame", editing_node.current_frame)
 		undo_redo.add_undo_method(layer, "remove_frame", editing_node.current_frame)
@@ -566,7 +559,7 @@ func _insert_frame():
 
 func _remove_frame():
 	var undo_redo = get_undo_redo()
-	undo_redo.create_action("Remove frame")
+	undo_redo.create_action("Remove Frame")
 	
 	for layer: BrushLayer2D in editing_node.layers:
 		undo_redo.add_do_method(layer, "remove_frame", editing_node.current_frame)
@@ -588,7 +581,7 @@ func _remove_frame():
 
 func _convert_keyframe():
 	var undo_redo = get_undo_redo()
-	undo_redo.create_action("Convert keyframe")
+	undo_redo.create_action("Convert Keyframe")
 	
 	var layer = _get_current_layer()
 	if not layer.is_keyframe(editing_node.current_frame):
@@ -618,7 +611,7 @@ func _convert_keyframe():
 
 func _convert_keyframe_blank():
 	var undo_redo = get_undo_redo()
-	undo_redo.create_action("Convert blank keyframe")
+	undo_redo.create_action("Convert Blank Keyframe")
 	
 	var layer: BrushLayer2D = _get_current_layer()
 	if not layer.is_keyframe(editing_node.current_frame):
@@ -651,7 +644,7 @@ func _remove_keyframe():
 	var keyframe = layer.get_keyframe(editing_node.current_frame)
 	if keyframe:
 		var undo_redo = get_undo_redo()
-		undo_redo.create_action("Remove keyframe")
+		undo_redo.create_action("Remove Keyframe")
 		undo_redo.add_do_method(layer, "remove_keyframe", editing_node.current_frame)
 		undo_redo.add_undo_method(layer, "set_keyframe", keyframe, editing_node.current_frame)
 		
@@ -1065,7 +1058,7 @@ func action_fill_try(action_position: Vector2):
 			_editing_brush.stroke_data.erase(stroke)
 			_editing_brush.draw()
 			_editing_brush.edited.emit()
-			undo_redo_strokes_complete("Bucket clear")
+			undo_redo_strokes_complete("Bucket Clear")
 		return
 	
 	var stroke_under_mouse = get_stroke_at_position(action_position)
@@ -1073,25 +1066,28 @@ func action_fill_try(action_position: Vector2):
 		undo_redo_strokes_start()
 		stroke_under_mouse.color = current_color
 		_merge_stroke(stroke_under_mouse)
-		undo_redo_strokes_complete("Bucket fill recolor")
+		undo_redo_strokes_complete("Bucket Fill Recolor")
 		return
 	for stroke: BrushStrokeData in _editing_brush.stroke_data:
 		for i in stroke.holes.size():
 			if Geometry2D.is_point_in_polygon(action_position, stroke.holes[i]):
 				undo_redo_strokes_start()
-				
 				if stroke.color.to_html() == current_color.to_html():
 					stroke.holes.remove_at(i)
+					for stroke_inside in _editing_brush.stroke_data:
+						if stroke == stroke_inside:
+							continue
+						stroke.subtract_stroke(stroke_inside)
 				else:
 					var polygon = stroke.holes[i].duplicate()
 					polygon.reverse()
 					var fill_stroke = BrushStrokeData.new(polygon, [], current_color)
 					for stroke_inside in _editing_brush.stroke_data:
-						fill_stroke = fill_stroke.subtract_stroke(stroke_inside)[0]
+						fill_stroke.subtract_stroke(stroke_inside)
 					_editing_brush.add_stroke(fill_stroke)
 				_editing_brush.draw()
 				_editing_brush.edited.emit()
-				undo_redo_strokes_complete("Bucket fill hole")
+				undo_redo_strokes_complete("Bucket Fill Hole")
 				return
 
 #endregion
@@ -1150,7 +1146,7 @@ func action_paint_complete():
 	
 	if _action_rmb:
 		_subtract_stroke(_action_stroke)
-		undo_redo_strokes_complete("Paint brush erase")
+		undo_redo_strokes_complete("Paint Brush Erase")
 	else:
 		if _action_brush_inside:
 			_editing_brush.stroke_data.erase(_action_stroke)
@@ -1166,7 +1162,7 @@ func action_paint_complete():
 			_editing_brush.edited.emit()
 		else:
 			_merge_stroke(_action_stroke)
-		undo_redo_strokes_complete("Paint brush draw")
+		undo_redo_strokes_complete("Paint Brush Draw")
 	_editing_brush.edited.emit()
 	if editing_node is BrushClip2D:
 		editing_node.edited.emit()
@@ -1261,10 +1257,10 @@ func action_oval_complete(action_position):
 	
 	if _action_rmb:
 		_subtract_stroke(stroke)
-		undo_redo_strokes_complete("Oval brush erase")
+		undo_redo_strokes_complete("Oval Brush Erase")
 	else:
 		_merge_stroke(stroke)
-		undo_redo_strokes_complete("Oval brush draw")
+		undo_redo_strokes_complete("Oval Brush Draw")
 
 
 func get_oval_tool_shape(from: Vector2, to: Vector2, centered: bool, equal: bool, noise := 0.03):
@@ -1334,10 +1330,10 @@ func action_rect_complete(action_position):
 	
 	if _action_rmb:
 		_subtract_stroke(stroke)
-		undo_redo_strokes_complete("Rect brush erase")
+		undo_redo_strokes_complete("Rect Brush Erase")
 	else:
 		_merge_stroke(stroke)
-		undo_redo_strokes_complete("Rect brush draw")
+		undo_redo_strokes_complete("Rect Brush Draw")
 
 
 func get_rect_tool_shape(from: Vector2, to: Vector2, centered: bool, equal: bool, noise := 0.01):
@@ -1414,10 +1410,10 @@ func action_shape_process(action_position):
 func action_shape_complete():
 	if _action_rmb:
 		_subtract_stroke(_action_stroke)
-		undo_redo_strokes_complete("Shape brush erase")
+		undo_redo_strokes_complete("Shape Brush Erase")
 	else:
 		_merge_stroke(_action_stroke)
-		undo_redo_strokes_complete("Shape brush draw")
+		undo_redo_strokes_complete("Shape Brush Draw")
 
 #endregion
 
@@ -1467,13 +1463,13 @@ func _get_editing_brush():
 	if not editing_node:
 		_editing_brush = null
 	elif editing_node is BrushClip2D:
-		_editing_brush = editing_node.layers[_editing_layer_num].get_frame(editing_node.current_frame)
+		_editing_brush = editing_node.layers[editing_node._editing_layer_num].get_frame(editing_node.current_frame)
 	else:
 		_editing_brush = editing_node
 
 
 func _get_current_layer():
-	return editing_node.layers[_editing_layer_num]
+	return editing_node.layers[editing_node._editing_layer_num]
 
 
 func _get_current_tool() -> int:
@@ -1521,8 +1517,17 @@ func add_custom_script_to_keyframe(keyframe):
 	EditorInterface.get_editor_main_screen().get_child(2).visible = true
 
 
-func select_later():
-	pass
+func set_editing_layer_num(value):
+	if editing_node and editing_node is BrushClip2D:
+		editing_node._editing_layer_num = value
+		editing_layer_changed.emit()
+		_get_editing_brush()
+
+
+func get_editing_layer_num() -> int:
+	if editing_node and editing_node is BrushClip2D:
+		return editing_node._editing_layer_num
+	return 0
 
 
 func _is_main_screen_visible(screen: int):
