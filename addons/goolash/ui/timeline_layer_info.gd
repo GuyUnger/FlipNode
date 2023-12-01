@@ -17,6 +17,9 @@ func _ready():
 
 
 func _on_goolash_selection_changed():
+	if not is_instance_valid(layer):
+		GoolashEditor.editor.selection_changed.disconnect(_on_goolash_selection_changed)
+		return
 	update_style()
 
 

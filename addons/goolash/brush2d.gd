@@ -88,7 +88,8 @@ func draw():
 	for i in stroke_data.size():
 		strokes[i].self_modulate.a = alpha
 		strokes[i].draw(stroke_data[i])
-		strokes[i].material = get_override_material(stroke_data[i])
+		var material = get_override_material(stroke_data[i])
+		strokes[i].material = material
 
 
 func _generate_static_body():
@@ -187,10 +188,11 @@ func get_strokes_duplicate() -> Array:
 	return strokes_duplicate
 
 
-func get_override_material(stroke):
+func get_override_material(stroke) -> Material:
 	if stroke._erasing:
 		return GoolashEditor.StrokeEraseMaterial
 	elif material:
 		return material
 	else:
-		return GoolashEditor.StrokeRegularMaterial
+		var material = GoolashEditor.StrokeRegularMaterial
+		return material

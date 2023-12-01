@@ -134,7 +134,7 @@ func insert_frame(frame_num: int):
 	edited.emit()
 
 
-func remove_frame(frame_num):
+func remove_frame(frame_num: int):
 	if frame_num > frame_count:
 		return
 	if frame_count == 1:
@@ -145,6 +145,15 @@ func remove_frame(frame_num):
 			remove_child(keyframe)
 		elif keyframe.frame_num > frame_num:
 			keyframe.frame_num -= 1
+	find_keyframes()
+	update_keyframe_endpoints()
+	edited.emit()
+
+
+func remove_keyframe(frame_num: int):
+	var frame = get_keyframe(frame_num)
+	if frame:
+		remove_child(frame)
 	find_keyframes()
 	update_keyframe_endpoints()
 	edited.emit()

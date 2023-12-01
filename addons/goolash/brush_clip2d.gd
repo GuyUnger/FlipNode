@@ -105,25 +105,26 @@ func previous_frame() -> bool:
 
 
 ## Helper function to both go to a specified frame/label, and stop playing.
-func goto_and_stop(frame_or_label):
-	goto(frame_or_label)
+func goto_and_stop(frame_num_or_label):
+	goto(frame_num_or_label)
 	is_playing = false
 
 
 ## Helper function to both go to a specified frame/label, and start/continue playing.
-func goto_and_play(frame_or_label):
+func goto_and_play(frame_num_or_label):
+	goto(frame_num_or_label)
 	is_playing = true
 
 
 ## Helper function to both go to a specified frame or label, and start/continue playing.
-func goto(frame_or_label):
-	if frame_or_label is int:
-		current_frame = frame_or_label
-	elif frame_or_label is String:
-		if labels.has(frame_or_label):
-			current_frame = labels[frame_or_label]
+func goto(frame_num_or_label):
+	if frame_num_or_label is int:
+		current_frame = frame_num_or_label
+	elif frame_num_or_label is String:
+		if labels.has(frame_num_or_label):
+			current_frame = labels[frame_num_or_label]
 		else:
-			push_error("label '%s' doesn't exist." % frame_or_label)
+			push_error("label '%s' doesn't exist." % frame_num_or_label)
 	else:
 		push_error("goto_and_stop only takes ints (frame number) or strings (label names).")
 

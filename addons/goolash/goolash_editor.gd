@@ -7,6 +7,8 @@ enum {TOOL_SELECT, TOOL_PAINT, TOOL_FILL, TOOL_EYEDROPPER, TOOL_OVAL, TOOL_RECT,
 enum {ACTION_NONE, ACTION_WARP, ACTION_PAINT, ACTION_OVAL, ACTION_RECT, ACTION_SHAPE, ACTION_MOVE, ACTION_SELECT_RECT}
 enum {PAINT_MODE_FRONT, PAINT_MODE_BEHIND, PAINT_MODE_INSIDE}
 
+enum {MAIN_SCREEN_2D, MAIN_SCREEN_3D, MAIN_SCREEN_SCRIPT}
+
 static var editor: GoolashEditor
 
 static var godot_accent_color: Color
@@ -272,12 +274,6 @@ func _on_selection_changed():
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 		timeline.load_brush_clip(null)
 		_edit_brush_complete()
-	
-	var visible_2d = EditorInterface.get_editor_main_screen().get_child(0).visible
-	var visible_3d = EditorInterface.get_editor_main_screen().get_child(1).visible
-	var visible_script = EditorInterface.get_editor_main_screen().get_child(2).visible
-	if visible_script and (visible_2d or visible_3d):
-		EditorInterface.get_editor_main_screen().get_child(2).visible = false
 
 
 func _select_brush(brush):
@@ -325,7 +321,7 @@ func _edit_brush_complete():
 #region INPUT
 
 func _input(event):
-	if Input.is_key_pressed(KEY_CTRL):
+	if Input.is_key_pressed(KEY_CTRL) or not _is_main_screen_visible(MAIN_SCREEN_2D):
 		return
 	if event is InputEventKey and event.is_pressed():
 		_navigation_input(event)
@@ -358,13 +354,13 @@ func _navigation_input(event):
 			return true
 		key_add_keyframe:
 			if Input.is_key_pressed(KEY_SHIFT):
-				pass
+				_remove_keyframe()
 			else:
 				_convert_keyframe()
 			return true
 		key_add_keyframe_blank:
 			if Input.is_key_pressed(KEY_SHIFT):
-				pass
+				_remove_keyframe()
 			else:
 				_convert_keyframe_blank()
 			return true
@@ -548,50 +544,116 @@ func _process(delta):
 
 
 func _insert_frame():
+	var undo_redo = get_undo_redo()
+	undo_redo.create_action("Insert keyframe")
 	for layer in editing_node.layers:
-		layer.insert_frame(editing_node.current_frame)
-	editing_node._update_frame_count()
-	editing_node.next_frame()
+		undo_redo.add_do_method(layer, "insert_frame", editing_node.current_frame)
+		undo_redo.add_undo_method(layer, "remove_frame", editing_node.current_frame)
+	
+	undo_redo.add_do_method(editing_node, "_update_frame_count")
+	undo_redo.add_undo_method(editing_node, "_update_frame_count")
+	
+	undo_redo.add_do_method(editing_node, "goto", editing_node.current_frame + 1)
+	undo_redo.add_undo_method(editing_node, "goto", editing_node.current_frame)
+	
+	undo_redo.commit_action()
 
 
 func _remove_frame():
-	for layer in editing_node.layers:
-		layer.remove_frame(editing_node.current_frame)
-	editing_node._update_frame_count()
-	if editing_node.current_frame > editing_node.total_frames - 1:
-		editing_node.previous_frame()
+	var undo_redo = get_undo_redo()
+	undo_redo.create_action("Remove frame")
+	
+	for layer: BrushLayer2D in editing_node.layers:
+		undo_redo.add_do_method(layer, "remove_frame", editing_node.current_frame)
+		var keyframe = layer.get_keyframe(editing_node.current_frame)
+		if keyframe:
+			undo_redo.add_undo_method(layer, "insert_frame", editing_node.current_frame-1)
+			undo_redo.add_undo_method(layer, "set_keyframe", keyframe, editing_node.current_frame)
+		else:
+			undo_redo.add_undo_method(layer, "insert_frame", editing_node.current_frame)
+	undo_redo.add_do_method(editing_node, "_update_frame_count")
+	undo_redo.add_undo_method(editing_node, "_update_frame_count")
+	
+	if editing_node.current_frame >= editing_node.total_frames - 1:
+		undo_redo.add_do_method(editing_node, "goto", editing_node.current_frame - 1)
+		undo_redo.add_undo_method(editing_node, "goto", editing_node.current_frame)
+	
+	undo_redo.commit_action()
 
 
 func _convert_keyframe():
+	var undo_redo = get_undo_redo()
+	undo_redo.create_action("Convert keyframe")
+	
 	var layer = _get_current_layer()
 	if not layer.is_keyframe(editing_node.current_frame):
 		var copy = layer.get_frame(editing_node.current_frame).duplicate()
-		layer.set_keyframe(copy, editing_node.current_frame)
-		editing_node._update_frame_count()
-		return true
+		undo_redo.add_do_method(layer, "set_keyframe", copy, editing_node.current_frame)
+		undo_redo.add_undo_method(layer, "remove_keyframe", editing_node.current_frame)
+		
+		undo_redo.add_do_method(editing_node, "_update_frame_count")
+		undo_redo.add_undo_method(editing_node, "_update_frame_count")
+		
 	elif not layer.is_keyframe(editing_node.current_frame + 1):
 		var copy = layer.get_frame(editing_node.current_frame).duplicate()
-		layer.set_keyframe(copy, editing_node.current_frame + 1)
-		editing_node._update_frame_count()
-		editing_node.next_frame()
+		undo_redo.add_do_method(layer, "set_keyframe", copy, editing_node.current_frame + 1)
+		undo_redo.add_undo_method(layer, "remove_frame", editing_node.current_frame + 1)
+		
+		undo_redo.add_do_method(editing_node, "_update_frame_count")
+		undo_redo.add_undo_method(editing_node, "_update_frame_count")
+		
+		undo_redo.add_do_method(editing_node, "goto", editing_node.current_frame + 1)
+		undo_redo.add_undo_method(editing_node, "goto", editing_node.current_frame)
 	else:
-		editing_node._update_frame_count()
-		editing_node.next_frame()
+		undo_redo.add_do_method(editing_node, "goto", editing_node.current_frame + 1)
+		undo_redo.add_undo_method(editing_node, "goto", editing_node.current_frame)
+	
+	undo_redo.commit_action()
 
 
 func _convert_keyframe_blank():
-	var layer = _get_current_layer()
+	var undo_redo = get_undo_redo()
+	undo_redo.create_action("Convert blank keyframe")
+	
+	var layer: BrushLayer2D = _get_current_layer()
 	if not layer.is_keyframe(editing_node.current_frame):
-		layer.set_keyframe(BrushKeyframe2D.new(), editing_node.current_frame)
-		editing_node._update_frame_count()
-		return true
+		var frame = BrushKeyframe2D.new()
+		undo_redo.add_do_method(layer, "set_keyframe", frame, editing_node.current_frame)
+		undo_redo.add_undo_method(layer, "remove_keyframe", editing_node.current_frame)
+		
+		undo_redo.add_do_method(editing_node, "_update_frame_count")
+		undo_redo.add_undo_method(editing_node, "_update_frame_count")
+		
 	elif not layer.is_keyframe(editing_node.current_frame + 1):
-		layer.set_keyframe(BrushKeyframe2D.new(), editing_node.current_frame + 1)
-		editing_node._update_frame_count()
-		editing_node.next_frame()
+		var frame = BrushKeyframe2D.new()
+		undo_redo.add_do_method(layer, "set_keyframe", frame, editing_node.current_frame + 1)
+		undo_redo.add_undo_method(layer, "remove_frame", editing_node.current_frame + 1)
+		
+		undo_redo.add_do_method(editing_node, "_update_frame_count")
+		undo_redo.add_undo_method(editing_node, "_update_frame_count")
+		
+		undo_redo.add_do_method(editing_node, "goto", editing_node.current_frame + 1)
+		undo_redo.add_undo_method(editing_node, "goto", editing_node.current_frame)
 	else:
-		editing_node._update_frame_count()
-		editing_node.next_frame()
+		undo_redo.add_do_method(editing_node, "goto", editing_node.current_frame + 1)
+		undo_redo.add_undo_method(editing_node, "goto", editing_node.current_frame)
+	
+	undo_redo.commit_action()
+
+
+func _remove_keyframe():
+	var layer: BrushLayer2D = _get_current_layer()
+	var keyframe = layer.get_keyframe(editing_node.current_frame)
+	if keyframe:
+		var undo_redo = get_undo_redo()
+		undo_redo.create_action("Remove keyframe")
+		undo_redo.add_do_method(layer, "remove_keyframe", editing_node.current_frame)
+		undo_redo.add_undo_method(layer, "set_keyframe", keyframe, editing_node.current_frame)
+		
+		undo_redo.add_do_method(editing_node, "goto", editing_node.current_frame)
+		undo_redo.add_undo_method(editing_node, "goto", editing_node.current_frame)
+		
+		undo_redo.commit_action()
 
 
 static func set_tool(tool):
@@ -648,6 +710,7 @@ func _action_start(mouse_position) -> bool:
 			return true
 	return false
 
+
 func _current_action_complete(mouse_position):
 	match _current_action:
 		ACTION_WARP:
@@ -688,6 +751,8 @@ func _forward_draw_brush(brush):
 					var selection: ActionWarpSelection = _get_warp_selection(stroke, cursor_position, _action_warp_size)
 					if selection:
 						_draw_warp_selection(selection)
+						brush.draw_circle(selection.closest_point, 3.0 * zoom, Color.WHITE)
+						
 	
 	if _selected_highlight > 0.0:
 		for stroke: BrushStrokeData in brush.stroke_data:
@@ -711,7 +776,7 @@ func _draw_warp_selection(selection: ActionWarpSelection):
 			var t_to = (j + 1) / steps
 			var pos_from = lerp(from, to, t_from)
 			var pos_to = lerp(from, to, t_to)
-			var thickness = lerp(thickness_from, thickness_to, j / steps) * 4.0 / zoom
+			var thickness = lerp(thickness_from, thickness_to, j / steps) * 3.0 / zoom
 			_editing_brush.draw_line(pos_from, pos_to, Color.WHITE, thickness, true)
 
 
@@ -835,7 +900,7 @@ func _get_warp_selection(stroke: BrushStrokeData, action_postion: Vector2, range
 	var closest_point_on_edge = stroke.polygon_curve.get_closest_point(action_postion)
 	var distance_to_edge = closest_point_on_edge.distance_to(action_postion)
 	
-	if distance_to_edge > 10.0 / _get_brush_zoom():
+	if distance_to_edge > 6.0 / _get_brush_zoom():
 		return null
 	
 	var polygon = stroke.polygon
@@ -902,6 +967,9 @@ func _get_warp_selection(stroke: BrushStrokeData, action_postion: Vector2, range
 		var weight = 1.0 - (total_dist / range)
 		weight = _warp_ease(weight)
 		selection.add_vertex(vertex_i, weight)
+	
+	selection.closest_point = closest_point_on_edge
+	
 	return selection
 
 
@@ -909,13 +977,6 @@ func _action_warp_draw(brush):
 	for selection: ActionWarpSelection in action_warp_selections:
 		_draw_warp_selection(selection)
 		brush.draw_polygon_outline(selection.stroke.polygon, 1.0 / _get_brush_zoom(), Color.WHITE, 0.5)
-
-
-func _is_hovering_edge(stroke, mouse_position):
-	var zoom = _get_brush_zoom()
-	
-	var closest_point = stroke.polygon_curve.get_closest_point(mouse_position)
-	return closest_point.distance_to(mouse_position) < 10.0 / zoom
 
 
 func _warp_ease(t):
@@ -929,7 +990,7 @@ class ActionWarpSelection:
 	var stroke: BrushStrokeData
 	var vertex_indexes := []
 	var vertex_weights := []
-	
+	var closest_point: Vector2
 	
 	func _init(stroke: BrushStrokeData):
 		self.stroke = stroke
@@ -1090,13 +1151,22 @@ func action_paint_process(action_position: Vector2):
 
 func _create_polygon_circle(start_position: Vector2, end_position: Vector2, size: float) -> PackedVector2Array:
 	var angle = start_position.angle_to_point(end_position)
-	var brush_polygon = []
+	var start_polygon := []
+	var end_polygon := []
+	var mid_left := []
+	var mid_right := []
+	
 	var points := 16.0
 	for i in points:
-		brush_polygon.push_back(start_position + Vector2.DOWN.rotated(angle + i / points * PI) * size)
+		start_polygon.push_back(start_position + Vector2.DOWN.rotated(angle + i / points * PI) * size)
+	
+	var middle_points = floor(start_position.distance_to(end_position) / size)
+	#for i in middle_points:
+		#mid_left.push_back()
+	
 	for i in points:
-		brush_polygon.push_back(end_position + Vector2.DOWN.rotated(angle + PI + i / points * PI) * size)
-	return PackedVector2Array(brush_polygon)
+		end_polygon.push_back(end_position + Vector2.DOWN.rotated(angle + PI + i / points * PI) * size)
+	return PackedVector2Array(start_polygon + end_polygon)
 
 #endregion
 
@@ -1398,6 +1468,14 @@ func add_custom_script_to_keyframe(keyframe):
 	EditorInterface.get_editor_main_screen().get_child(2).visible = true
 
 
+func select_later():
+	pass
+
+
+func _is_main_screen_visible(screen: int):
+	return EditorInterface.get_editor_main_screen().get_child(screen).visible
+
+
 #region UNDO/REDO
 
 func undo_redo_strokes_start():
@@ -1448,7 +1526,7 @@ void fragment() {
 	vec2 noise_uv = UV / 8.0;
 	float frame = floor(goolash_frame / 4.0);
 	noise_uv += vec2(frame * 0.05, frame * PI);
-	uv += (texture(goolash_boil_noise, noise_uv).rg - 0.5) * 0.002;
+	uv += (texture(goolash_boil_noise, noise_uv).rg - 0.5) * 0.003;
 	"
 	
 	if anti_alias:
@@ -1457,7 +1535,7 @@ void fragment() {
 	float a = 0.0;
 	float directions = 8.0;
 	float quality = 4.0;
-	float size = 5.0;
+	float size = 4.0;
 	for (float angle = 0.0; angle < TAU; angle += TAU / directions) {
 		vec2 offset = vec2(cos(angle), sin(angle));
 		for (float i = 1.0; i <= quality; i += 1.0) {

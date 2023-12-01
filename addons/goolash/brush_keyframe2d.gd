@@ -62,7 +62,7 @@ func is_blank() -> bool:
 	return stroke_data.size() == 0
 
 
-func get_override_material(stroke):
+func get_override_material(stroke) -> Material:
 	if stroke._erasing:
 		return GoolashEditor.StrokeEraseMaterial
 	else:
@@ -70,4 +70,4 @@ func get_override_material(stroke):
 		if clip.material:
 			return clip.material
 		else:
-			super.get_override_material(stroke)
+			return super.get_override_material(stroke)
