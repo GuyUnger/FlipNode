@@ -1,6 +1,7 @@
-[gd_scene load_steps=16 format=3 uid="uid://chuytojhypqte"]
+[gd_scene load_steps=17 format=3 uid="uid://chuytojhypqte"]
 
 [ext_resource type="Script" path="res://addons/goolash/ui/hud.gd" id="1_72a5i"]
+[ext_resource type="PackedScene" uid="uid://dbnwg2psnoj0f" path="res://addons/goolash/ui/button_used_color.tscn" id="2_5di5i"]
 [ext_resource type="Texture2D" uid="uid://jnmhbl8m5hy2" path="res://addons/goolash/icons/ToolSelect.svg" id="2_7pmde"]
 [ext_resource type="Texture2D" uid="uid://da1imqfk7aeg5" path="res://addons/goolash/icons/Paint.svg" id="3_eks0u"]
 [ext_resource type="Texture2D" uid="uid://dpumbmfv451m4" path="res://addons/goolash/icons/ToolShape.svg" id="4_lemf8"]
@@ -49,7 +50,7 @@ anchor_right = 1.0
 offset_left = -171.0
 offset_top = 25.0
 offset_right = -21.0
-offset_bottom = 230.0
+offset_bottom = 376.0
 grow_horizontal = 0
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -62,7 +63,7 @@ anchor_bottom = 1.0
 offset_left = -3.0
 offset_top = -3.0
 offset_right = 4.0
-offset_bottom = 3.0
+offset_bottom = 28.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/margin_left = 5
@@ -80,7 +81,7 @@ theme_override_constants/margin = 0
 theme_override_constants/sv_width = 0
 theme_override_constants/sv_height = 130
 theme_override_constants/h_width = 18
-color = Color(0.803922, 0.521569, 0.247059, 1)
+color = Color(0.45098, 0.631373, 0.0627451, 1)
 can_add_swatches = false
 color_modes_visible = false
 sliders_visible = false
@@ -88,6 +89,115 @@ presets_visible = false
 
 [node name="UsedColors" type="HFlowContainer" parent="Colors/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HSeparator2" type="HSeparator" parent="Colors/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="DefaultColors" type="HFlowContainer" parent="Colors/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Caramel" parent="Colors/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
+modulate = Color(0.890196, 0.592157, 0.196078, 1)
+layout_mode = 2
+
+[node name="Black" parent="Colors/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
+modulate = Color(0, 0, 0, 1)
+layout_mode = 2
+
+[node name="DarkestGray" parent="Colors/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
+modulate = Color(0.0941176, 0.0980392, 0.137255, 1)
+layout_mode = 2
+
+[node name="DarkGray" parent="Colors/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
+modulate = Color(0.176471, 0.196078, 0.215686, 1)
+layout_mode = 2
+
+[node name="LightGray" parent="Colors/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
+modulate = Color(0.545098, 0.541176, 0.501961, 1)
+layout_mode = 2
+
+[node name="White" parent="Colors/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
+layout_mode = 2
+
+[node name="HSeparator" type="HSeparator" parent="Colors/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="DefaultColors2" type="HFlowContainer" parent="Colors/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Rouge" parent="Colors/MarginContainer/VBoxContainer/DefaultColors2" instance=ExtResource("2_5di5i")]
+modulate = Color(0.984314, 0.619608, 0.843137, 1)
+layout_mode = 2
+
+[node name="Peach" parent="Colors/MarginContainer/VBoxContainer/DefaultColors2" instance=ExtResource("2_5di5i")]
+modulate = Color(0.921569, 0.537255, 0.470588, 1)
+layout_mode = 2
+
+[node name="Cream" parent="Colors/MarginContainer/VBoxContainer/DefaultColors2" instance=ExtResource("2_5di5i")]
+modulate = Color(0.980392, 0.921569, 0.843137, 1)
+layout_mode = 2
+
+[node name="Green3" parent="Colors/MarginContainer/VBoxContainer/DefaultColors2" instance=ExtResource("2_5di5i")]
+modulate = Color(0.839216, 0.929412, 0.0901961, 1)
+layout_mode = 2
+
+[node name="Sky" parent="Colors/MarginContainer/VBoxContainer/DefaultColors2" instance=ExtResource("2_5di5i")]
+modulate = Color(0.658824, 0.901961, 0.811765, 1)
+layout_mode = 2
+
+[node name="Blue3" parent="Colors/MarginContainer/VBoxContainer/DefaultColors2" instance=ExtResource("2_5di5i")]
+modulate = Color(0.517647, 0.756863, 1, 1)
+layout_mode = 2
+
+[node name="Magenta" parent="Colors/MarginContainer/VBoxContainer/DefaultColors2" instance=ExtResource("2_5di5i")]
+modulate = Color(0.831373, 0.027451, 0.466667, 1)
+layout_mode = 2
+
+[node name="Red" parent="Colors/MarginContainer/VBoxContainer/DefaultColors2" instance=ExtResource("2_5di5i")]
+modulate = Color(0.988235, 0.321569, 0, 1)
+layout_mode = 2
+
+[node name="Yellow" parent="Colors/MarginContainer/VBoxContainer/DefaultColors2" instance=ExtResource("2_5di5i")]
+modulate = Color(1, 0.823529, 0, 1)
+layout_mode = 2
+
+[node name="Green" parent="Colors/MarginContainer/VBoxContainer/DefaultColors2" instance=ExtResource("2_5di5i")]
+modulate = Color(0.45098, 0.631373, 0.0627451, 1)
+layout_mode = 2
+
+[node name="Cyan" parent="Colors/MarginContainer/VBoxContainer/DefaultColors2" instance=ExtResource("2_5di5i")]
+modulate = Color(0.160784, 0.698039, 0.647059, 1)
+layout_mode = 2
+
+[node name="Blue" parent="Colors/MarginContainer/VBoxContainer/DefaultColors2" instance=ExtResource("2_5di5i")]
+modulate = Color(0.27451, 0.498039, 0.862745, 1)
+layout_mode = 2
+
+[node name="Purple" parent="Colors/MarginContainer/VBoxContainer/DefaultColors2" instance=ExtResource("2_5di5i")]
+modulate = Color(0.431373, 0.0745098, 0.470588, 1)
+layout_mode = 2
+
+[node name="Red2" parent="Colors/MarginContainer/VBoxContainer/DefaultColors2" instance=ExtResource("2_5di5i")]
+modulate = Color(0.47451, 0, 0.12549, 1)
+layout_mode = 2
+
+[node name="Brown" parent="Colors/MarginContainer/VBoxContainer/DefaultColors2" instance=ExtResource("2_5di5i")]
+modulate = Color(0.47451, 0.270588, 0.184314, 1)
+layout_mode = 2
+
+[node name="Green2" parent="Colors/MarginContainer/VBoxContainer/DefaultColors2" instance=ExtResource("2_5di5i")]
+modulate = Color(0.223529, 0.286275, 0.121569, 1)
+layout_mode = 2
+
+[node name="Cyan2" parent="Colors/MarginContainer/VBoxContainer/DefaultColors2" instance=ExtResource("2_5di5i")]
+modulate = Color(0.172549, 0.388235, 0.356863, 1)
+layout_mode = 2
+
+[node name="Blue2" parent="Colors/MarginContainer/VBoxContainer/DefaultColors2" instance=ExtResource("2_5di5i")]
+modulate = Color(0.180392, 0.223529, 0.494118, 1)
 layout_mode = 2
 
 [node name="Tools" type="Panel" parent="."]
