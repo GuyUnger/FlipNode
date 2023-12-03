@@ -325,7 +325,7 @@ func _edit_brush_complete():
 	var previous_editing = editing_node
 	_queue_redraw()
 	editing_node = null
-	previous_editing.draw()
+	#previous_editing.draw()
 	hud.visible = false
 	set_process(false)
 
@@ -547,7 +547,8 @@ func _on_mouse_motion(mouse_position):
 		ACTION_WARP:
 			action_warp_process(mouse_position)
 		ACTION_SHAPE:
-			action_shape_process(mouse_position)
+			if not Input.is_key_pressed(KEY_SHIFT):
+				action_shape_process(mouse_position)
 		ACTION_PAINT:
 			action_paint_process(mouse_position)
 		ACTION_MOVE:
@@ -564,6 +565,11 @@ func _on_mouse_button_pressed(mouse_position: Vector2, right_mouse_button := fal
 
 
 func _on_mouse_button_released(mouse_position):
+	if Input.is_key_pressed(KEY_SHIFT):
+		match _current_action:
+			ACTION_SHAPE:
+				action_shape_process(mouse_position)
+				return
 	_current_action_complete(mouse_position)
 
 #endregion
@@ -824,6 +830,9 @@ func _forward_draw_brush(brush):
 		ACTION_WARP:
 			_action_warp_draw(brush)
 			return
+		ACTION_SHAPE:
+			_action_shape_draw(brush)
+			return
 	
 	match current_tool:
 		TOOL_SELECT:
@@ -920,8 +929,7 @@ func action_warp_try(action_position: Vector2) -> bool:
 		if selection:
 			selections.push_back(selection)
 	for selection in selections:
-		_editing_brush.strokes_data.erase(selection.stroke)
-		_editing_brush.strokes_data.push_back(selection.stroke)
+		_editing_brush.move_stroke_to_front(selection.stroke)
 	
 	if selections.size() > 0:
 		action_warp_selections = selections
@@ -1234,8 +1242,8 @@ func action_paint_complete():
 	else:
 		if _action_brush_inside:
 			_editing_brush.remove_stroke(_action_stroke)
-			var strokes = _action_stroke.mask_stroke(_action_brush_inside)
-			for stroke in strokes:
+			var masked_strokes = _action_stroke.mask_stroke(_action_brush_inside)
+			for stroke in masked_strokes:
 				stroke.polygon = Geometry2D.offset_polygon(stroke.polygon, 0.01)[0]
 				_merge_stroke(stroke)
 			_action_brush_inside = null
@@ -1480,11 +1488,16 @@ func action_shape_start(action_position):
 	_editing_brush.add_stroke(_action_stroke)
 
 
+func _action_shape_draw(brush):
+	var color = Color.RED if _action_rmb else lerp(current_color, Color.WHITE, 0.5)
+	brush.draw_stroke_outline(_action_stroke, 1.0, color, 0.5)
+
+
 func action_shape_process(action_position):
-	if Input.is_key_pressed(KEY_ALT) and _action_stroke.polygon.size() > 0:
-		_action_stroke.polygon[_action_stroke.polygon.size() - 1] = action_position
-		_action_stroke.draw()
-		return
+	#if Input.is_key_pressed(KEY_SHIFT) and _action_stroke.polygon.size() > 0:
+		#_action_stroke.polygon[_action_stroke.polygon.size() - 1] = action_position
+		#_action_stroke.draw()
+		#return
 	
 	_action_stroke.polygon.push_back(action_position)
 	_action_stroke.draw()
@@ -1507,22 +1520,22 @@ func _merge_stroke(merging_stroke):
 	if _editing_brush.strokes_data.has(merging_stroke):
 		_editing_brush.remove_stroke(merging_stroke)
 	
-	var strokes := []
+	var merged_strokes := []
 	while _editing_brush.strokes_data.size() > 0:
-		var stroke_data = _editing_brush.strokes_data.pop_front()
-		_editing_brush.remove_stroke(stroke_data)
-		if merging_stroke.is_stroke_overlapping(stroke_data):
-			if merging_stroke.color.to_html() == stroke_data.color.to_html():
-				merging_stroke.union_stroke(stroke_data)
+		var stroke = _editing_brush.strokes_data[0]
+		_editing_brush.remove_stroke(stroke)
+		if merging_stroke.is_stroke_overlapping(stroke):
+			if merging_stroke.color.to_html() == stroke.color.to_html():
+				merging_stroke.union_stroke(stroke)
 			else:
-				strokes.append_array(stroke_data.subtract_stroke(merging_stroke))
+				merged_strokes.append_array(stroke.subtract_stroke(merging_stroke))
 		else:
-			strokes.push_back(stroke_data)
+			merged_strokes.push_back(stroke)
 	
-	strokes.push_back(merging_stroke)
+	merged_strokes.push_back(merging_stroke)
 	
-	for stroke_data in strokes:
-		_editing_brush.add_stroke(stroke_data)
+	for stroke in merged_strokes:
+		_editing_brush.add_stroke(stroke)
 	
 	_editing_brush.edited.emit()
 

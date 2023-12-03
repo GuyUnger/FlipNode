@@ -6,7 +6,7 @@ extends Resource
 @export var polygon: PackedVector2Array
 @export var holes:  Array[PackedVector2Array]
 
-var stroke: BrushStroke2D
+var graphic: BrushStroke2D
 
 ## Curves
 @export var polygon_curve: Curve2D:
@@ -31,8 +31,8 @@ func _init(polygon := PackedVector2Array(), holes: Array[PackedVector2Array] = [
 
 
 func draw():
-	if stroke:
-		stroke.draw_stroke(self)
+	if graphic:
+		graphic.draw_stroke(self)
 
 
 func union_stroke(stroke: BrushStrokeData):

@@ -64,31 +64,25 @@ func _ready():
 				call_deferred("_generate_rigid_body")
 
 
-func add_stroke(stroke_data: BrushStrokeData):
+func add_stroke(stroke: BrushStrokeData):
 	#TODO: not sure if this is the best way to handle stroke data and strokes
-	strokes_data.push_back(stroke_data)
+	strokes_data.push_back(stroke)
 	
-	var stroke = BrushStroke2D.new()
-	stroke_data.stroke = stroke
-	add_child(stroke)
-	stroke_data.draw()
-	stroke.material = get_override_material(stroke_data)
+	var stroke_graphic = BrushStroke2D.new()
+	stroke.graphic = stroke_graphic
+	add_child(stroke_graphic)
+	stroke.draw()
+	stroke_graphic.material = get_override_material(stroke)
 
 
 func remove_stroke(stroke_data: BrushStrokeData):
 	strokes_data.erase(stroke_data)
-	remove_child(stroke_data.stroke)
+	remove_child(stroke_data.graphic)
 
 
 func init_strokes():
-	#TODO: duplicate code from add_stroke
-	for stroke_data in strokes_data:
-		
-		var stroke = BrushStroke2D.new()
-		stroke_data.stroke = stroke
-		add_child(stroke)
-		stroke.material = get_override_material(stroke_data)
-		stroke_data.draw()
+	for stroke in strokes_data:
+		init_stroke_graphic(stroke)
 
 
 func move_stroke_to_back(stroke_data: BrushStrokeData):
@@ -106,12 +100,16 @@ func redraw_all():
 		if child is BrushStroke2D:
 			remove_child(child)
 	
-	for stroke_data in strokes_data:
-		var stroke = BrushStroke2D.new()
-		stroke_data.stroke = stroke
-		add_child(stroke)
-		stroke.material = get_override_material(stroke_data)
-		stroke_data.draw()
+	for stroke in strokes_data:
+		init_stroke_graphic(stroke)
+
+
+func init_stroke_graphic(stroke: BrushStrokeData):
+	var stroke_graphic = BrushStroke2D.new()
+	stroke.graphic = stroke_graphic
+	add_child(stroke_graphic)
+	stroke_graphic.material = get_override_material(stroke)
+	stroke.draw()
 
 
 func _generate_static_body():
@@ -196,6 +194,8 @@ func draw_stroke_outline(stroke, thickness := 1.0, color: Color = Color.WHITE, a
 
 
 func draw_polygon_outline(polygon, thickness := 1.0, color: Color = Color.WHITE, alpha := 1.0):
+	if polygon.size() < 3:
+		return
 	polygon = polygon.duplicate()
 	polygon.push_back(polygon[0])
 	color.a = alpha

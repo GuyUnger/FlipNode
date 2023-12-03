@@ -46,7 +46,7 @@ func _enter_frame():
 
 func clear():
 	for stroke_data in strokes_data:
-		remove_child(stroke_data.stroke)
+		remove_child(stroke_data.graphic)
 	strokes_data.clear()
 
 
