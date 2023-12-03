@@ -17,8 +17,8 @@ static var godot_selection_color: Color
 
 const TextureEyedropper = preload("res://addons/goolash/icons/ColorPick.svg")
 const TextureFill = preload("res://addons/goolash/icons/CursorBucket.svg")
-const StrokeEraseMaterial = preload("res://addons/goolash/brush_erase_material.tres")
-const StrokeRegularMaterial = preload("res://addons/goolash/brush_stroke_material.tres")
+const StrokeEraseMaterial = preload("res://addons/goolash/shading/brush_erase_material.tres")
+const StrokeRegularMaterial = preload("res://addons/goolash/shading/brush_stroke_material.tres")
 
 static var KEYFRAME_SCRIPT
 static var KEYFRAME_SCRIPT_CUSTOM
@@ -132,7 +132,6 @@ func _enter_tree():
 func _on_mode_changed():
 	is_editing = is_instance_valid(editing_node) and button_select_mode.button_pressed
 	
-	#hud.visible = is_editing
 	EditorInterface.inspect_object(editing_node)
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
@@ -237,7 +236,7 @@ func _exit_tree() -> void:
 func _handles(object) -> bool:
 	#if not button_select_mode.button_pressed:
 		#return false
-	if object is BrushClip2D or object is BrushKeyframe2D or object is Brush2D or object is Brush3D:
+	if object is BrushClip2D or object is BrushKeyframe2D or object is Brush2D or object is Brush3D or object is BrushClip3D:
 		return true
 	return false
 
@@ -246,6 +245,7 @@ func _on_selection_changed():
 	var selection := get_editor_interface().get_selection()
 	var selected_nodes = selection.get_selected_nodes()
 	selected_keyframe = null
+	
 	if selected_nodes.size() == 1:
 		var selected_node = selected_nodes[0]
 		if selected_node is BrushClip2D:
@@ -273,6 +273,10 @@ func _on_selection_changed():
 			return
 		elif selected_node is Brush3D:
 			_select_brush(selected_node.brush2d)
+			editing_node = selected_node
+			return
+		elif selected_node is BrushClip3D:
+			select_brush_clip(selected_node.brush_clip2d)
 			editing_node = selected_node
 			return
 	
@@ -310,10 +314,10 @@ func _edit_start(node):
 
 func _edit_brush_complete():
 	var i := 0
-	while i < _editing_brush.stroke_data.size():
-		var stroke: BrushStrokeData = _editing_brush.stroke_data[i]
-		if stroke.polygon.size() < 4:
-			_editing_brush.stroke_data.remove_at(i)
+	while i < _editing_brush.strokes_data.size():
+		var stroke_data: BrushStrokeData = _editing_brush.strokes_data[i]
+		if not stroke_data.is_valid():
+			_editing_brush.remove_stroke(stroke_data)
 		else:
 			i += 1
 	
@@ -328,7 +332,9 @@ func _edit_brush_complete():
 #region INPUT
 
 func _input(event):
-	if Input.is_key_pressed(KEY_CTRL) or not _is_main_screen_visible(MAIN_SCREEN_2D):
+	if Input.is_key_pressed(KEY_CTRL):
+		return
+	if not (_is_main_screen_visible(MAIN_SCREEN_2D) or _is_main_screen_visible(MAIN_SCREEN_3D)):
 		return
 	if event is InputEventKey and event.is_pressed():
 		_navigation_input(event)
@@ -337,20 +343,20 @@ func _input(event):
 func _navigation_input(event):
 	match event.keycode:
 		key_play:
-			if editing_node is BrushClip2D:
+			if editing_node is BrushClip2D or editing_node is BrushClip3D:
 				if editing_node.is_playing:
 					editing_node.stop()
 				else:
 					editing_node.play()
 				return true
 		key_frame_previous:
-			if editing_node is BrushClip2D:
+			if editing_node is BrushClip2D or editing_node is BrushClip3D:
 				editing_node.stop()
 				selected_keyframe = null
 				if editing_node.previous_frame():
 					return true
 		key_frame_next:
-			if editing_node is BrushClip2D:
+			if editing_node is BrushClip2D or editing_node is BrushClip3D:
 				editing_node.stop()
 				selected_keyframe = null
 				if editing_node.next_frame():
@@ -378,7 +384,9 @@ func _navigation_input(event):
 func _forward_3d_gui_input(viewport_camera, event):
 	if not editing_node:
 		return false
-	if editing_node is Brush3D:
+	if event is InputEventKey:
+		_forward_canvas_gui_input(event)
+	if editing_node is Brush3D or editing_node is BrushClip3D:
 		if event is InputEventMouse:
 			var mouse_position = get_mouse_position_on_plane(viewport_camera, event.position, editing_node)
 			if event is InputEventMouseButton:
@@ -403,10 +411,9 @@ func get_mouse_position_on_plane(camera: Camera3D, mouse_pos: Vector2, node: Nod
 	var local_origin := node.to_local(ray_origin)
 	var local_normal = node.to_local(ray_origin + ray_normal) - local_origin
 	
-	var t = -local_origin.z / local_normal.z  # Use z instead of y
+	var t = -local_origin.z / local_normal.z
 	var intersection = local_origin + local_normal * t
 	
-	# Return only x and y values
 	return Vector2(intersection.x, -intersection.y) * 100.0
 
 
@@ -507,11 +514,13 @@ func _input_mouse(event: InputEventMouse) -> bool:
 	if not button_select_mode.button_pressed:
 		return false
 	
-	#var mouse_position = _editing_brush.get_viewport_transform().affine_inverse() * event.position
-	var mouse_position = event.position + Vector2.ONE * 250.0
-	#printt(mouse_position)
+	var mouse_position: Vector2
+	if editing_node is Brush3D or editing_node is BrushClip3D:
+		mouse_position = event.position + Vector2.ONE * 250.0
+	else:
+		mouse_position = _editing_brush.get_viewport_transform().affine_inverse() * event.position
+		mouse_position = _editing_brush.to_local(mouse_position)
 	
-	#var mouse_position = _editing_brush.get_local_mouse_position()
 	if event is InputEventMouseButton:
 		var event_mouse_button: InputEventMouseButton = event
 		if event_mouse_button.button_index == MOUSE_BUTTON_LEFT:
@@ -554,8 +563,8 @@ func _on_mouse_button_pressed(mouse_position: Vector2, right_mouse_button := fal
 func _on_mouse_button_released(mouse_position):
 	_current_action_complete(mouse_position)
 
-
 #endregion
+
 
 func _process(delta):
 	if not is_instance_valid(editing_node):
@@ -806,7 +815,7 @@ func _forward_draw_brush(brush):
 		TOOL_SELECT:
 			if _current_action == ACTION_NONE:
 				var zoom = _get_brush_zoom()
-				for stroke: BrushStrokeData in brush.stroke_data:
+				for stroke: BrushStrokeData in brush.strokes_data:
 					var selection: ActionWarpSelection = _get_warp_selection(stroke, cursor_position, _action_warp_size)
 					if selection:
 						_draw_warp_selection(selection)
@@ -814,7 +823,7 @@ func _forward_draw_brush(brush):
 						
 	
 	if _selected_highlight > 0.0:
-		for stroke: BrushStrokeData in brush.stroke_data:
+		for stroke: BrushStrokeData in brush.strokes_data:
 			if stroke.polygon.size() < 3 or stroke._erasing:
 				continue
 			brush.draw_stroke_outline(stroke, 1.0, godot_selection_color, ease(_selected_highlight, 0.2))
@@ -866,7 +875,7 @@ func _draw_custom_cursor():
 			pass
 		TOOL_EYEDROPPER:
 			var preview_size := 20.0
-			for stroke: BrushStrokeData in _editing_brush.stroke_data:
+			for stroke: BrushStrokeData in _editing_brush.strokes_data:
 				if stroke.is_point_inside(_editing_brush.get_local_mouse_position()):
 					hud.draw_circle(cursor_position, preview_size, stroke.color)
 					_draw_circle_outline(hud, cursor_position, preview_size, Color.WHITE)
@@ -892,13 +901,13 @@ var action_warp_selections: Array
 
 func action_warp_try(action_position: Vector2) -> bool:
 	var selections := []
-	for stroke in _editing_brush.stroke_data:
+	for stroke in _editing_brush.strokes_data:
 		var selection = _get_warp_selection(stroke, action_position, _action_warp_size)
 		if selection:
 			selections.push_back(selection)
 	for selection in selections:
-		_editing_brush.stroke_data.erase(selection.stroke)
-		_editing_brush.stroke_data.push_back(selection.stroke)
+		_editing_brush.strokes_data.erase(selection.stroke)
+		_editing_brush.strokes_data.push_back(selection.stroke)
 	
 	if selections.size() > 0:
 		action_warp_selections = selections
@@ -918,8 +927,7 @@ func action_warp_process(action_position):
 			var index = selection.vertex_indexes[i]
 			var weight = selection.vertex_weights[i]
 			selection.stroke.polygon[index] += move_delta * weight
-	
-	_editing_brush.draw()
+			selection.stroke.draw()
 
 
 func action_warp_complete():
@@ -942,15 +950,14 @@ func action_warp_complete():
 				invert_fix_results.remove_at(i)
 			else:
 				i += 1
-		
-		_editing_brush.stroke_data.erase(selection.stroke)
+		_editing_brush.remove_stroke(selection.stroke)
 		for polygon in invert_fix_results:
 			var stroke = BrushStrokeData.new(polygon, [], selection.stroke.color)
 			for hole in holes:
 				if stroke.is_polygon_overlapping(hole):
 					stroke.holes.push_back(hole)
 			_editing_brush.add_stroke(stroke)
-	_editing_brush.draw()
+	
 	_editing_brush.edited.emit()
 	if editing_node is BrushClip2D:
 		editing_node.edited.emit()
@@ -1080,15 +1087,14 @@ class ActionWarpSelectionHole extends ActionWarpSelection:
 
 #region ACTION MOVE
 
-var action_move_stroke
+var action_move_stroke: BrushStrokeData
 
 func action_move_try(action_position: Vector2) -> bool:
-	for stroke: BrushStrokeData in _editing_brush.stroke_data:
+	for stroke: BrushStrokeData in _editing_brush.strokes_data:
 		if stroke.is_point_inside(action_position):
 			undo_redo_strokes_start()
 			action_move_stroke = stroke
-			_editing_brush.stroke_data.erase(action_move_stroke)
-			_editing_brush.stroke_data.push_back(action_move_stroke)
+			_editing_brush.move_stroke_to_front(action_move_stroke)
 			_action_position_previous = action_position
 			_current_action = ACTION_MOVE
 			return true
@@ -1097,8 +1103,8 @@ func action_move_try(action_position: Vector2) -> bool:
 
 func action_move_process(action_position: Vector2):
 	action_move_stroke.translate(action_position - _action_position_previous)
+	action_move_stroke.draw()
 	_action_position_previous = action_position
-	_editing_brush.draw()
 
 
 func action_move_complete():
@@ -1119,8 +1125,7 @@ func action_fill_try(action_position: Vector2):
 		var stroke = get_stroke_at_position(action_position)
 		if stroke:
 			undo_redo_strokes_start()
-			_editing_brush.stroke_data.erase(stroke)
-			_editing_brush.draw()
+			_editing_brush.remove_stroke(stroke)
 			_editing_brush.edited.emit()
 			undo_redo_strokes_complete("Bucket Clear")
 		return
@@ -1149,7 +1154,7 @@ func action_fill_try(action_position: Vector2):
 					for stroke_inside in _editing_brush.stroke_data:
 						fill_stroke.subtract_stroke(stroke_inside)
 					_editing_brush.add_stroke(fill_stroke)
-				_editing_brush.draw()
+				
 				_editing_brush.edited.emit()
 				undo_redo_strokes_complete("Bucket Fill Hole")
 				return
@@ -1188,17 +1193,17 @@ func action_paint_process(action_position: Vector2):
 	var brush_size = _action_paint_erase_size if _action_rmb else _action_paint_size
 	
 	_action_paint_curve_points.push_back(action_position)
-	printt(action_position)
 	
 	var brush_polygon = _create_polygon_capsule(_action_position_previous, action_position, brush_size)
 	_action_stroke.union_polygon(brush_polygon)
 	_action_position_previous = action_position
-	_editing_brush.draw()
+	
+	_action_stroke.draw()
 
 
 func action_paint_complete():
-	if _action_paint_curve_points.size() >= 4:
-		_editing_brush.stroke_data.erase(_action_stroke)
+	if _action_paint_curve_points.size() >= 4 and not _action_rmb:
+		_editing_brush.remove_stroke(_action_stroke)
 		_action_stroke = BrushStrokeData.new([], [], current_color)
 		
 		var curve_catmull_rom = catmull_rom_interpolate(_action_paint_curve_points)
@@ -1214,16 +1219,15 @@ func action_paint_complete():
 		undo_redo_strokes_complete("Paint Brush Erase")
 	else:
 		if _action_brush_inside:
-			_editing_brush.stroke_data.erase(_action_stroke)
+			_editing_brush.remove_stroke(_action_stroke)
 			var strokes = _action_stroke.mask_stroke(_action_brush_inside)
 			for stroke in strokes:
 				stroke.polygon = Geometry2D.offset_polygon(stroke.polygon, 0.01)[0]
 				_merge_stroke(stroke)
 			_action_brush_inside = null
 		elif current_paint_mode == PAINT_MODE_INSIDE or current_paint_mode == PAINT_MODE_BEHIND:
-			_editing_brush.stroke_data.erase(_action_stroke)
-			_editing_brush.stroke_data.push_front(_action_stroke)
-			_editing_brush.draw()
+			_editing_brush.move_stroke_to_back(_action_stroke)
+			
 			_editing_brush.edited.emit()
 		else:
 			_merge_stroke(_action_stroke)
@@ -1247,7 +1251,7 @@ func catmull_rom_interpolate(points) -> PackedVector2Array:
 		var p2 = points[i + 2]
 		var p3 = points[i + 3]
 		
-		var num_segments = ceil(p1.distance_to(p2) / 10.0)
+		var num_segments = min(ceil(p1.distance_to(p2) / 10.0), 8)
 		for j in range(num_segments):
 			var t = j / float(num_segments)
 			var t2 = t * t
@@ -1465,11 +1469,11 @@ func action_shape_start(action_position):
 func action_shape_process(action_position):
 	if Input.is_key_pressed(KEY_ALT) and _action_stroke.polygon.size() > 0:
 		_action_stroke.polygon[_action_stroke.polygon.size() - 1] = action_position
-		_editing_brush.draw()
+		_action_stroke.draw()
 		return
 	
 	_action_stroke.polygon.push_back(action_position)
-	_editing_brush.draw()
+	_action_stroke.draw()
 
 
 func action_shape_complete():
@@ -1486,39 +1490,41 @@ func action_shape_complete():
 #region BRUSH OPERATIONS
 
 func _merge_stroke(merging_stroke):
-	_editing_brush.strokes.erase(merging_stroke)
+	if _editing_brush.strokes_data.has(merging_stroke):
+		_editing_brush.remove_stroke(merging_stroke)
 	
 	var strokes := []
-	while _editing_brush.stroke_data.size() > 0:
-		var stroke = _editing_brush.stroke_data.pop_front()
-		if merging_stroke.is_stroke_overlapping(stroke):
-			if merging_stroke.color.to_html() == stroke.color.to_html():
-				merging_stroke.union_stroke(stroke)
+	while _editing_brush.strokes_data.size() > 0:
+		var stroke_data = _editing_brush.strokes_data.pop_front()
+		_editing_brush.remove_stroke(stroke_data)
+		if merging_stroke.is_stroke_overlapping(stroke_data):
+			if merging_stroke.color.to_html() == stroke_data.color.to_html():
+				merging_stroke.union_stroke(stroke_data)
 			else:
-				strokes.append_array(stroke.subtract_stroke(merging_stroke))
+				strokes.append_array(stroke_data.subtract_stroke(merging_stroke))
 		else:
-			strokes.push_back(stroke)
+			strokes.push_back(stroke_data)
 	
 	strokes.push_back(merging_stroke)
 	
-	for stroke in strokes:
-		_editing_brush.add_stroke(stroke)
+	for stroke_data in strokes:
+		_editing_brush.add_stroke(stroke_data)
 	
-	_editing_brush.draw()
 	_editing_brush.edited.emit()
 
 
 func _subtract_stroke(subtracting_stroke):
 	var strokes := []
-	_editing_brush.stroke_data.erase(subtracting_stroke)
-	while _editing_brush.stroke_data.size() > 0:
-		var stroke: BrushStrokeData = _editing_brush.stroke_data.pop_front()
+	if _editing_brush.strokes_data.has(subtracting_stroke):
+		_editing_brush.remove_stroke(subtracting_stroke)
+	while _editing_brush.strokes_data.size() > 0:
+		var stroke: BrushStrokeData = _editing_brush.strokes_data[0]
+		_editing_brush.remove_stroke(stroke)
 		strokes.append_array(stroke.subtract_stroke(subtracting_stroke))
 	
 	for stroke in strokes:
 		_editing_brush.add_stroke(stroke)
 	
-	_editing_brush.draw()
 	_editing_brush.edited.emit()
 
 #endregion
@@ -1529,6 +1535,10 @@ func _get_editing_brush():
 		_editing_brush = null
 	elif editing_node is BrushClip2D:
 		_editing_brush = editing_node.layers[editing_node._editing_layer_num].get_frame(editing_node.current_frame)
+	elif editing_node is BrushClip3D:
+		_editing_brush = editing_node.brush_clip2d.layers[editing_node._editing_layer_num].get_frame(editing_node.current_frame)
+	elif editing_node is Brush3D:
+		_editing_brush = editing_node.brush2d
 	else:
 		_editing_brush = editing_node
 
@@ -1556,7 +1566,7 @@ func _get_erase_color() -> Color:
 func get_stroke_at_position(action_position, brush = null):
 	if brush == null:
 		brush = _editing_brush
-	for stroke: BrushStrokeData in brush.stroke_data:
+	for stroke: BrushStrokeData in brush.strokes_data:
 		if stroke.is_point_inside(action_position):
 			return stroke
 	return null
@@ -1570,17 +1580,11 @@ func _queue_redraw():
 
 
 func add_custom_script_to_keyframe(keyframe):
-	if keyframe.has_custom_script:
-		pass
-	else:
+	if not keyframe.has_custom_script:
 		keyframe.set_script(KEYFRAME_SCRIPT_CUSTOM.duplicate())
 		keyframe.has_custom_script = true
 		keyframe.edited.emit()
-	await get_tree().process_frame
-	EditorInterface.edit_resource(keyframe.get_script())
-	EditorInterface.edit_script(keyframe.get_script(), 5, 1)
-	EditorInterface.get_editor_main_screen().get_child(2).visible = true
-
+	EditorInterface.inspect_object(keyframe.get_script())
 
 
 func _is_main_screen_visible(screen: int):
@@ -1647,10 +1651,10 @@ func undo_redo_strokes_complete(name):
 	
 	var undo_redo = get_undo_redo()
 	undo_redo.create_action(name)
-	undo_redo.add_undo_property(_editing_brush, "stroke_data", _strokes_before)
-	undo_redo.add_do_property(_editing_brush, "stroke_data", strokes_after)
-	undo_redo.add_do_method(_editing_brush, "draw")
-	undo_redo.add_undo_method(_editing_brush, "draw")
+	undo_redo.add_undo_property(_editing_brush, "strokes_data", _strokes_before)
+	undo_redo.add_do_property(_editing_brush, "strokes_data", strokes_after)
+	undo_redo.add_do_method(_editing_brush, "redraw_all")
+	undo_redo.add_undo_method(_editing_brush, "redraw_all")
 	
 	undo_redo.commit_action(false)
 

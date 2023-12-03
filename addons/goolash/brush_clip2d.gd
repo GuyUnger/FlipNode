@@ -16,6 +16,7 @@ signal edited
 			value = clamp(value, 0, _frame_count - 1)
 		current_frame = value
 		if Engine.is_editor_hint():
+			#TODO: replace this with 
 			GoolashEditor.editor._get_editing_brush()
 		draw()
 		frame_changed.emit()
@@ -56,6 +57,7 @@ func _ready():
 	else:
 		if auto_play:
 			play()
+	current_frame = 0
 
 
 func init():

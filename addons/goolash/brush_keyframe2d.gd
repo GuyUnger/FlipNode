@@ -18,7 +18,7 @@ extends Brush2D
 
 func copy() -> BrushKeyframe2D:
 	var frame = BrushKeyframe2D.new()
-	frame.stroke_data = stroke_data.duplicate()
+	frame.stroke_data = strokes_data.duplicate()
 	return frame
 
 func _ready():
@@ -45,8 +45,9 @@ func _enter_frame():
 
 
 func clear():
-	stroke_data.clear()
-	draw()
+	for stroke_data in strokes_data:
+		remove_child(stroke_data.stroke)
+	strokes_data.clear()
 
 
 func update_name():
@@ -59,7 +60,7 @@ func update_name():
 
 
 func is_blank() -> bool:
-	return stroke_data.size() == 0
+	return strokes_data.size() == 0
 
 
 func get_override_material(stroke) -> Material:

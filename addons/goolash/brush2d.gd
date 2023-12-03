@@ -3,12 +3,11 @@
 class_name Brush2D
 extends Node2D
 
-const BrushStroke2D = preload("res://addons/goolash/brush_stroke2d.tscn")
+#const BrushStroke2D = preload("res://addons/goolash/brush_stroke2d.tscn")
 
 signal edited
 
-@export var stroke_data: Array
-var strokes: Array
+@export var strokes_data: Array
 
 @export_group("Collision")
 enum PhysicsMode {NONE, STATIC, RIGID, SOFT}
@@ -49,47 +48,70 @@ func _validate_property(property):
 
 
 func _ready():
-	show_behind_parent = true
-	
 	if Engine.is_editor_hint():
-		draw()
+		init_strokes()
+		get_tree().process_frame.connect(queue_redraw)
 	else:
-		if stroke_data.size() == 0:
+		if strokes_data.size() == 0:
 			return
 		match physics_mode:
 			PhysicsMode.NONE:
-				draw()
+				init_strokes()
 			PhysicsMode.STATIC:
 				call_deferred("_generate_static_body")
-				draw()
+				init_strokes()
 			PhysicsMode.RIGID:
 				call_deferred("_generate_rigid_body")
 
 
-func add_stroke(stroke: BrushStrokeData):
-	stroke_data.push_back(stroke)
+func add_stroke(stroke_data: BrushStrokeData):
+	#TODO: not sure if this is the best way to handle stroke data and strokes
+	strokes_data.push_back(stroke_data)
+	
+	var stroke = BrushStroke2D.new()
+	stroke_data.stroke = stroke
+	add_child(stroke)
+	stroke_data.draw()
+	stroke.material = get_override_material(stroke_data)
 
 
-func draw():
-	var stroke_count = stroke_data.size()
-	
-	## Remove unused strokes
-	while strokes.size() > stroke_count:
-		remove_child(strokes[strokes.size() - 1])
-		strokes.pop_back()
-	
-	## Add amount of strokes needed
-	while strokes.size() < stroke_count:
-		var stroke = BrushStroke2D.instantiate()
-		add_child(stroke)
+func remove_stroke(stroke_data: BrushStrokeData):
+	strokes_data.erase(stroke_data)
+	remove_child(stroke_data.stroke)
+
+
+func init_strokes():
+	#TODO: duplicate code from add_stroke
+	for stroke_data in strokes_data:
 		
-		strokes.push_back(stroke)
+		var stroke = BrushStroke2D.new()
+		stroke_data.stroke = stroke
+		add_child(stroke)
+		stroke.material = get_override_material(stroke_data)
+		stroke_data.draw()
+
+
+func move_stroke_to_back(stroke_data: BrushStrokeData):
+	strokes_data.erase(stroke_data)
+	strokes_data.push_front(stroke_data)
+
+
+func move_stroke_to_front(stroke_data: BrushStrokeData):
+	strokes_data.erase(stroke_data)
+	strokes_data.push_back(stroke_data)
+
+
+func redraw_all():
+	for child in get_children():
+		if child is BrushStroke2D:
+			remove_child(child)
 	
-	for i in stroke_data.size():
-		strokes[i].self_modulate.a = alpha
-		strokes[i].draw(stroke_data[i])
-		var material = get_override_material(stroke_data[i])
-		strokes[i].material = material
+	for stroke_data in strokes_data:
+		var stroke = BrushStroke2D.new()
+		stroke_data.stroke = stroke
+		add_child(stroke)
+		stroke.material = get_override_material(stroke_data)
+		stroke_data.draw()
 
 
 func _generate_static_body():
@@ -129,14 +151,14 @@ func _generate_rigid_body():
 		rigidbody.add_child(collision_polygon)
 		collision_polygon.polygon = GoolashEditor.douglas_peucker(polygon, 3.0)
 		
-		var stroke = BrushStroke2D.instantiate()
+		var stroke = BrushStroke2D.new()
 		rigidbody.add_child(stroke)
-		stroke.draw(BrushStrokeData.new(polygon, [], stroke_data[0].color))
+		stroke.init(BrushStrokeData.new(polygon, [], strokes_data[0].color))
 
 
 func get_islands():
 	var islands := []
-	for stroke in stroke_data:
+	for stroke in strokes_data:
 		var i := 0
 		var l := islands.size()
 		var merging_polygon = stroke.polygon
@@ -155,16 +177,15 @@ func get_islands():
 	return islands
 
 
-func _process(delta):
-	if Engine.is_editor_hint():
-		queue_redraw()
+#func _process(delta):
+	#if Engine.is_editor_hint():
+		#queue_redraw()
 
 
 func _draw():
-	if Engine.is_editor_hint():
-		if _forward_draw_requested:
-			_forward_draw_requested = false
-			GoolashEditor.editor._forward_draw_brush(self)
+	if Engine.is_editor_hint() and _forward_draw_requested:
+		_forward_draw_requested = false
+		GoolashEditor.editor._forward_draw_brush(self)
 
 
 func draw_stroke_outline(stroke, thickness := 1.0, color: Color = Color.WHITE, alpha := 1.0):
@@ -183,7 +204,7 @@ func draw_polygon_outline(polygon, thickness := 1.0, color: Color = Color.WHITE,
 
 func get_strokes_duplicate() -> Array:
 	var strokes_duplicate = []
-	for stroke in stroke_data:
+	for stroke in strokes_data:
 		strokes_duplicate.push_back(stroke.copy())
 	return strokes_duplicate
 

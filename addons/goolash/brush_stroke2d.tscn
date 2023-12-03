@@ -1,10 +1,9 @@
 [gd_scene load_steps=3 format=3 uid="uid://cavcwjpdd1cqx"]
 
-[ext_resource type="Material" uid="uid://8hs3p3kogtk3" path="res://addons/goolash/brush_stroke_material.tres" id="1_sk1y3"]
+[ext_resource type="Material" uid="uid://8hs3p3kogtk3" path="res://addons/goolash/shading/brush_stroke_material.tres" id="1_ddrc7"]
 [ext_resource type="Script" path="res://addons/goolash/brush_stroke2d.gd" id="2_akkcy"]
 
 [node name="Brush2D" type="CanvasGroup"]
 show_behind_parent = true
-material = ExtResource("1_sk1y3")
-use_mipmaps = true
+material = ExtResource("1_ddrc7")
 script = ExtResource("2_akkcy")

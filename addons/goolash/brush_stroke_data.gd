@@ -6,6 +6,8 @@ extends Resource
 @export var polygon: PackedVector2Array
 @export var holes:  Array[PackedVector2Array]
 
+var stroke: BrushStroke2D
+
 ## Curves
 @export var polygon_curve: Curve2D:
 	get:
@@ -26,6 +28,11 @@ func _init(polygon := PackedVector2Array(), holes: Array[PackedVector2Array] = [
 	self.polygon = polygon
 	self.holes = holes
 	self.color = color
+
+
+func draw():
+	if stroke:
+		stroke.draw_stroke(self)
 
 
 func union_stroke(stroke: BrushStrokeData):
@@ -294,7 +301,9 @@ func optimize(tolerance := 1.0) -> void:
 	polygon = polygon_curve.get_baked_points()
 	hole_curves = []
 	for i in holes.size():
-		var hole_curve = polygon_to_curve(GoolashEditor.douglas_peucker(holes[i]), tolerance)
+		var hole_polygon = GoolashEditor.douglas_peucker(holes[i])
+		#hole_polygon = Geometry2D.offset_polygon(hole_polygon, 0.0)[0]
+		var hole_curve = polygon_to_curve(hole_polygon, tolerance)
 		hole_curves.push_back(hole_curve)
 		holes[i] = hole_curve.get_baked_points()
 
@@ -335,6 +344,10 @@ func is_polygon_valid(polygon):
 			area += ar
 	
 	return area > 16.0
+
+
+func is_valid() -> bool:
+	return is_polygon_valid(polygon)
 
 
 func copy():
