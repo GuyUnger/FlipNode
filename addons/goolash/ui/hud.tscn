@@ -60,7 +60,7 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -8.0
+offset_left = 10.0
 offset_top = -3.0
 offset_right = 4.0
 offset_bottom = 28.0
@@ -81,7 +81,7 @@ theme_override_constants/margin = 0
 theme_override_constants/sv_width = 0
 theme_override_constants/sv_height = 130
 theme_override_constants/h_width = 18
-color = Color(1, 0.372549, 0, 1)
+color = Color(0.992157, 0.607843, 0.27451, 1)
 can_add_swatches = false
 color_modes_visible = false
 sliders_visible = false
@@ -94,31 +94,25 @@ theme_override_constants/h_separation = 2
 theme_override_constants/v_separation = 2
 
 [node name="Pink" parent="Colors/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
-self_modulate = Color(0.984314, 0.619608, 0.843137, 1)
+self_modulate = Color(0.988235, 0.478431, 0.576471, 1)
 layout_mode = 2
 tooltip_text = "Pink"
 is_default = true
 
-[node name="Peach" parent="Colors/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
-self_modulate = Color(0.921569, 0.537255, 0.470588, 1)
-layout_mode = 2
-tooltip_text = "Peach"
-is_default = true
-
 [node name="Caramel" parent="Colors/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
-self_modulate = Color(0.890196, 0.592157, 0.196078, 1)
+self_modulate = Color(0.988235, 0.592157, 0.207843, 1)
 layout_mode = 2
-tooltip_text = "Caramel 2"
+tooltip_text = "Caramel"
 is_default = true
 
-[node name="Cream" parent="Colors/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
-self_modulate = Color(0.980392, 0.921569, 0.843137, 1)
+[node name="Yellow" parent="Colors/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
+self_modulate = Color(1, 0.85098, 0, 1)
 layout_mode = 2
-tooltip_text = "Cream"
+tooltip_text = "Yellow"
 is_default = true
 
 [node name="Lime" parent="Colors/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
-self_modulate = Color(0.839216, 0.929412, 0.0901961, 1)
+self_modulate = Color(0.909804, 1, 0, 1)
 layout_mode = 2
 tooltip_text = "Lime"
 is_default = true
@@ -136,27 +130,21 @@ tooltip_text = "Sky"
 is_default = true
 
 [node name="Magenta" parent="Colors/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
-self_modulate = Color(0.831373, 0.027451, 0.466667, 1)
+self_modulate = Color(0.886275, 0.0627451, 0.466667, 1)
 layout_mode = 2
 tooltip_text = "Magenta"
 is_default = true
 
 [node name="Red" parent="Colors/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
-self_modulate = Color(0.988235, 0.0235294, 0.14902, 1)
+self_modulate = Color(1, 0.0980392, 0.168627, 1)
 layout_mode = 2
-tooltip_text = "Paprika"
+tooltip_text = "Red"
 is_default = true
 
 [node name="Orange" parent="Colors/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
 self_modulate = Color(1, 0.372549, 0, 1)
 layout_mode = 2
 tooltip_text = "Orange"
-is_default = true
-
-[node name="Yellow" parent="Colors/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
-self_modulate = Color(1, 0.823529, 0, 1)
-layout_mode = 2
-tooltip_text = "Pee"
 is_default = true
 
 [node name="Green" parent="Colors/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
@@ -166,49 +154,43 @@ tooltip_text = "Green"
 is_default = true
 
 [node name="Cyan" parent="Colors/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
-self_modulate = Color(0.160784, 0.698039, 0.647059, 1)
+self_modulate = Color(0.160784, 0.698039, 0.615686, 1)
 layout_mode = 2
 tooltip_text = "Cyan"
 is_default = true
 
 [node name="Blue" parent="Colors/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
-self_modulate = Color(0.27451, 0.498039, 0.862745, 1)
+self_modulate = Color(0.219608, 0.486275, 0.835294, 1)
 layout_mode = 2
 tooltip_text = "Blue"
 is_default = true
 
 [node name="Purple" parent="Colors/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
-self_modulate = Color(0.431373, 0.0745098, 0.470588, 1)
+self_modulate = Color(0.435294, 0.117647, 0.470588, 1)
 layout_mode = 2
 tooltip_text = "Purple"
 is_default = true
 
 [node name="Chestnut" parent="Colors/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
-self_modulate = Color(0.47451, 0, 0.12549, 1)
+self_modulate = Color(0.470588, 0.0509804, 0.164706, 1)
 layout_mode = 2
 tooltip_text = "Chestnut"
 is_default = true
 
-[node name="Coffee" parent="Colors/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
-self_modulate = Color(0.341176, 0.129412, 0.0313726, 1)
-layout_mode = 2
-tooltip_text = "Coffee"
-is_default = true
-
 [node name="Goulash" parent="Colors/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
-self_modulate = Color(0.47451, 0.270588, 0.184314, 1)
+self_modulate = Color(0.52549, 0.211765, 0.184314, 1)
 layout_mode = 2
 tooltip_text = "Goulash"
 is_default = true
 
 [node name="Olive" parent="Colors/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
-self_modulate = Color(0.223529, 0.286275, 0.121569, 1)
+self_modulate = Color(0.223529, 0.290196, 0.156863, 1)
 layout_mode = 2
 tooltip_text = "Olive"
 is_default = true
 
 [node name="Teal" parent="Colors/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
-self_modulate = Color(0.172549, 0.388235, 0.356863, 1)
+self_modulate = Color(0.160784, 0.392157, 0.345098, 1)
 layout_mode = 2
 tooltip_text = "Teal"
 is_default = true
@@ -219,57 +201,44 @@ layout_mode = 2
 tooltip_text = "Space"
 is_default = true
 
-[node name="HSeparator2" type="HSeparator" parent="Colors/MarginContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="DefaultGrayscale" type="HFlowContainer" parent="Colors/MarginContainer/VBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_constants/h_separation = 2
-
-[node name="Black" parent="Colors/MarginContainer/VBoxContainer/DefaultGrayscale" instance=ExtResource("2_5di5i")]
+[node name="Black" parent="Colors/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
 self_modulate = Color(0, 0, 0, 1)
 layout_mode = 2
 tooltip_text = "Black"
 is_default = true
 
-[node name="Charcoal" parent="Colors/MarginContainer/VBoxContainer/DefaultGrayscale" instance=ExtResource("2_5di5i")]
+[node name="Charcoal" parent="Colors/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
 self_modulate = Color(0.0941176, 0.0980392, 0.137255, 1)
 layout_mode = 2
 tooltip_text = "Charcoal"
 is_default = true
 
-[node name="Gray" parent="Colors/MarginContainer/VBoxContainer/DefaultGrayscale" instance=ExtResource("2_5di5i")]
-self_modulate = Color(0.317647, 0.34902, 0.376471, 1)
+[node name="Graphite" parent="Colors/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
+self_modulate = Color(0.2, 0.192157, 0.219608, 1)
+layout_mode = 2
+tooltip_text = "Graphite"
+is_default = true
+
+[node name="Gray" parent="Colors/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
+self_modulate = Color(0.431373, 0.423529, 0.411765, 1)
 layout_mode = 2
 tooltip_text = "Gray"
 is_default = true
 
-[node name="Smoke" parent="Colors/MarginContainer/VBoxContainer/DefaultGrayscale" instance=ExtResource("2_5di5i")]
-self_modulate = Color(0.635294, 0.568627, 0.537255, 1)
+[node name="Cream" parent="Colors/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
+self_modulate = Color(0.756863, 0.701961, 0.67451, 1)
 layout_mode = 2
-tooltip_text = "Smoke"
+tooltip_text = "Cream"
 is_default = true
 
-[node name="White2" parent="Colors/MarginContainer/VBoxContainer/DefaultGrayscale" instance=ExtResource("2_5di5i")]
+[node name="White" parent="Colors/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
 layout_mode = 2
-tooltip_text = "White 2"
-is_default = true
-
-[node name="White3" parent="Colors/MarginContainer/VBoxContainer/DefaultGrayscale" instance=ExtResource("2_5di5i")]
-self_modulate = Color(0, 0, 0, 0.5)
-layout_mode = 2
-tooltip_text = "White 3"
-is_default = true
-
-[node name="White4" parent="Colors/MarginContainer/VBoxContainer/DefaultGrayscale" instance=ExtResource("2_5di5i")]
-self_modulate = Color(1, 1, 1, 0.501961)
-layout_mode = 2
-tooltip_text = "White 4"
+tooltip_text = "White"
 is_default = true
 
 [node name="HSeparator" type="HSeparator" parent="Colors/MarginContainer/VBoxContainer"]
 layout_mode = 2
+theme_override_constants/separation = 10
 
 [node name="UsedColors" type="HFlowContainer" parent="Colors/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true

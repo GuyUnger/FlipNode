@@ -27,10 +27,18 @@ window/stretch/mode="canvas_items"
 
 enabled=PackedStringArray("res://addons/goolash/plugin.cfg", "res://addons/insta_complete/plugin.cfg")
 
+[file_customization]
+
+folder_colors={
+"res://addons/goolash/": "red",
+"res://demo/": "teal"
+}
+
 [goolash]
 
 animation/default_fps=12
 rendering/boiling=true
+painting/default_color=Color(0.992157, 0.607843, 0.27451, 1)
 
 [rendering]
 

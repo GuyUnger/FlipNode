@@ -386,6 +386,22 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 2
 
+[node name="PopupMenu" type="PopupMenu" parent="."]
+unique_name_in_owner = true
+size = Vector2i(245, 143)
+visible = true
+item_count = 5
+item_0/text = "Add Frame (5)"
+item_0/id = 0
+item_1/text = "Add Keyframe (6)"
+item_1/id = 1
+item_2/text = "Add Empty Keyframe (7)"
+item_2/id = 2
+item_3/text = "Remove Frame (Shift+5)"
+item_3/id = 3
+item_4/text = "Remove Keyframe (Shift+6)"
+item_4/id = 4
+
 [connection signal="pressed" from="Timeline/HBoxContainer/LayerOptionsContainer/LayerOptions/ButtonPreviousFrame" to="." method="_on_button_previous_frame_pressed"]
 [connection signal="pressed" from="Timeline/HBoxContainer/LayerOptionsContainer/LayerOptions/ButtonPlay" to="." method="_on_button_play_pressed"]
 [connection signal="pressed" from="Timeline/HBoxContainer/LayerOptionsContainer/LayerOptions/ButtonNextFrame" to="." method="_on_button_next_frame_pressed"]

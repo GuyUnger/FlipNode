@@ -60,7 +60,7 @@ func update_keyframe_endpoints():
 
 
 func display_frame(frame_num):
-	transform = tweenframes_baked[frame_num]
+	transform = tweenframes_baked[min(frame_num, frame_count-1)]
 	if Engine.is_editor_hint():
 		var onion_skin_frames := 0
 		if (

@@ -12,8 +12,14 @@ var brush_clip: BrushClip2D
 
 var scrubbing := false
 
+@onready var layers_info = %LayersInfo
+@onready var layers_frames = %LayersFrames
+@onready var frame_indicator = %FrameIndicator
+@onready var context_menu = %PopupMenu
+@onready var input_fps = %LineEditFPS
+
 func _ready():
-	%FrameIndicator.modulate = GoolashEditor.godot_accent_color
+	frame_indicator.modulate = GoolashEditor.godot_accent_color
 	
 	%LabelNoBrushClip.visible = true
 	%Timeline.visible = false
@@ -40,11 +46,11 @@ func load_brush_clip(brush_clip: BrushClip2D):
 		return
 	
 	## FPS
-	%LineEditFPS.placeholder_text = str(Goolash.default_fps)
+	input_fps.placeholder_text = str(Goolash.default_fps)
 	if brush_clip.fps_override == 0:
-		%LineEditFPS.text = ""
+		input_fps.text = ""
 	else:
-		%LineEditFPS.text = str(brush_clip.fps_override)
+		input_fps.text = str(brush_clip.fps_override)
 	
 	%ButtonAutoPlay.button_pressed = brush_clip.auto_play
 	%ButtonLoop.button_pressed = brush_clip.looping
@@ -72,7 +78,7 @@ func _on_brush_clip_edited():
 
 
 func update_timeline_length():
-	%FrameIndicator.position.x = GoolashEditor.editor.editing_node.current_frame * FRAME_WIDTH + FRAME_WIDTH * 0.5
+	frame_indicator.position.x = GoolashEditor.editor.editing_node.current_frame * FRAME_WIDTH + FRAME_WIDTH * 0.5
 	var end_pos = brush_clip.frame_count * FRAME_WIDTH
 	%AreaActive.size.x = end_pos
 	%AreaInactive.position.x = end_pos
@@ -98,9 +104,9 @@ func _on_button_next_frame_pressed():
 
 
 func _load_layers():
-	for layer_options in %LayersInfo.get_children():
+	for layer_options in layers_info.get_children():
 		layer_options.queue_free()
-	for layer_frames in %LayersFrames.get_children():
+	for layer_frames in layers_frames.get_children():
 		layer_frames.queue_free()
 	
 	if not GoolashEditor.is_editable(brush_clip):
@@ -116,11 +122,11 @@ func _load_layers():
 func _add_layer(layer):
 	var layer_info = TimelineLayerInfo.instantiate()
 	var layer_frames = TimelineLayerFrames.instantiate()
-	%LayersInfo.add_child(layer_info)
-	%LayersInfo.move_child(layer_info, layer.layer_num)
+	layers_info.add_child(layer_info)
+	layers_info.move_child(layer_info, layer.layer_num)
 	layer_info.init(layer)
-	%LayersFrames.add_child(layer_frames)
-	%LayersFrames.move_child(layer_frames, layer.layer_num)
+	layers_frames.add_child(layer_frames)
+	layers_frames.move_child(layer_frames, layer.layer_num)
 	layer_frames.init(layer)
 
 
@@ -133,12 +139,14 @@ func _on_layer_added_or_removed():
 	_load_layers()
 
 
+#region FPS
+
 func _on_line_edit_fps_text_submitted(input: String):
-	%LineEditFPS.release_focus()
+	input_fps.release_focus()
 
 
 func _on_line_edit_fps_focus_exited():
-	_parse_fps(%LineEditFPS.text)
+	_parse_fps(input_fps.text)
 
 
 func _parse_fps(input: String):
@@ -149,13 +157,16 @@ func _parse_fps(input: String):
 		expression.parse(input)
 		var result = expression.execute()
 		if expression.has_execute_failed():
-			%LineEditFPS.text = ""
+			input_fps.text = ""
 		else:
 			_set_fps(int(result))
 
+
 func _set_fps(value: int):
 	GoolashEditor.editor.editing_node.fps_override = value
-	%LineEditFPS.text = str(value)
+	input_fps.text = str(value)
+
+#endregion
 
 
 func _on_line_edit_onion_frames_text_submitted(new_text):
@@ -170,21 +181,52 @@ func _on_line_edit_onion_frames_focus_exited():
 func _input(event) -> void:
 	if not visible or not is_instance_valid(brush_clip):
 		return
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
-		if event.is_pressed():
-			var mouse_position = get_local_mouse_position()
-			var tl_node = %FrameCounts
-			var rect = Rect2(tl_node.position, get_rect().size - tl_node.position)
-			rect.size.y = tl_node.get_rect().size.y + %LayersInfo.get_child_count() * LAYER_HEIGHT
-			
-			if rect.has_point(mouse_position):
-				if mouse_position.y < rect.position.y + rect.size.y + LAYER_HEIGHT and mouse_position.x > rect.position.x + rect.size.x - 60.0:
-					pass
-				else:
-					scrubbing = true
-					GoolashEditor.editor.selected_keyframe = null
-		else:
-			scrubbing = false
+	if event is InputEventMouseButton:
+		if event.button_index == MOUSE_BUTTON_LEFT:
+			if event.is_pressed():
+				var mouse_position = get_local_mouse_position()
+				var tl_node = %FrameCounts
+				var rect = Rect2(tl_node.position, get_rect().size - tl_node.position)
+				rect.size.y = tl_node.get_rect().size.y + layers_info.get_child_count() * LAYER_HEIGHT
+				
+				if rect.has_point(mouse_position):
+					if mouse_position.y < rect.position.y + rect.size.y + LAYER_HEIGHT and mouse_position.x > rect.position.x + rect.size.x - 60.0:
+						pass
+					else:
+						scrubbing = true
+						GoolashEditor.editor.selected_keyframe = null
+			else:
+				scrubbing = false
+		elif event.button_index == MOUSE_BUTTON_RIGHT:
+			if event.is_pressed():
+				var mouse_position = get_local_mouse_position()
+				var tl_node = %FrameCounts
+				var rect = Rect2(tl_node.position, get_rect().size - tl_node.position)
+				rect.position.y = 30.0
+				rect.size.y = layers_info.get_child_count() * LAYER_HEIGHT
+				
+				if rect.has_point(mouse_position):
+					init_context_menu()
+
+
+func init_context_menu():
+	context_menu.clear()
+	add_context_menu_item("Add Frame", GoolashEditor.editor.key_add_frame)
+	add_context_menu_item("Add Keyframe", GoolashEditor.editor.key_add_keyframe)
+	add_context_menu_item("Add Empty Keyframe", GoolashEditor.editor.key_add_keyframe_blank)
+	add_context_menu_item("Remove Frame", GoolashEditor.editor.key_add_frame, true)
+	add_context_menu_item("Remove Keyframe", GoolashEditor.editor.key_add_keyframe, true)
+	context_menu.position = get_global_mouse_position()
+	context_menu.reset_size()
+	context_menu.show()
+
+
+func add_context_menu_item(text: String, key: int, shift := false):
+	var shortcut = char(key)
+	if shift:
+		shortcut = "Shift+" + shortcut
+	text = "%s (%s)" % [text, shortcut]
+	context_menu.add_item(text, -1, key)
 
 
 func _process(delta):

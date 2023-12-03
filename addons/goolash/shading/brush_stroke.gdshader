@@ -1,7 +1,7 @@
 shader_type canvas_item;
 render_mode unshaded;
 
-uniform sampler2D screen_texture : hint_screen_texture, repeat_disable;//, filter_linear_mipmap;
+uniform sampler2D screen_texture : hint_screen_texture, repeat_disable, filter_nearest;
 
 varying vec4 modulate;
 
@@ -26,7 +26,7 @@ void fragment() {
 	float a = 0.0;
 	float directions = 8.0;
 	float quality = 4.0;
-	float size = 3.0;
+	float size = 4.0;
 	for (float angle = 0.0; angle < TAU; angle += TAU / directions) {
 		vec2 offset = vec2(cos(angle), sin(angle));
 		for (float i = 1.0; i <= quality; i += 1.0) {
@@ -35,9 +35,6 @@ void fragment() {
 	}
 	a /= directions * quality;
 	a = smoothstep(0.3, 0.6, a);
-	
-	//a = textureLod(screen_texture, uv, 0.75).r;
-	//a = smoothstep(0.25, 0.5, a);
 	
 	COLOR.a = a * modulate.a;
 	

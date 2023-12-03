@@ -54,8 +54,8 @@ var current_color: Color = Color.WHITE
 
 var current_paint_mode := PAINT_MODE_FRONT
 
-var _action_paint_size := 10.0
-var _action_paint_erase_size := 20.0
+var _action_paint_size := 8.0
+var _action_paint_erase_size := 16.0
 var _action_warp_size := 60.0
 var _action_warp_cut_angle := deg_to_rad(30.0)
 var _pen_pressure
@@ -140,7 +140,8 @@ func _init_project_settings():
 	_add_project_setting("goolash/animation/default_fps", 12)
 	_add_project_setting("goolash/animation/onion_skin_enabled", true)
 	_add_project_setting("goolash/animation/onion_skin_frames", 2)
-	_add_project_setting("goolash/painting/default_color", Color.PERU)
+	_add_project_setting("goolash/painting/default_color", Color("fd9b46"))
+	_add_project_setting("goolash/painting/default_paint_size", 8.0)
 	_add_project_setting("goolash/rendering/anti-alias", true)
 	_add_project_setting("goolash/rendering/boiling", true)
 	
@@ -762,7 +763,7 @@ func _action_start(mouse_position) -> bool:
 			action_fill_try(mouse_position)
 			return true
 		TOOL_EYEDROPPER:
-			for stroke: BrushStrokeData in _editing_brush.stroke_data:
+			for stroke: BrushStrokeData in _editing_brush.strokes_data:
 				if stroke.is_point_inside(mouse_position):
 					current_color = stroke.color
 					hud._update_color_picker_color()
@@ -1137,13 +1138,13 @@ func action_fill_try(action_position: Vector2):
 		_merge_stroke(stroke_under_mouse)
 		undo_redo_strokes_complete("Bucket Fill Recolor")
 		return
-	for stroke: BrushStrokeData in _editing_brush.stroke_data:
+	for stroke: BrushStrokeData in _editing_brush.strokes_data:
 		for i in stroke.holes.size():
 			if Geometry2D.is_point_in_polygon(action_position, stroke.holes[i]):
 				undo_redo_strokes_start()
 				if stroke.color.to_html() == current_color.to_html():
 					stroke.holes.remove_at(i)
-					for stroke_inside in _editing_brush.stroke_data:
+					for stroke_inside in _editing_brush.strokes_data:
 						if stroke == stroke_inside:
 							continue
 						stroke.subtract_stroke(stroke_inside)
@@ -1719,7 +1720,7 @@ void fragment() {
 	shader_source += "
 }
 "
-	var file := FileAccess.open("res://addons/goolash/brush_stroke.gdshader", FileAccess.WRITE)
+	var file := FileAccess.open("res://addons/goolash/shading/brush_stroke.gdshader", FileAccess.WRITE)
 	file.store_string(shader_source)
 	file.close()
 
