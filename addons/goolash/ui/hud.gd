@@ -37,11 +37,11 @@ func _update_used_colors():
 	if GoolashEditor.editor.editing_node is BrushClip2D:
 		for layer in GoolashEditor.editor.editing_node.layers:
 			for keyframe in layer.keyframes:
-				for stroke in keyframe.strokes_data:
+				for stroke in keyframe.strokes:
 					if not _used_colors.has(stroke.color.to_html()):
 						_add_used_color(stroke.color.to_html())
 	else:
-		for stroke in GoolashEditor.editor._editing_brush.strokes_data:
+		for stroke in GoolashEditor.editor._editing_brush.strokes:
 			if not _used_colors.has(stroke.color.to_html()):
 				_add_used_color(stroke.color.to_html())
 

@@ -7,7 +7,7 @@ extends Node2D
 
 signal edited
 
-@export var strokes_data: Array
+@export var strokes: Array
 
 @export_group("Collision")
 enum PhysicsMode {NONE, STATIC, RIGID, SOFT}
@@ -52,7 +52,7 @@ func _ready():
 		init_strokes()
 		get_tree().process_frame.connect(queue_redraw)
 	else:
-		if strokes_data.size() == 0:
+		if strokes.size() == 0:
 			return
 		match physics_mode:
 			PhysicsMode.NONE:
@@ -66,7 +66,7 @@ func _ready():
 
 func add_stroke(stroke: BrushStrokeData):
 	#TODO: not sure if this is the best way to handle stroke data and strokes
-	strokes_data.push_back(stroke)
+	strokes.push_back(stroke)
 	
 	var stroke_graphic = BrushStroke2D.new()
 	stroke.graphic = stroke_graphic
@@ -76,23 +76,23 @@ func add_stroke(stroke: BrushStrokeData):
 
 
 func remove_stroke(stroke_data: BrushStrokeData):
-	strokes_data.erase(stroke_data)
+	strokes.erase(stroke_data)
 	remove_child(stroke_data.graphic)
 
 
 func init_strokes():
-	for stroke in strokes_data:
+	for stroke in strokes:
 		init_stroke_graphic(stroke)
 
 
 func move_stroke_to_back(stroke_data: BrushStrokeData):
-	strokes_data.erase(stroke_data)
-	strokes_data.push_front(stroke_data)
+	strokes.erase(stroke_data)
+	strokes.push_front(stroke_data)
 
 
 func move_stroke_to_front(stroke_data: BrushStrokeData):
-	strokes_data.erase(stroke_data)
-	strokes_data.push_back(stroke_data)
+	strokes.erase(stroke_data)
+	strokes.push_back(stroke_data)
 
 
 func redraw_all():
@@ -100,7 +100,7 @@ func redraw_all():
 		if child is BrushStroke2D:
 			remove_child(child)
 	
-	for stroke in strokes_data:
+	for stroke in strokes:
 		init_stroke_graphic(stroke)
 
 
@@ -151,12 +151,12 @@ func _generate_rigid_body():
 		
 		var stroke = BrushStroke2D.new()
 		rigidbody.add_child(stroke)
-		stroke.init(BrushStrokeData.new(polygon, [], strokes_data[0].color))
+		stroke.init(BrushStrokeData.new(polygon, [], strokes[0].color))
 
 
 func get_islands():
 	var islands := []
-	for stroke in strokes_data:
+	for stroke in strokes:
 		var i := 0
 		var l := islands.size()
 		var merging_polygon = stroke.polygon
@@ -204,7 +204,7 @@ func draw_polygon_outline(polygon, thickness := 1.0, color: Color = Color.WHITE,
 
 func get_strokes_duplicate() -> Array:
 	var strokes_duplicate = []
-	for stroke in strokes_data:
+	for stroke in strokes:
 		strokes_duplicate.push_back(stroke.copy())
 	return strokes_duplicate
 

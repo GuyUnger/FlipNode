@@ -315,8 +315,8 @@ func _edit_start(node):
 
 func _edit_brush_complete():
 	var i := 0
-	while i < _editing_brush.strokes_data.size():
-		var stroke_data: BrushStrokeData = _editing_brush.strokes_data[i]
+	while i < _editing_brush.strokes.size():
+		var stroke_data: BrushStrokeData = _editing_brush.strokes[i]
 		if not stroke_data.is_valid():
 			_editing_brush.remove_stroke(stroke_data)
 		else:
@@ -782,7 +782,7 @@ func _action_start(mouse_position) -> bool:
 			action_fill_try(mouse_position)
 			return true
 		TOOL_EYEDROPPER:
-			for stroke: BrushStrokeData in _editing_brush.strokes_data:
+			for stroke: BrushStrokeData in _editing_brush.strokes:
 				if stroke.is_point_inside(mouse_position):
 					current_color = stroke.color
 					hud._update_color_picker_color()
@@ -838,7 +838,7 @@ func _forward_draw_brush(brush):
 		TOOL_SELECT:
 			if _current_action == ACTION_NONE:
 				var zoom = _get_brush_zoom()
-				for stroke: BrushStrokeData in brush.strokes_data:
+				for stroke: BrushStrokeData in brush.strokes:
 					var selection: ActionWarpSelection = _get_warp_selection(stroke, cursor_position, _action_warp_size)
 					if selection:
 						_draw_warp_selection(selection)
@@ -846,7 +846,7 @@ func _forward_draw_brush(brush):
 						
 	
 	if _selected_highlight > 0.0:
-		for stroke: BrushStrokeData in brush.strokes_data:
+		for stroke: BrushStrokeData in brush.strokes:
 			if stroke.polygon.size() < 3 or stroke._erasing:
 				continue
 			brush.draw_stroke_outline(stroke, 1.0, godot_selection_color, ease(_selected_highlight, 0.2))
@@ -898,7 +898,7 @@ func _draw_custom_cursor():
 			pass
 		TOOL_EYEDROPPER:
 			var preview_size := 20.0
-			for stroke: BrushStrokeData in _editing_brush.strokes_data:
+			for stroke: BrushStrokeData in _editing_brush.strokes:
 				if stroke.is_point_inside(_editing_brush.get_local_mouse_position()):
 					hud.draw_circle(cursor_position, preview_size, stroke.color)
 					_draw_circle_outline(hud, cursor_position, preview_size, Color.WHITE)
@@ -924,7 +924,7 @@ var action_warp_selections: Array
 
 func action_warp_try(action_position: Vector2) -> bool:
 	var selections := []
-	for stroke in _editing_brush.strokes_data:
+	for stroke in _editing_brush.strokes:
 		var selection = _get_warp_selection(stroke, action_position, _action_warp_size)
 		if selection:
 			selections.push_back(selection)
@@ -1112,7 +1112,7 @@ class ActionWarpSelectionHole extends ActionWarpSelection:
 var action_move_stroke: BrushStrokeData
 
 func action_move_try(action_position: Vector2) -> bool:
-	for stroke: BrushStrokeData in _editing_brush.strokes_data:
+	for stroke: BrushStrokeData in _editing_brush.strokes:
 		if stroke.is_point_inside(action_position):
 			undo_redo_strokes_start()
 			action_move_stroke = stroke
@@ -1159,13 +1159,13 @@ func action_fill_try(action_position: Vector2):
 		_merge_stroke(stroke_under_mouse)
 		undo_redo_strokes_complete("Bucket Fill Recolor")
 		return
-	for stroke: BrushStrokeData in _editing_brush.strokes_data:
+	for stroke: BrushStrokeData in _editing_brush.strokes:
 		for i in stroke.holes.size():
 			if Geometry2D.is_point_in_polygon(action_position, stroke.holes[i]):
 				undo_redo_strokes_start()
 				if stroke.color.to_html() == current_color.to_html():
 					stroke.holes.remove_at(i)
-					for stroke_inside in _editing_brush.strokes_data:
+					for stroke_inside in _editing_brush.strokes:
 						if stroke == stroke_inside:
 							continue
 						stroke.subtract_stroke(stroke_inside)
@@ -1173,7 +1173,7 @@ func action_fill_try(action_position: Vector2):
 					var polygon = stroke.holes[i].duplicate()
 					polygon.reverse()
 					var fill_stroke = BrushStrokeData.new(polygon, [], current_color)
-					for stroke_inside in _editing_brush.strokes_data:
+					for stroke_inside in _editing_brush.strokes:
 						fill_stroke.subtract_stroke(stroke_inside)
 					_editing_brush.add_stroke(fill_stroke)
 				
@@ -1517,12 +1517,12 @@ func action_shape_complete():
 #region BRUSH OPERATIONS
 
 func _merge_stroke(merging_stroke):
-	if _editing_brush.strokes_data.has(merging_stroke):
+	if _editing_brush.strokes.has(merging_stroke):
 		_editing_brush.remove_stroke(merging_stroke)
 	
 	var merged_strokes := []
-	while _editing_brush.strokes_data.size() > 0:
-		var stroke = _editing_brush.strokes_data[0]
+	while _editing_brush.strokes.size() > 0:
+		var stroke = _editing_brush.strokes[0]
 		_editing_brush.remove_stroke(stroke)
 		if merging_stroke.is_stroke_overlapping(stroke):
 			if merging_stroke.color.to_html() == stroke.color.to_html():
@@ -1541,15 +1541,16 @@ func _merge_stroke(merging_stroke):
 
 
 func _subtract_stroke(subtracting_stroke):
-	var strokes := []
-	if _editing_brush.strokes_data.has(subtracting_stroke):
-		_editing_brush.remove_stroke(subtracting_stroke)
-	while _editing_brush.strokes_data.size() > 0:
-		var stroke: BrushStrokeData = _editing_brush.strokes_data[0]
-		_editing_brush.remove_stroke(stroke)
-		strokes.append_array(stroke.subtract_stroke(subtracting_stroke))
+	var subtracted_strokes := []
 	
-	for stroke in strokes:
+	if _editing_brush.strokes.has(subtracting_stroke):
+		_editing_brush.remove_stroke(subtracting_stroke)
+	while _editing_brush.strokes.size() > 0:
+		var stroke: BrushStrokeData = _editing_brush.strokes[0]
+		_editing_brush.remove_stroke(stroke)
+		subtracted_strokes.append_array(stroke.subtract_stroke(subtracting_stroke))
+	
+	for stroke in subtracted_strokes:
 		_editing_brush.add_stroke(stroke)
 	
 	_editing_brush.edited.emit()
@@ -1593,7 +1594,7 @@ func _get_erase_color() -> Color:
 func get_stroke_at_position(action_position, brush = null):
 	if brush == null:
 		brush = _editing_brush
-	for stroke: BrushStrokeData in brush.strokes_data:
+	for stroke: BrushStrokeData in brush.strokes:
 		if stroke.is_point_inside(action_position):
 			return stroke
 	return null
@@ -1681,8 +1682,8 @@ func undo_redo_strokes_complete(name):
 	
 	var undo_redo = get_undo_redo()
 	undo_redo.create_action(name)
-	undo_redo.add_undo_property(_editing_brush, "strokes_data", _strokes_before)
-	undo_redo.add_do_property(_editing_brush, "strokes_data", strokes_after)
+	undo_redo.add_undo_property(_editing_brush, "strokes", _strokes_before)
+	undo_redo.add_do_property(_editing_brush, "strokes", strokes_after)
 	undo_redo.add_do_method(_editing_brush, "redraw_all")
 	undo_redo.add_undo_method(_editing_brush, "redraw_all")
 	

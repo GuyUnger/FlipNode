@@ -112,7 +112,7 @@ func subtract_stroke(stroke: BrushStrokeData) -> Array:
 	var subtract_polygon = stroke.polygon.duplicate()
 	
 	var subtracted_holes: Array[PackedVector2Array]
-	var strokes := []
+	var subtracted_strokes := []
 	
 	var holes_in_holes := []
 	
@@ -123,7 +123,7 @@ func subtract_stroke(stroke: BrushStrokeData) -> Array:
 				if Geometry2D.is_polygon_clockwise(result_polygon):
 					## island inside hole, make a new stroke
 					result_polygon.reverse()
-					strokes.push_back(create_stroke(result_polygon))
+					subtracted_strokes.push_back(create_stroke(result_polygon))
 				else:
 					subtract_polygon = result_polygon
 		else:
@@ -146,14 +146,14 @@ func subtract_stroke(stroke: BrushStrokeData) -> Array:
 							var clip = Geometry2D.clip_polygons(result, hole_a)
 							if clip.size() > 0:
 								result = clip[0]
-				strokes.push_back(create_stroke(result, shape_holes))
+				subtracted_strokes.push_back(create_stroke(result, shape_holes))
 	
 	if Geometry2D.clip_polygons(subtract_polygon, polygon).size() == 0:
 		## hole added
 		subtracted_holes.push_back(subtract_polygon)
 		holes = subtracted_holes
-		strokes.push_back(self)
-		return strokes
+		subtracted_strokes.push_back(self)
+		return subtracted_strokes
 	
 	var clipped_polygons = Geometry2D.clip_polygons(polygon, subtract_polygon)
 	if clipped_polygons.size() == 0:
@@ -165,7 +165,7 @@ func subtract_stroke(stroke: BrushStrokeData) -> Array:
 		holes = subtracted_holes
 		
 		if is_polygon_valid(polygon):
-			strokes.push_back(self)
+			subtracted_strokes.push_back(self)
 	else:
 		## split into multiple
 		for p in clipped_polygons:
@@ -176,14 +176,14 @@ func subtract_stroke(stroke: BrushStrokeData) -> Array:
 			for hole in subtracted_holes:
 				if Geometry2D.intersect_polygons(p, hole).size() > 0:
 					seperated_stroke.holes.push_back(hole)
-			strokes.push_back(seperated_stroke)
+			subtracted_strokes.push_back(seperated_stroke)
 	
 	_curves_dirty = true
-	return strokes
+	return subtracted_strokes
 
 
 func subtract_polygon(subtracting_polygon: PackedVector2Array):
-	var strokes := []
+	var subtracted_strokes := []
 	var hole_merged := false
 	var merged_holes: Array[PackedVector2Array]
 	
@@ -207,13 +207,13 @@ func subtract_polygon(subtracting_polygon: PackedVector2Array):
 					if Geometry2D.intersect_polygons(p, subtracting_polygon).size() > 0:
 						holes.push_back(hole)
 						merged_holes.erase(hole)
-				strokes.push_back(BrushStrokeData.new(p, holes))
+				subtracted_strokes.push_back(create_stroke(p, holes))
 	
-	return strokes
+	return subtracted_strokes
 
 
 func mask_stroke(stroke: BrushStrokeData):
-	var strokes := []
+	var masked_strokes := []
 	
 	var results = Geometry2D.intersect_polygons(polygon, stroke.polygon)
 	for result_polygon in results:
@@ -227,8 +227,8 @@ func mask_stroke(stroke: BrushStrokeData):
 			# todo maybe this should check if the hole is inside a hole?
 			if Geometry2D.intersect_polygons(result_polygon, hole).size() > 0:
 				result_holes.push_back(hole)
-		strokes.push_back(create_stroke(result_polygon, result_holes))
-	return strokes
+		masked_strokes.push_back(create_stroke(result_polygon, result_holes))
+	return masked_strokes
 
 
 func translate(offset: Vector2):
