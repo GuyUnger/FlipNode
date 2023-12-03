@@ -81,7 +81,7 @@ theme_override_constants/margin = 0
 theme_override_constants/sv_width = 0
 theme_override_constants/sv_height = 130
 theme_override_constants/h_width = 18
-color = Color(0.992157, 0.607843, 0.27451, 1)
+color = Color(0.247059, 0.14902, 0.0901961, 1)
 can_add_swatches = false
 color_modes_visible = false
 sliders_visible = false
@@ -154,7 +154,7 @@ tooltip_text = "Green"
 is_default = true
 
 [node name="Cyan" parent="Colors/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
-self_modulate = Color(0.160784, 0.698039, 0.615686, 1)
+self_modulate = Color(0.160784, 0.568627, 0.462745, 1)
 layout_mode = 2
 tooltip_text = "Cyan"
 is_default = true
@@ -178,7 +178,7 @@ tooltip_text = "Chestnut"
 is_default = true
 
 [node name="Goulash" parent="Colors/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
-self_modulate = Color(0.52549, 0.211765, 0.184314, 1)
+self_modulate = Color(0.247059, 0.14902, 0.0901961, 1)
 layout_mode = 2
 tooltip_text = "Goulash"
 is_default = true
@@ -424,12 +424,6 @@ theme_override_styles/normal = SubResource("StyleBoxEmpty_qkkh3")
 text = "10"
 alignment = 1
 max_length = 3
-
-[node name="Button" type="Button" parent="Tools/MarginContainer/VBoxContainer/PropertiesPaint"]
-layout_mode = 2
-tooltip_text = "The size of the brush is the same pixel size, independent of view zoom."
-toggle_mode = true
-text = "🎥"
 
 [node name="Control" type="Control" parent="Tools/MarginContainer/VBoxContainer/PropertiesPaint"]
 custom_minimum_size = Vector2(0, 32)

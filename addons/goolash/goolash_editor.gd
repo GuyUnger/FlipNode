@@ -140,7 +140,7 @@ func _init_project_settings():
 	_add_project_setting("goolash/animation/default_fps", 12)
 	_add_project_setting("goolash/animation/onion_skin_enabled", true)
 	_add_project_setting("goolash/animation/onion_skin_frames", 2)
-	_add_project_setting("goolash/painting/default_color", Color("fd9b46"))
+	_add_project_setting("goolash/painting/default_color", Color("3f2617"))
 	_add_project_setting("goolash/painting/default_paint_size", 8.0)
 	_add_project_setting("goolash/rendering/anti-alias", true)
 	_add_project_setting("goolash/rendering/boiling", true)
@@ -519,6 +519,8 @@ func _input_mouse(event: InputEventMouse) -> bool:
 	if editing_node is Brush3D or editing_node is BrushClip3D:
 		mouse_position = event.position + Vector2.ONE * 250.0
 	else:
+		if not _editing_brush:
+			return true
 		mouse_position = _editing_brush.get_viewport_transform().affine_inverse() * event.position
 		mouse_position = _editing_brush.to_local(mouse_position)
 	
@@ -608,6 +610,8 @@ func _insert_frame():
 	var undo_redo = get_undo_redo()
 	undo_redo.create_action("Insert Keyframe")
 	for layer in editing_node.layers:
+		if editing_node.current_frame >= layer.frame_count:
+			continue
 		if selected_keyframe and layer != selected_keyframe.get_layer():
 			continue
 		undo_redo.add_do_method(layer, "insert_frame", editing_node.current_frame)
@@ -627,6 +631,8 @@ func _remove_frame():
 	undo_redo.create_action("Remove Frame")
 	
 	for layer: BrushLayer2D in editing_node.layers:
+		if editing_node.current_frame >= layer.frame_count:
+			continue
 		if selected_keyframe and layer != selected_keyframe.get_layer():
 			continue
 		undo_redo.add_do_method(layer, "remove_frame", editing_node.current_frame)
@@ -654,14 +660,20 @@ func _convert_keyframe():
 	
 	var layer = _get_current_layer()
 	if not layer.is_keyframe(editing_node.current_frame):
-		var copy = layer.get_frame(editing_node.current_frame).duplicate()
+		## Current frame is empty, insert a keyframe
+		
+		var copy = layer.get_frame(min(editing_node.current_frame, layer.frame_count-1)).duplicate()
 		undo_redo.add_do_method(layer, "set_keyframe", copy, editing_node.current_frame)
 		undo_redo.add_undo_method(layer, "remove_keyframe", editing_node.current_frame)
 		
+		if layer.frame_count < editing_node.current_frame:
+			undo_redo.add_do_property(layer, "frame_count", editing_node.current_frame)
+			undo_redo.add_undo_property(layer, "frame_count", layer.frame_count)
+		
 		undo_redo.add_do_method(editing_node, "_update_frame_count")
 		undo_redo.add_undo_method(editing_node, "_update_frame_count")
-		
 	elif not layer.is_keyframe(editing_node.current_frame + 1):
+		## Current frame is a keyframe, add a keyframe to the next frame
 		var copy = layer.get_frame(editing_node.current_frame).duplicate()
 		undo_redo.add_do_method(layer, "set_keyframe", copy, editing_node.current_frame + 1)
 		undo_redo.add_undo_method(layer, "remove_frame", editing_node.current_frame + 1)
@@ -672,6 +684,7 @@ func _convert_keyframe():
 		undo_redo.add_do_method(editing_node, "goto", editing_node.current_frame + 1)
 		undo_redo.add_undo_method(editing_node, "goto", editing_node.current_frame)
 	else:
+		## Current and next frames are a keyframes, only move a frame forward
 		undo_redo.add_do_method(editing_node, "goto", editing_node.current_frame + 1)
 		undo_redo.add_undo_method(editing_node, "goto", editing_node.current_frame)
 	
@@ -1152,7 +1165,7 @@ func action_fill_try(action_position: Vector2):
 					var polygon = stroke.holes[i].duplicate()
 					polygon.reverse()
 					var fill_stroke = BrushStrokeData.new(polygon, [], current_color)
-					for stroke_inside in _editing_brush.stroke_data:
+					for stroke_inside in _editing_brush.strokes_data:
 						fill_stroke.subtract_stroke(stroke_inside)
 					_editing_brush.add_stroke(fill_stroke)
 				
@@ -1621,6 +1634,9 @@ func remove_layer(layer: BrushLayer2D):
 	undo_redo.add_undo_method(clip, "add_layer", layer)
 	undo_redo.add_do_method(timeline, "_on_layer_added_or_removed")
 	undo_redo.add_undo_method(timeline, "_on_layer_added_or_removed")
+	
+	undo_redo.add_do_method(self, "_get_editing_brush")
+	undo_redo.add_undo_method(self, "_get_editing_brush")
 	
 	undo_redo.commit_action()
 

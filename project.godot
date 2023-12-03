@@ -38,7 +38,6 @@ folder_colors={
 
 animation/default_fps=12
 rendering/boiling=true
-painting/default_color=Color(0.992157, 0.607843, 0.27451, 1)
 
 [rendering]
 

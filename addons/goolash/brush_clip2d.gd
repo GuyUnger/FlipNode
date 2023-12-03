@@ -168,9 +168,11 @@ func add_layer(layer: BrushLayer2D):
 	for keyframe in layer.keyframes:
 		keyframe.owner = owner
 	_find_layers()
+	_editing_layer_num = min(_editing_layer_num, layers.size() - 1)
 
 
 func remove_layer(layer: BrushLayer2D):
 	remove_child(layer)
 	layer.owner = null
 	_find_layers()
+	_editing_layer_num = min(_editing_layer_num, layers.size() - 1)

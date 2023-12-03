@@ -32,6 +32,8 @@ func _update_used_colors():
 	for button in %UsedColors.get_children():
 		button.queue_free()
 	_used_colors = []
+	for c in %DefaultColors.get_children():
+		_used_colors.push_back(c.self_modulate.to_html())
 	if GoolashEditor.editor.editing_node is BrushClip2D:
 		for layer in GoolashEditor.editor.editing_node.layers:
 			for keyframe in layer.keyframes:

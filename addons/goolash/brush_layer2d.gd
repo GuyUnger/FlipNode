@@ -48,6 +48,7 @@ func find_keyframes():
 			keyframes.push_back(child)
 
 
+#TODO: name this something more general about cleaning up stuff
 func update_keyframe_endpoints():
 	keyframes.sort_custom(_compare_keyframes)
 	for i in keyframes.size():
@@ -57,6 +58,9 @@ func update_keyframe_endpoints():
 			keyframe.frame_end_num = frame_count - 1
 		else:
 			keyframe.frame_end_num = keyframes[i + 1].frame_num - 1
+	
+	if tweenframes_baked.size() != frame_count:
+		bake_tweenframes()
 
 
 func display_frame(frame_num):
