@@ -9,17 +9,17 @@ extends Resource
 var graphic: BrushStroke2D
 
 ## Curves
-@export var polygon_curve: Curve2D:
+var polygon_curve: Curve2D:
 	get:
 		if _curves_dirty:
 			create_curves()
 		return polygon_curve
-@export var hole_curves: Array[Curve2D]:
+var hole_curves: Array[Curve2D]:
 	get:
 		if _curves_dirty:
 			create_curves()
 		return hole_curves
-@export var _curves_dirty := true
+var _curves_dirty := true
 
 var _erasing := false
 
