@@ -50,7 +50,7 @@ anchor_right = 1.0
 offset_left = -171.0
 offset_top = 25.0
 offset_right = -21.0
-offset_bottom = 376.0
+offset_bottom = 234.0
 grow_horizontal = 0
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -60,10 +60,6 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 10.0
-offset_top = -3.0
-offset_right = 4.0
-offset_bottom = 28.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/margin_left = 5
@@ -87,160 +83,190 @@ color_modes_visible = false
 sliders_visible = false
 presets_visible = false
 
-[node name="DefaultColors" type="HFlowContainer" parent="Colors/MarginContainer/VBoxContainer"]
+[node name="Colors2" type="Panel" parent="."]
+unique_name_in_owner = true
+self_modulate = Color(1, 1, 1, 0.823529)
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -95.0
+offset_top = 234.0
+offset_right = -21.0
+offset_bottom = 625.0
+grow_horizontal = 0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="Colors2"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Colors2/MarginContainer"]
+layout_mode = 2
+
+[node name="DefaultColors" type="HFlowContainer" parent="Colors2/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/h_separation = 2
 theme_override_constants/v_separation = 2
 
-[node name="Pink" parent="Colors/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
+[node name="Pink" parent="Colors2/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
 self_modulate = Color(0.988235, 0.478431, 0.576471, 1)
 layout_mode = 2
 tooltip_text = "Pink"
 is_default = true
 
-[node name="Caramel" parent="Colors/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
-self_modulate = Color(0.988235, 0.592157, 0.207843, 1)
-layout_mode = 2
-tooltip_text = "Caramel"
-is_default = true
-
-[node name="Yellow" parent="Colors/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
-self_modulate = Color(1, 0.85098, 0, 1)
-layout_mode = 2
-tooltip_text = "Yellow"
-is_default = true
-
-[node name="Lime" parent="Colors/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
-self_modulate = Color(0.909804, 1, 0, 1)
-layout_mode = 2
-tooltip_text = "Lime"
-is_default = true
-
-[node name="Mint" parent="Colors/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
-self_modulate = Color(0.658824, 0.901961, 0.811765, 1)
-layout_mode = 2
-tooltip_text = "Mint"
-is_default = true
-
-[node name="Sky" parent="Colors/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
-self_modulate = Color(0.431373, 0.776471, 1, 1)
-layout_mode = 2
-tooltip_text = "Sky"
-is_default = true
-
-[node name="Magenta" parent="Colors/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
+[node name="Magenta" parent="Colors2/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
 self_modulate = Color(0.886275, 0.0627451, 0.466667, 1)
 layout_mode = 2
 tooltip_text = "Magenta"
 is_default = true
 
-[node name="Red" parent="Colors/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
-self_modulate = Color(1, 0.0980392, 0.168627, 1)
-layout_mode = 2
-tooltip_text = "Red"
-is_default = true
-
-[node name="Orange" parent="Colors/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
-self_modulate = Color(1, 0.372549, 0, 1)
-layout_mode = 2
-tooltip_text = "Orange"
-is_default = true
-
-[node name="Green" parent="Colors/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
-self_modulate = Color(0.45098, 0.631373, 0.0627451, 1)
-layout_mode = 2
-tooltip_text = "Green"
-is_default = true
-
-[node name="Cyan" parent="Colors/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
-self_modulate = Color(0.160784, 0.568627, 0.462745, 1)
-layout_mode = 2
-tooltip_text = "Cyan"
-is_default = true
-
-[node name="Blue" parent="Colors/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
-self_modulate = Color(0.219608, 0.486275, 0.835294, 1)
-layout_mode = 2
-tooltip_text = "Blue"
-is_default = true
-
-[node name="Purple" parent="Colors/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
+[node name="Purple" parent="Colors2/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
 self_modulate = Color(0.435294, 0.117647, 0.470588, 1)
 layout_mode = 2
 tooltip_text = "Purple"
 is_default = true
 
-[node name="Chestnut" parent="Colors/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
+[node name="Caramel" parent="Colors2/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
+self_modulate = Color(0.988235, 0.592157, 0.207843, 1)
+layout_mode = 2
+tooltip_text = "Caramel"
+is_default = true
+
+[node name="Red" parent="Colors2/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
+self_modulate = Color(1, 0.0980392, 0.168627, 1)
+layout_mode = 2
+tooltip_text = "Red"
+is_default = true
+
+[node name="Chestnut" parent="Colors2/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
 self_modulate = Color(0.470588, 0.0509804, 0.164706, 1)
 layout_mode = 2
 tooltip_text = "Chestnut"
 is_default = true
 
-[node name="Goulash" parent="Colors/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
+[node name="Yellow" parent="Colors2/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
+self_modulate = Color(1, 0.85098, 0, 1)
+layout_mode = 2
+tooltip_text = "Yellow"
+is_default = true
+
+[node name="Orange" parent="Colors2/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
+self_modulate = Color(1, 0.372549, 0, 1)
+layout_mode = 2
+tooltip_text = "Orange"
+is_default = true
+
+[node name="Goulash" parent="Colors2/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
 self_modulate = Color(0.247059, 0.14902, 0.0901961, 1)
 layout_mode = 2
 tooltip_text = "Goulash"
 is_default = true
 
-[node name="Olive" parent="Colors/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
+[node name="Lime" parent="Colors2/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
+self_modulate = Color(0.909804, 1, 0, 1)
+layout_mode = 2
+tooltip_text = "Lime"
+is_default = true
+
+[node name="Green" parent="Colors2/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
+self_modulate = Color(0.45098, 0.631373, 0.0627451, 1)
+layout_mode = 2
+tooltip_text = "Green"
+is_default = true
+
+[node name="Olive" parent="Colors2/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
 self_modulate = Color(0.223529, 0.290196, 0.156863, 1)
 layout_mode = 2
 tooltip_text = "Olive"
 is_default = true
 
-[node name="Teal" parent="Colors/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
+[node name="Mint" parent="Colors2/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
+self_modulate = Color(0.658824, 0.901961, 0.811765, 1)
+layout_mode = 2
+tooltip_text = "Mint"
+is_default = true
+
+[node name="Turqoise" parent="Colors2/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
+self_modulate = Color(0.160784, 0.568627, 0.462745, 1)
+layout_mode = 2
+tooltip_text = "Turqoise"
+is_default = true
+
+[node name="Teal" parent="Colors2/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
 self_modulate = Color(0.160784, 0.392157, 0.345098, 1)
 layout_mode = 2
 tooltip_text = "Teal"
 is_default = true
 
-[node name="Space" parent="Colors/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
+[node name="Sky" parent="Colors2/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
+self_modulate = Color(0.431373, 0.776471, 1, 1)
+layout_mode = 2
+tooltip_text = "Sky"
+is_default = true
+
+[node name="Blue" parent="Colors2/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
+self_modulate = Color(0.219608, 0.486275, 0.835294, 1)
+layout_mode = 2
+tooltip_text = "Blue"
+is_default = true
+
+[node name="Space" parent="Colors2/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
 self_modulate = Color(0.180392, 0.223529, 0.494118, 1)
 layout_mode = 2
 tooltip_text = "Space"
 is_default = true
 
-[node name="Black" parent="Colors/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
+[node name="Black" parent="Colors2/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
 self_modulate = Color(0, 0, 0, 1)
 layout_mode = 2
 tooltip_text = "Black"
 is_default = true
 
-[node name="Charcoal" parent="Colors/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
+[node name="Charcoal" parent="Colors2/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
 self_modulate = Color(0.0941176, 0.0980392, 0.137255, 1)
 layout_mode = 2
 tooltip_text = "Charcoal"
 is_default = true
 
-[node name="Graphite" parent="Colors/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
-self_modulate = Color(0.2, 0.192157, 0.219608, 1)
+[node name="Graphite" parent="Colors2/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
+self_modulate = Color(0.215686, 0.207843, 0.235294, 1)
 layout_mode = 2
 tooltip_text = "Graphite"
 is_default = true
 
-[node name="Gray" parent="Colors/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
-self_modulate = Color(0.431373, 0.423529, 0.411765, 1)
+[node name="Gray" parent="Colors2/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
+self_modulate = Color(0.411765, 0.403922, 0.392157, 1)
 layout_mode = 2
 tooltip_text = "Gray"
 is_default = true
 
-[node name="Cream" parent="Colors/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
+[node name="Cream" parent="Colors2/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
 self_modulate = Color(0.756863, 0.701961, 0.67451, 1)
 layout_mode = 2
 tooltip_text = "Cream"
 is_default = true
 
-[node name="White" parent="Colors/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
+[node name="White" parent="Colors2/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
 layout_mode = 2
 tooltip_text = "White"
 is_default = true
 
-[node name="HSeparator" type="HSeparator" parent="Colors/MarginContainer/VBoxContainer"]
+[node name="HSeparator" type="HSeparator" parent="Colors2/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="UsedColors" type="HFlowContainer" parent="Colors/MarginContainer/VBoxContainer"]
+[node name="UsedColors" type="HFlowContainer" parent="Colors2/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 
@@ -498,6 +524,8 @@ horizontal_alignment = 1
 [connection signal="mouse_entered" from="Colors" to="." method="_on_colors_mouse_entered"]
 [connection signal="mouse_exited" from="Colors" to="." method="_on_colors_mouse_exited"]
 [connection signal="color_changed" from="Colors/MarginContainer/VBoxContainer/ColorPicker" to="." method="_on_color_picker_color_changed"]
+[connection signal="mouse_entered" from="Colors2" to="." method="_on_colors_mouse_entered"]
+[connection signal="mouse_exited" from="Colors2" to="." method="_on_colors_mouse_exited"]
 [connection signal="pressed" from="Tools/MarginContainer/VBoxContainer/Tools/ButtonSelect" to="." method="_on_button_select_pressed"]
 [connection signal="pressed" from="Tools/MarginContainer/VBoxContainer/Tools/ButtonPaint" to="." method="_on_button_paint_pressed"]
 [connection signal="pressed" from="Tools/MarginContainer/VBoxContainer/Tools/ButtonOval" to="." method="_on_button_oval_pressed"]
