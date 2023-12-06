@@ -23,7 +23,16 @@ var _used_colors := []
 
 
 func _ready():
+	_update_default_swatches()
 	_update_color_picker_color()
+
+
+func _update_default_swatches():
+	for button in %DefaultSwatches.get_children():
+		button.queue_free()
+	
+	for color in GoolashEditor.editor.default_swatches:
+		_add_swatch(color, %DefaultSwatches)
 
 
 func _update_used_colors():
@@ -32,25 +41,25 @@ func _update_used_colors():
 	for button in %UsedColors.get_children():
 		button.queue_free()
 	_used_colors = []
-	for c in %DefaultColors.get_children():
+	for c in %DefaultSwatches.get_children():
 		_used_colors.push_back(c.self_modulate.to_html())
 	if GoolashEditor.editor.editing_node is BrushClip2D:
 		for layer in GoolashEditor.editor.editing_node.layers:
 			for keyframe in layer.keyframes:
 				for stroke in keyframe.strokes:
 					if not _used_colors.has(stroke.color.to_html()):
-						_add_used_color(stroke.color.to_html())
+						_add_swatch(stroke.color, %UsedColors)
 	else:
 		for stroke in GoolashEditor.editor._editing_brush.strokes:
 			if not _used_colors.has(stroke.color.to_html()):
-				_add_used_color(stroke.color.to_html())
+				_add_swatch(stroke.color, %UsedColors)
 
 
-func _add_used_color(color):
-	_used_colors.push_back(color)
+func _add_swatch(color: Color, to: Control):
+	_used_colors.push_back(color.to_html())
 	var button = ButtonUsedColor.instantiate()
-	button.set_color(Color(color))
-	%UsedColors.add_child(button)
+	button.set_color(color)
+	to.add_child(button)
 
 
 func _on_button_select_pressed():
@@ -145,48 +154,82 @@ func _input(event):
 			if %MenuPaintMode.get_rect().has_point(%MenuPaintMode.get_parent().get_local_mouse_position()):
 				GoolashEditor.allow_custom_cursor = false
 	
-		if event is InputEventMouseButton:
-			if not event.is_pressed() and event.button_index == MOUSE_BUTTON_LEFT:
+	if event is InputEventMouseButton:
+		if not event.is_pressed() and event.button_index == MOUSE_BUTTON_LEFT:
+			if %MenuPaintMode.visible:
 				if allow_paintmode_close:
 					%MenuPaintMode.visible = false
 				else:
 					allow_paintmode_close = true
+			
+			if %MenuWarpEase.visible:
+				if allow_warp_ease_close:
+					%MenuWarpEase.visible = false
+				else:
+					allow_warp_ease_close = true
+
+func _on_button_erase_mode_toggled(toggled_on):
+	GoolashEditor.erase_mode = toggled_on
+
+
+#region Paint Mode
+
 
 var allow_paintmode_close := false
+
+func set_paint_mode(paint_mode):
+	%ButtonPaintMode.icon = %PaintModeButtons.get_child(paint_mode).icon
+	%MenuPaintMode.visible = false
+
 
 func _on_button_paint_mode_button_down():
 	%MenuPaintMode.visible = true
 	allow_paintmode_close = false
 
 
-@onready var paint_mode_textures = [
-	preload("res://addons/goolash/icons/paint_mode_front.svg"),
-	preload("res://addons/goolash/icons/paint_mode_behind.svg"),
-	preload("res://addons/goolash/icons/paint_mode_inside.svg"),
-]
-
-func set_paint_mode(paint_mode):
-	%ButtonPaintMode.icon = paint_mode_textures[paint_mode]
-
-
 func _on_button_pain_mode_front_button_up():
 	GoolashEditor.set_paint_mode(GoolashEditor.PAINT_MODE_FRONT)
-	%MenuPaintMode.visible = false
 
 
 func _on_button_pain_mode_behind_button_up():
 	GoolashEditor.set_paint_mode(GoolashEditor.PAINT_MODE_BEHIND)
-	%MenuPaintMode.visible = false
 
 
 func _on_button_pain_mode_inside_button_up():
 	GoolashEditor.set_paint_mode(GoolashEditor.PAINT_MODE_INSIDE)
-	%MenuPaintMode.visible = false
-
-
-func _on_button_erase_mode_toggled(toggled_on):
-	GoolashEditor.erase_mode = toggled_on
 
 
 func set_erase_mode(value: bool):
 	%ButtonEraseMode.button_pressed = value
+
+#endregion
+
+
+#region Warp Ease
+
+var allow_warp_ease_close := false
+func _on_button_warp_ease_button_down():
+	%MenuWarpEase.visible = true
+	allow_warp_ease_close = false
+
+
+func set_warp_ease(warp_ease):
+	%ButtonWarpEase.icon = %WarpEaseButtons.get_child(warp_ease).icon
+
+
+func _on_button_warp_ease_smooth_button():
+	GoolashEditor.set_warp_ease(GoolashEditor.WARP_EASE_SMOOTH)
+
+
+func _on_button_warp_ease_sharp_button():
+	GoolashEditor.set_warp_ease(GoolashEditor.WARP_EASE_SHARP)
+
+
+func _on_button_warp_ease_linear_button():
+	GoolashEditor.set_warp_ease(GoolashEditor.WARP_EASE_LINEAR)
+
+
+func _on_button_warp_ease_random_button():
+	GoolashEditor.set_warp_ease(GoolashEditor.WARP_EASE_RANDOM)
+
+#endregion

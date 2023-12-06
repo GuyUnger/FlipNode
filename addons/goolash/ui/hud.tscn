@@ -1,7 +1,6 @@
-[gd_scene load_steps=17 format=3 uid="uid://chuytojhypqte"]
+[gd_scene load_steps=20 format=3 uid="uid://chuytojhypqte"]
 
 [ext_resource type="Script" path="res://addons/goolash/ui/hud.gd" id="1_72a5i"]
-[ext_resource type="PackedScene" uid="uid://dbnwg2psnoj0f" path="res://addons/goolash/ui/button_used_color.tscn" id="2_5di5i"]
 [ext_resource type="Texture2D" uid="uid://jnmhbl8m5hy2" path="res://addons/goolash/icons/ToolSelect.svg" id="2_7pmde"]
 [ext_resource type="Texture2D" uid="uid://da1imqfk7aeg5" path="res://addons/goolash/icons/Paint.svg" id="3_eks0u"]
 [ext_resource type="Texture2D" uid="uid://dpumbmfv451m4" path="res://addons/goolash/icons/ToolShape.svg" id="4_lemf8"]
@@ -13,6 +12,10 @@
 [ext_resource type="Texture2D" uid="uid://bf5ibats8rlf4" path="res://addons/goolash/icons/paint_mode_front.svg" id="9_t0ong"]
 [ext_resource type="Texture2D" uid="uid://2sqtdt3603qw" path="res://addons/goolash/icons/paint_mode_behind.svg" id="10_3a2id"]
 [ext_resource type="Texture2D" uid="uid://bfa3nkxo2umg7" path="res://addons/goolash/icons/paint_mode_inside.svg" id="11_dayuh"]
+[ext_resource type="Texture2D" uid="uid://ci27pyvjmdmsb" path="res://addons/goolash/icons/warp_ease_smooth.svg" id="12_3owkf"]
+[ext_resource type="Texture2D" uid="uid://bjoaemnk42ku3" path="res://addons/goolash/icons/warp_ease_sharp.svg" id="12_s2217"]
+[ext_resource type="Texture2D" uid="uid://csrntenvlivnf" path="res://addons/goolash/icons/warp_ease_linear.svg" id="13_f8ble"]
+[ext_resource type="Texture2D" uid="uid://bcfdyrr0a28a7" path="res://addons/goolash/icons/warp_ease_random.svg" id="14_6y1wt"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_774xs"]
 
@@ -47,10 +50,10 @@ layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -171.0
-offset_top = 25.0
-offset_right = -21.0
-offset_bottom = 234.0
+offset_left = -160.0
+offset_top = 11.0
+offset_right = -10.0
+offset_bottom = 220.0
 grow_horizontal = 0
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -77,28 +80,27 @@ theme_override_constants/margin = 0
 theme_override_constants/sv_width = 0
 theme_override_constants/sv_height = 130
 theme_override_constants/h_width = 18
-color = Color(0.247059, 0.14902, 0.0901961, 1)
 can_add_swatches = false
 color_modes_visible = false
 sliders_visible = false
 presets_visible = false
 
-[node name="Colors2" type="Panel" parent="."]
+[node name="Swatches" type="Panel" parent="."]
 unique_name_in_owner = true
 self_modulate = Color(1, 1, 1, 0.823529)
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -95.0
-offset_top = 234.0
-offset_right = -21.0
-offset_bottom = 625.0
+offset_left = -84.0
+offset_top = 220.0
+offset_right = -10.0
+offset_bottom = 611.0
 grow_horizontal = 0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="MarginContainer" type="MarginContainer" parent="Colors2"]
+[node name="MarginContainer" type="MarginContainer" parent="Swatches"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -110,165 +112,24 @@ theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 5
 theme_override_constants/margin_bottom = 5
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Colors2/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Swatches/MarginContainer"]
 layout_mode = 2
 
-[node name="DefaultColors" type="HFlowContainer" parent="Colors2/MarginContainer/VBoxContainer"]
+[node name="DefaultSwatches" type="HFlowContainer" parent="Swatches/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/h_separation = 2
 theme_override_constants/v_separation = 2
 
-[node name="Pink" parent="Colors2/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
-self_modulate = Color(0.988235, 0.478431, 0.576471, 1)
-layout_mode = 2
-tooltip_text = "Pink"
-is_default = true
-
-[node name="Magenta" parent="Colors2/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
-self_modulate = Color(0.886275, 0.0627451, 0.466667, 1)
-layout_mode = 2
-tooltip_text = "Magenta"
-is_default = true
-
-[node name="Purple" parent="Colors2/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
-self_modulate = Color(0.435294, 0.117647, 0.470588, 1)
-layout_mode = 2
-tooltip_text = "Purple"
-is_default = true
-
-[node name="Caramel" parent="Colors2/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
-self_modulate = Color(0.988235, 0.592157, 0.207843, 1)
-layout_mode = 2
-tooltip_text = "Caramel"
-is_default = true
-
-[node name="Red" parent="Colors2/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
-self_modulate = Color(1, 0.0980392, 0.168627, 1)
-layout_mode = 2
-tooltip_text = "Red"
-is_default = true
-
-[node name="Chestnut" parent="Colors2/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
-self_modulate = Color(0.470588, 0.0509804, 0.164706, 1)
-layout_mode = 2
-tooltip_text = "Chestnut"
-is_default = true
-
-[node name="Yellow" parent="Colors2/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
-self_modulate = Color(1, 0.85098, 0, 1)
-layout_mode = 2
-tooltip_text = "Yellow"
-is_default = true
-
-[node name="Orange" parent="Colors2/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
-self_modulate = Color(1, 0.372549, 0, 1)
-layout_mode = 2
-tooltip_text = "Orange"
-is_default = true
-
-[node name="Goulash" parent="Colors2/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
-self_modulate = Color(0.247059, 0.14902, 0.0901961, 1)
-layout_mode = 2
-tooltip_text = "Goulash"
-is_default = true
-
-[node name="Lime" parent="Colors2/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
-self_modulate = Color(0.909804, 1, 0, 1)
-layout_mode = 2
-tooltip_text = "Lime"
-is_default = true
-
-[node name="Green" parent="Colors2/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
-self_modulate = Color(0.45098, 0.631373, 0.0627451, 1)
-layout_mode = 2
-tooltip_text = "Green"
-is_default = true
-
-[node name="Olive" parent="Colors2/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
-self_modulate = Color(0.223529, 0.290196, 0.156863, 1)
-layout_mode = 2
-tooltip_text = "Olive"
-is_default = true
-
-[node name="Mint" parent="Colors2/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
-self_modulate = Color(0.658824, 0.901961, 0.811765, 1)
-layout_mode = 2
-tooltip_text = "Mint"
-is_default = true
-
-[node name="Turqoise" parent="Colors2/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
-self_modulate = Color(0.160784, 0.568627, 0.462745, 1)
-layout_mode = 2
-tooltip_text = "Turqoise"
-is_default = true
-
-[node name="Teal" parent="Colors2/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
-self_modulate = Color(0.160784, 0.392157, 0.345098, 1)
-layout_mode = 2
-tooltip_text = "Teal"
-is_default = true
-
-[node name="Sky" parent="Colors2/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
-self_modulate = Color(0.431373, 0.776471, 1, 1)
-layout_mode = 2
-tooltip_text = "Sky"
-is_default = true
-
-[node name="Blue" parent="Colors2/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
-self_modulate = Color(0.219608, 0.486275, 0.835294, 1)
-layout_mode = 2
-tooltip_text = "Blue"
-is_default = true
-
-[node name="Space" parent="Colors2/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
-self_modulate = Color(0.180392, 0.223529, 0.494118, 1)
-layout_mode = 2
-tooltip_text = "Space"
-is_default = true
-
-[node name="Black" parent="Colors2/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
-self_modulate = Color(0, 0, 0, 1)
-layout_mode = 2
-tooltip_text = "Black"
-is_default = true
-
-[node name="Charcoal" parent="Colors2/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
-self_modulate = Color(0.0941176, 0.0980392, 0.137255, 1)
-layout_mode = 2
-tooltip_text = "Charcoal"
-is_default = true
-
-[node name="Graphite" parent="Colors2/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
-self_modulate = Color(0.215686, 0.207843, 0.235294, 1)
-layout_mode = 2
-tooltip_text = "Graphite"
-is_default = true
-
-[node name="Gray" parent="Colors2/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
-self_modulate = Color(0.411765, 0.403922, 0.392157, 1)
-layout_mode = 2
-tooltip_text = "Gray"
-is_default = true
-
-[node name="Cream" parent="Colors2/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
-self_modulate = Color(0.756863, 0.701961, 0.67451, 1)
-layout_mode = 2
-tooltip_text = "Cream"
-is_default = true
-
-[node name="White" parent="Colors2/MarginContainer/VBoxContainer/DefaultColors" instance=ExtResource("2_5di5i")]
-layout_mode = 2
-tooltip_text = "White"
-is_default = true
-
-[node name="HSeparator" type="HSeparator" parent="Colors2/MarginContainer/VBoxContainer"]
+[node name="HSeparator" type="HSeparator" parent="Swatches/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="UsedColors" type="HFlowContainer" parent="Colors2/MarginContainer/VBoxContainer"]
+[node name="UsedColors" type="HFlowContainer" parent="Swatches/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_constants/h_separation = 2
+theme_override_constants/v_separation = 2
 
 [node name="Tools" type="Panel" parent="."]
 unique_name_in_owner = true
@@ -406,21 +267,80 @@ layout_mode = 2
 
 [node name="PropertiesSelect" type="VBoxContainer" parent="Tools/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
+layout_mode = 2
+
+[node name="WarpEaseContainer" type="Control" parent="Tools/MarginContainer/VBoxContainer/PropertiesSelect"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+
+[node name="ButtonWarpEase" type="Button" parent="Tools/MarginContainer/VBoxContainer/PropertiesSelect/WarpEaseContainer"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+icon = ExtResource("12_3owkf")
+icon_alignment = 1
+
+[node name="MenuWarpEase" type="Panel" parent="Tools/MarginContainer/VBoxContainer/PropertiesSelect/WarpEaseContainer"]
+unique_name_in_owner = true
 visible = false
-layout_mode = 2
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = 5.0
+offset_top = -16.0
+offset_right = 102.0
+offset_bottom = 108.0
+grow_horizontal = 0
+grow_vertical = 2
 
-[node name="MenuBar" type="MenuBar" parent="Tools/MarginContainer/VBoxContainer/PropertiesSelect"]
-layout_mode = 2
+[node name="WarpEaseButtons" type="VBoxContainer" parent="Tools/MarginContainer/VBoxContainer/PropertiesSelect/WarpEaseContainer/MenuWarpEase"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 0
 
-[node name="Fall" type="PopupMenu" parent="Tools/MarginContainer/VBoxContainer/PropertiesSelect/MenuBar"]
-item_count = 2
-item_0/text = "Smooth"
-item_0/id = 0
-item_1/text = "Linear"
-item_1/id = 1
+[node name="ButtonWarpEaseSmooth" type="Button" parent="Tools/MarginContainer/VBoxContainer/PropertiesSelect/WarpEaseContainer/MenuWarpEase/WarpEaseButtons"]
+layout_mode = 2
+text = "Smooth"
+icon = ExtResource("12_3owkf")
+flat = true
+alignment = 0
+
+[node name="ButtonWarpEaseSharp" type="Button" parent="Tools/MarginContainer/VBoxContainer/PropertiesSelect/WarpEaseContainer/MenuWarpEase/WarpEaseButtons"]
+layout_mode = 2
+text = "Sharp"
+icon = ExtResource("12_s2217")
+flat = true
+alignment = 0
+
+[node name="ButtonWarpEaseLinear" type="Button" parent="Tools/MarginContainer/VBoxContainer/PropertiesSelect/WarpEaseContainer/MenuWarpEase/WarpEaseButtons"]
+layout_mode = 2
+text = "Linear"
+icon = ExtResource("13_f8ble")
+flat = true
+alignment = 0
+
+[node name="ButtonWarpEaseRandom" type="Button" parent="Tools/MarginContainer/VBoxContainer/PropertiesSelect/WarpEaseContainer/MenuWarpEase/WarpEaseButtons"]
+layout_mode = 2
+text = "Random"
+icon = ExtResource("14_6y1wt")
+flat = true
+alignment = 0
 
 [node name="PropertiesPaint" type="VBoxContainer" parent="Tools/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 
 [node name="Label" type="Label" parent="Tools/MarginContainer/VBoxContainer/PropertiesPaint"]
@@ -451,11 +371,11 @@ text = "10"
 alignment = 1
 max_length = 3
 
-[node name="Control" type="Control" parent="Tools/MarginContainer/VBoxContainer/PropertiesPaint"]
+[node name="PaintModeContainer" type="Control" parent="Tools/MarginContainer/VBoxContainer/PropertiesPaint"]
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 
-[node name="ButtonPaintMode" type="Button" parent="Tools/MarginContainer/VBoxContainer/PropertiesPaint/Control"]
+[node name="ButtonPaintMode" type="Button" parent="Tools/MarginContainer/VBoxContainer/PropertiesPaint/PaintModeContainer"]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -466,7 +386,7 @@ grow_vertical = 2
 icon = ExtResource("9_t0ong")
 icon_alignment = 1
 
-[node name="MenuPaintMode" type="Panel" parent="Tools/MarginContainer/VBoxContainer/PropertiesPaint/Control"]
+[node name="MenuPaintMode" type="Panel" parent="Tools/MarginContainer/VBoxContainer/PropertiesPaint/PaintModeContainer"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
@@ -482,7 +402,8 @@ offset_bottom = 78.0
 grow_horizontal = 0
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Tools/MarginContainer/VBoxContainer/PropertiesPaint/Control/MenuPaintMode"]
+[node name="PaintModeButtons" type="VBoxContainer" parent="Tools/MarginContainer/VBoxContainer/PropertiesPaint/PaintModeContainer/MenuPaintMode"]
+unique_name_in_owner = true
 layout_mode = 2
 offset_right = 99.0
 offset_bottom = 106.0
@@ -490,22 +411,28 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 0
 
-[node name="ButtonPainModeFront" type="Button" parent="Tools/MarginContainer/VBoxContainer/PropertiesPaint/Control/MenuPaintMode/VBoxContainer"]
+[node name="ButtonPainModeFront" type="Button" parent="Tools/MarginContainer/VBoxContainer/PropertiesPaint/PaintModeContainer/MenuPaintMode/PaintModeButtons"]
+unique_name_in_owner = true
 layout_mode = 2
+keep_pressed_outside = true
 text = "Front"
 icon = ExtResource("9_t0ong")
 flat = true
 alignment = 0
 
-[node name="ButtonPainModeBehind" type="Button" parent="Tools/MarginContainer/VBoxContainer/PropertiesPaint/Control/MenuPaintMode/VBoxContainer"]
+[node name="ButtonPainModeBehind" type="Button" parent="Tools/MarginContainer/VBoxContainer/PropertiesPaint/PaintModeContainer/MenuPaintMode/PaintModeButtons"]
+unique_name_in_owner = true
 layout_mode = 2
+keep_pressed_outside = true
 text = "Behind"
 icon = ExtResource("10_3a2id")
 flat = true
 alignment = 0
 
-[node name="ButtonPainModeInside" type="Button" parent="Tools/MarginContainer/VBoxContainer/PropertiesPaint/Control/MenuPaintMode/VBoxContainer"]
+[node name="ButtonPainModeInside" type="Button" parent="Tools/MarginContainer/VBoxContainer/PropertiesPaint/PaintModeContainer/MenuPaintMode/PaintModeButtons"]
+unique_name_in_owner = true
 layout_mode = 2
+keep_pressed_outside = true
 text = "Inside"
 icon = ExtResource("11_dayuh")
 flat = true
@@ -524,8 +451,32 @@ horizontal_alignment = 1
 [connection signal="mouse_entered" from="Colors" to="." method="_on_colors_mouse_entered"]
 [connection signal="mouse_exited" from="Colors" to="." method="_on_colors_mouse_exited"]
 [connection signal="color_changed" from="Colors/MarginContainer/VBoxContainer/ColorPicker" to="." method="_on_color_picker_color_changed"]
-[connection signal="mouse_entered" from="Colors2" to="." method="_on_colors_mouse_entered"]
-[connection signal="mouse_exited" from="Colors2" to="." method="_on_colors_mouse_exited"]
+[connection signal="mouse_entered" from="Swatches" to="." method="_on_colors_mouse_entered"]
+[connection signal="mouse_exited" from="Swatches" to="." method="_on_colors_mouse_exited"]
+[connection signal="pressed" from="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/ButtonUsedColor" to="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/ButtonUsedColor" method="_on_pressed"]
+[connection signal="pressed" from="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17627" to="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17627" method="_on_pressed"]
+[connection signal="pressed" from="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17628" to="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17628" method="_on_pressed"]
+[connection signal="pressed" from="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17629" to="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17629" method="_on_pressed"]
+[connection signal="pressed" from="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17630" to="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17630" method="_on_pressed"]
+[connection signal="pressed" from="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17631" to="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17631" method="_on_pressed"]
+[connection signal="pressed" from="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17632" to="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17632" method="_on_pressed"]
+[connection signal="pressed" from="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17633" to="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17633" method="_on_pressed"]
+[connection signal="pressed" from="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17634" to="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17634" method="_on_pressed"]
+[connection signal="pressed" from="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17635" to="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17635" method="_on_pressed"]
+[connection signal="pressed" from="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17636" to="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17636" method="_on_pressed"]
+[connection signal="pressed" from="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17637" to="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17637" method="_on_pressed"]
+[connection signal="pressed" from="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17638" to="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17638" method="_on_pressed"]
+[connection signal="pressed" from="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17639" to="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17639" method="_on_pressed"]
+[connection signal="pressed" from="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17640" to="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17640" method="_on_pressed"]
+[connection signal="pressed" from="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17641" to="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17641" method="_on_pressed"]
+[connection signal="pressed" from="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17642" to="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17642" method="_on_pressed"]
+[connection signal="pressed" from="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17643" to="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17643" method="_on_pressed"]
+[connection signal="pressed" from="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17644" to="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17644" method="_on_pressed"]
+[connection signal="pressed" from="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17645" to="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17645" method="_on_pressed"]
+[connection signal="pressed" from="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17646" to="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17646" method="_on_pressed"]
+[connection signal="pressed" from="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17647" to="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17647" method="_on_pressed"]
+[connection signal="pressed" from="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17648" to="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17648" method="_on_pressed"]
+[connection signal="pressed" from="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17649" to="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17649" method="_on_pressed"]
 [connection signal="pressed" from="Tools/MarginContainer/VBoxContainer/Tools/ButtonSelect" to="." method="_on_button_select_pressed"]
 [connection signal="pressed" from="Tools/MarginContainer/VBoxContainer/Tools/ButtonPaint" to="." method="_on_button_paint_pressed"]
 [connection signal="pressed" from="Tools/MarginContainer/VBoxContainer/Tools/ButtonOval" to="." method="_on_button_oval_pressed"]
@@ -534,7 +485,16 @@ horizontal_alignment = 1
 [connection signal="pressed" from="Tools/MarginContainer/VBoxContainer/Tools/ButtonEyedropper" to="." method="_on_button_eyedropper_pressed"]
 [connection signal="pressed" from="Tools/MarginContainer/VBoxContainer/Tools/ButtonFill" to="." method="_on_button_fill_pressed"]
 [connection signal="toggled" from="Tools/MarginContainer/VBoxContainer/ButtonEraseMode" to="." method="_on_button_erase_mode_toggled"]
-[connection signal="button_down" from="Tools/MarginContainer/VBoxContainer/PropertiesPaint/Control/ButtonPaintMode" to="." method="_on_button_paint_mode_button_down"]
-[connection signal="button_up" from="Tools/MarginContainer/VBoxContainer/PropertiesPaint/Control/MenuPaintMode/VBoxContainer/ButtonPainModeFront" to="." method="_on_button_pain_mode_front_button_up"]
-[connection signal="button_up" from="Tools/MarginContainer/VBoxContainer/PropertiesPaint/Control/MenuPaintMode/VBoxContainer/ButtonPainModeBehind" to="." method="_on_button_pain_mode_behind_button_up"]
-[connection signal="button_up" from="Tools/MarginContainer/VBoxContainer/PropertiesPaint/Control/MenuPaintMode/VBoxContainer/ButtonPainModeInside" to="." method="_on_button_pain_mode_inside_button_up"]
+[connection signal="button_down" from="Tools/MarginContainer/VBoxContainer/PropertiesSelect/WarpEaseContainer/ButtonWarpEase" to="." method="_on_button_warp_ease_button_down"]
+[connection signal="button_down" from="Tools/MarginContainer/VBoxContainer/PropertiesSelect/WarpEaseContainer/MenuWarpEase/WarpEaseButtons/ButtonWarpEaseSmooth" to="." method="_on_button_warp_ease_smooth_button"]
+[connection signal="button_up" from="Tools/MarginContainer/VBoxContainer/PropertiesSelect/WarpEaseContainer/MenuWarpEase/WarpEaseButtons/ButtonWarpEaseSmooth" to="." method="_on_button_warp_ease_smooth_button"]
+[connection signal="button_down" from="Tools/MarginContainer/VBoxContainer/PropertiesSelect/WarpEaseContainer/MenuWarpEase/WarpEaseButtons/ButtonWarpEaseSharp" to="." method="_on_button_warp_ease_sharp_button"]
+[connection signal="button_up" from="Tools/MarginContainer/VBoxContainer/PropertiesSelect/WarpEaseContainer/MenuWarpEase/WarpEaseButtons/ButtonWarpEaseSharp" to="." method="_on_button_warp_ease_sharp_button"]
+[connection signal="button_down" from="Tools/MarginContainer/VBoxContainer/PropertiesSelect/WarpEaseContainer/MenuWarpEase/WarpEaseButtons/ButtonWarpEaseLinear" to="." method="_on_button_warp_ease_linear_button"]
+[connection signal="button_up" from="Tools/MarginContainer/VBoxContainer/PropertiesSelect/WarpEaseContainer/MenuWarpEase/WarpEaseButtons/ButtonWarpEaseLinear" to="." method="_on_button_warp_ease_linear_button"]
+[connection signal="button_down" from="Tools/MarginContainer/VBoxContainer/PropertiesSelect/WarpEaseContainer/MenuWarpEase/WarpEaseButtons/ButtonWarpEaseRandom" to="." method="_on_button_warp_ease_random_button"]
+[connection signal="button_up" from="Tools/MarginContainer/VBoxContainer/PropertiesSelect/WarpEaseContainer/MenuWarpEase/WarpEaseButtons/ButtonWarpEaseRandom" to="." method="_on_button_warp_ease_random_button"]
+[connection signal="button_down" from="Tools/MarginContainer/VBoxContainer/PropertiesPaint/PaintModeContainer/ButtonPaintMode" to="." method="_on_button_paint_mode_button_down"]
+[connection signal="button_up" from="Tools/MarginContainer/VBoxContainer/PropertiesPaint/PaintModeContainer/MenuPaintMode/PaintModeButtons/ButtonPainModeFront" to="." method="_on_button_pain_mode_front_button_up"]
+[connection signal="button_up" from="Tools/MarginContainer/VBoxContainer/PropertiesPaint/PaintModeContainer/MenuPaintMode/PaintModeButtons/ButtonPainModeBehind" to="." method="_on_button_pain_mode_behind_button_up"]
+[connection signal="button_up" from="Tools/MarginContainer/VBoxContainer/PropertiesPaint/PaintModeContainer/MenuPaintMode/PaintModeButtons/ButtonPainModeInside" to="." method="_on_button_pain_mode_inside_button_up"]

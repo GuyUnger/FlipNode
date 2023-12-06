@@ -7,6 +7,7 @@ signal selected_keyframe_changed
 enum {TOOL_SELECT, TOOL_PAINT, TOOL_FILL, TOOL_EYEDROPPER, TOOL_OVAL, TOOL_RECT, TOOL_SHAPE}
 enum {ACTION_NONE, ACTION_WARP, ACTION_PAINT, ACTION_OVAL, ACTION_RECT, ACTION_SHAPE, ACTION_MOVE, ACTION_SELECT_RECT}
 enum {PAINT_MODE_FRONT, PAINT_MODE_BEHIND, PAINT_MODE_INSIDE}
+enum {WARP_EASE_SMOOTH, WARP_EASE_SHARP, WARP_EASE_LINEAR, WARP_EASE_RANDOM}
 
 enum {MAIN_SCREEN_2D, MAIN_SCREEN_3D, MAIN_SCREEN_SCRIPT}
 
@@ -48,20 +49,34 @@ var _action_rmb := false
 var _action_stroke: BrushStrokeData
 var _action_brush_inside: BrushStrokeData
 
-var current_tool := -1
-var current_tool_override := -1
+var default_swatches := PackedColorArray([
+		Color("fc9735"), Color("ff192b"), Color("780d2a"),
+		Color("ffd900"), Color("ff5f00"), Color("3f2617"),
+		Color("3f2617"), Color("73a110"), Color("393a28"),
+		Color("a8e6cf"), Color("299176"), Color("296458"),
+		Color("6ec6ff"), Color("387cd5"), Color("2e397e"),
+		Color("fc7a93"), Color("e21077"), Color("ffffff"),
+		Color("000000"), Color("181923"), Color("37353c"),
+		Color("696764"), Color("c1b3ac"), Color("ffffff"),
+	])
+var current_tool: int = -1
+var current_tool_override: int = -1
 var current_color: Color = Color.WHITE
 
 var current_paint_mode := PAINT_MODE_FRONT
+var current_warp_ease := WARP_EASE_SMOOTH
 
-var _action_paint_size := 8.0
-var _action_paint_erase_size := 16.0
-var _action_warp_size := 60.0
-var _action_warp_cut_angle := deg_to_rad(30.0)
-var _pen_pressure
+var _action_paint_size: float = 8.0
+var _action_paint_erase_size: float = 16.0
+
+var _action_warp_size: float = 60.0
+var _action_warp_cut_angle: float = deg_to_rad(30.0)
+var _action_warp_size_preview_t: float = 0.0
+
+var _pen_pressure: float = 0.0
 
 static var onion_skin_enabled := true
-static var onion_skin_frames := 1
+static var onion_skin_frames: int = 1
 static var erase_mode := false
 
 var editing_node
@@ -71,7 +86,7 @@ static var selected_keyframe: BrushKeyframe2D:
 		selected_keyframe = value
 		editor.selected_keyframe_changed.emit()
 var is_editing := false
-var _selected_highlight := 0.0
+var _selected_highlight: float = 0.0
 
 var canvas_transform_previous
 
@@ -137,13 +152,29 @@ func _on_mode_changed():
 
 
 func _init_project_settings():
-	_add_project_setting("goolash/animation/default_fps", 12)
-	_add_project_setting("goolash/animation/onion_skin_enabled", true)
-	_add_project_setting("goolash/animation/onion_skin_frames", 2)
-	_add_project_setting("goolash/painting/default_color", Color("3f2617"))
-	_add_project_setting("goolash/painting/default_paint_size", 8.0)
-	_add_project_setting("goolash/rendering/anti-alias", true)
-	_add_project_setting("goolash/rendering/boiling", true)
+	## Animation
+	_add_project_setting("animation", "default_fps", 12)
+	_add_project_setting("animation", "onion_skin_enabled", true)
+	_add_project_setting("animation", "onion_skin_frames", 2)
+	
+	## Painting
+	var default_swatches := PackedColorArray([
+		Color("fc9735"), Color("ff192b"), Color("780d2a"),
+		Color("ffd900"), Color("ff5f00"), Color("3f2617"),
+		Color("3f2617"), Color("73a110"), Color("393a28"),
+		Color("a8e6cf"), Color("299176"), Color("296458"),
+		Color("6ec6ff"), Color("387cd5"), Color("2e397e"),
+		Color("fc7a93"), Color("e21077"), Color("ffffff"),
+		Color("000000"), Color("181923"), Color("37353c"),
+		Color("696764"), Color("c1b3ac"), Color("ffffff"),
+	])
+	_add_project_setting("painting", "default_swatches", default_swatches)
+	_add_project_setting("painting", "default_paint_size", 8.0)
+	
+	## Rendering
+	_add_project_setting("rendering", "anti-alias", true)
+	_add_project_setting("rendering", "boiling", true)
+	
 	
 	_add_keybind("tools", "paint_brush_tool", "key_tool_select_paint_brush", KEY_B)
 	_add_keybind("tools", "oval_brush_tool", "key_tool_select_oval_brush", KEY_O)
@@ -159,6 +190,8 @@ func _init_project_settings():
 	_add_keybind("timeline", "add_keyframe", "key_add_keyframe", KEY_6)
 	_add_keybind("timeline", "add_blank_keyframe", "key_add_keyframe_blank", KEY_7)
 	_add_keybind("timeline", "add_script_to_keyframe", "key_add_script", KEY_9)
+	
+	
 
 var keybind_settings: Dictionary
 
@@ -166,11 +199,12 @@ func _add_keybind(section: String, alias: String, variable: String, default_key:
 	var path = "goolash/shortcuts/%s/%s" % [section, alias]
 	var character = char(default_key)
 	
-	_add_project_setting(path, character)
+	_add_project_setting(section, alias, character)
 	keybind_settings[variable] = path
 
 
-func _add_project_setting(name: String, default_value) -> void:
+func _add_project_setting(category, name: String, default_value) -> void:
+	var path = "goolash/%s/%s" % [category, name]
 	if ProjectSettings.has_setting(name):
 		return
 	ProjectSettings.set_setting(name, default_value)
@@ -181,7 +215,11 @@ func _load_project_settings(init := false):
 	Goolash.default_fps = ProjectSettings.get_setting_with_override("goolash/animation/default_fps")
 	onion_skin_enabled = ProjectSettings.get_setting_with_override("goolash/animation/onion_skin_enabled")
 	onion_skin_frames = ProjectSettings.get_setting_with_override("goolash/animation/onion_skin_frames")
-	current_color = ProjectSettings.get_setting_with_override("goolash/painting/default_color")
+	
+	var project_default_swatches = ProjectSettings.get_setting_with_override("goolash/painting/default_swatches")
+	if default_swatches != project_default_swatches:
+		default_swatches = project_default_swatches
+	current_color = default_swatches[0]
 	
 	var shader_anti_alias_setting = ProjectSettings.get_setting_with_override("goolash/rendering/anti-alias")
 	var shader_boil_setting = ProjectSettings.get_setting_with_override("goolash/rendering/boiling")
@@ -471,6 +509,7 @@ func _on_key_pressed(event: InputEventKey) -> bool:
 				return true
 			elif current_tool == TOOL_SELECT:
 				_action_warp_size *= 1 / (2.0 ** (1.0 / 6.0))
+				_action_warp_size_preview_t = 1.0
 				return true
 		key_tool_size_increase:
 			if current_tool == TOOL_PAINT:
@@ -479,6 +518,7 @@ func _on_key_pressed(event: InputEventKey) -> bool:
 				return true
 			elif current_tool == TOOL_SELECT:
 				_action_warp_size *= 2.0 ** (1.0 / 6.0)
+				_action_warp_size_preview_t = 1.0
 				return true
 		key_erase_mode:
 			set_erase_mode(true)
@@ -498,16 +538,18 @@ func _on_key_released(event: InputEventKey) -> bool:
 
 
 func _on_input_key_alt_pressed() -> bool:
-	if [TOOL_PAINT, TOOL_OVAL, TOOL_RECT, TOOL_SHAPE, TOOL_FILL].has(current_tool):
-		current_tool_override = TOOL_EYEDROPPER
-		_queue_redraw()
+	#if [TOOL_PAINT, TOOL_OVAL, TOOL_RECT, TOOL_SHAPE, TOOL_FILL].has(current_tool):
+	current_tool_override = TOOL_EYEDROPPER
+	_queue_redraw()
 	return false
 
 
 func _on_input_key_ctrl_pressed() -> bool:
-	if [TOOL_PAINT, TOOL_OVAL, TOOL_RECT, TOOL_SHAPE].has(current_tool):
-		current_tool_override = TOOL_FILL
-		_queue_redraw()
+	#if [TOOL_PAINT, TOOL_OVAL, TOOL_RECT, TOOL_SHAPE].has(current_tool):
+	current_tool_override = TOOL_FILL
+	_queue_redraw()
+	if _editing_brush:
+		_editing_brush._request_forward_draw()
 	return false
 
 
@@ -553,6 +595,11 @@ func _on_mouse_motion(mouse_position):
 			action_paint_process(mouse_position)
 		ACTION_MOVE:
 			action_move_process(mouse_position)
+	
+	match _get_current_tool():
+		TOOL_SELECT:
+			if _current_action == ACTION_NONE:
+				_get_warp_selections(mouse_position)
 
 
 func _on_mouse_button_pressed(mouse_position: Vector2, right_mouse_button := false) -> bool:
@@ -608,6 +655,9 @@ func _process(delta):
 	if current_tool_override == TOOL_FILL and not Input.is_key_pressed(KEY_CTRL):
 		current_tool_override = -1
 		_queue_redraw()
+	
+	if _action_warp_size_preview_t > 0.0:
+		_action_warp_size_preview_t -= delta
 	
 	_selected_highlight = move_toward(_selected_highlight, 0.0, delta / 0.5)
 
@@ -761,12 +811,13 @@ static func set_erase_mode(value):
 
 
 static func set_paint_mode(paint_mode):
-	editor._set_paint_mode(paint_mode)
-
-
-func _set_paint_mode(paint_mode):
-	current_paint_mode = paint_mode
+	editor.current_paint_mode = paint_mode
 	hud.set_paint_mode(paint_mode)
+
+
+static func set_warp_ease(warp_ease):
+	editor.current_warp_ease = warp_ease
+	hud.set_warp_ease(warp_ease)
 
 
 func _action_start(mouse_position) -> bool:
@@ -838,12 +889,14 @@ func _forward_draw_brush(brush):
 		TOOL_SELECT:
 			if _current_action == ACTION_NONE:
 				var zoom = _get_brush_zoom()
-				for stroke: BrushStrokeData in brush.strokes:
-					var selection: ActionWarpSelection = _get_warp_selection(stroke, cursor_position, _action_warp_size)
-					if selection:
+				for selection in action_warp_selections:
 						_draw_warp_selection(selection)
-						brush.draw_circle(selection.closest_point, 6.0 / zoom, Color.WHITE)
+						brush.draw_circle(selection.closest_point, 5.0 / zoom, Color.WHITE)
+						_draw_circle_outline(brush, selection.closest_point, 8.0 / zoom, Color.WHITE, 1.0 / zoom)
 						
+						_draw_circle_outline(brush, selection.closest_point, _action_warp_size, Color(0.0, 0.0, 0.0, 0.2), 0.5 / zoom)
+						_draw_circle_outline(brush, selection.closest_point, _action_warp_size, Color(1.0, 1.0, 1.0, 0.3), 0.5 / zoom)
+	
 	
 	if _selected_highlight > 0.0:
 		for stroke: BrushStrokeData in brush.strokes:
@@ -868,7 +921,8 @@ func _draw_warp_selection(selection: ActionWarpSelection):
 			var pos_from = lerp(from, to, t_from)
 			var pos_to = lerp(from, to, t_to)
 			var thickness = lerp(thickness_from, thickness_to, j / steps) * 3.0 / zoom
-			_editing_brush.draw_line(pos_from, pos_to, Color.WHITE, thickness, true)
+			_editing_brush.draw_line(pos_from, pos_to, Color.WHITE, thickness)
+			_editing_brush.draw_line(pos_from, pos_to, Color(1.0, 1.0, 1.0, 0.5), thickness + 0.3 / zoom)
 
 
 func _forward_draw_hud():
@@ -895,7 +949,8 @@ func _draw_custom_cursor():
 			
 			hud.draw_circle(cursor_position, 2.0, Color.WHITE)
 		TOOL_SELECT:
-			pass
+			if _action_warp_size_preview_t > 0.0 and action_warp_selections.size() == 0:
+				_draw_circle_outline(hud, cursor_position, _action_warp_size * zoom, Color(1.0, 1.0, 1.0, _action_warp_size_preview_t), 1.0)
 		TOOL_EYEDROPPER:
 			var preview_size := 20.0
 			for stroke: BrushStrokeData in _editing_brush.strokes:
@@ -908,13 +963,21 @@ func _draw_custom_cursor():
 
 
 func _draw_circle_outline(target, draw_position: Vector2, size: float, color: Color = Color.WHITE, width = 0.5, striped := false):
-	var point_count := 36
-	for i in point_count:
-		if striped and i % 4 < 3:
-			continue
-		var from = draw_position + Vector2.RIGHT.rotated(i / float(point_count) * TAU) * size
-		var to = draw_position + Vector2.RIGHT.rotated((i + 1) / float(point_count) * TAU) * size
-		target.draw_line(from, to, color, width, true)
+	var point_count := 72
+	var points = []
+	if striped:
+		#TODO: turn this into 
+		for i in point_count:
+			if i % 8 < 5:
+				continue
+			var from = draw_position + Vector2.RIGHT.rotated(i / float(point_count) * TAU) * size
+			var to = draw_position + Vector2.RIGHT.rotated((i + 1) / float(point_count) * TAU) * size
+			target.draw_line(from, to, color, width, true)
+	else:
+		for i in point_count:
+			points.push_back(draw_position + Vector2.RIGHT.rotated(i / float(point_count) * TAU) * size)
+		points.push_back(points[0])
+		target.draw_polyline(PackedVector2Array(points), color, width, true)
 
 
 ## ACTIONS
@@ -923,16 +986,17 @@ func _draw_circle_outline(target, draw_position: Vector2, size: float, color: Co
 var action_warp_selections: Array
 
 func action_warp_try(action_position: Vector2) -> bool:
-	var selections := []
-	for stroke in _editing_brush.strokes:
-		var selection = _get_warp_selection(stroke, action_position, _action_warp_size)
-		if selection:
-			selections.push_back(selection)
-	for selection in selections:
-		_editing_brush.move_stroke_to_front(selection.stroke)
+	_get_warp_selections(action_position)
+	#var selections := []
+	#for stroke in _editing_brush.strokes:
+		#var selection = _get_warp_selection(stroke, action_position, _action_warp_size)
+		#if selection:
+			#selections.push_back(selection)
 	
-	if selections.size() > 0:
-		action_warp_selections = selections
+	#action_warp_selections = selections
+	if action_warp_selections.size() > 0:
+		for selection in action_warp_selections:
+			_editing_brush.move_stroke_to_front(selection.stroke)
 		undo_redo_strokes_start()
 		_current_action = ACTION_WARP
 		_action_position_previous = action_position
@@ -945,7 +1009,7 @@ func action_warp_process(action_position):
 	_action_position_previous = action_position
 	
 	for selection: ActionWarpSelection in action_warp_selections:
-		for i in selection.vertex_count():
+		for i in selection.get_vertex_count():
 			var index = selection.vertex_indexes[i]
 			var weight = selection.vertex_weights[i]
 			selection.stroke.polygon[index] += move_delta * weight
@@ -965,11 +1029,13 @@ func action_warp_complete():
 		var holes = selection.stroke.holes
 		
 		var i := 0
-		while i < invert_fix_results.size():
+		var l := invert_fix_results.size()
+		while i < l:
 			var polygon = invert_fix_results[i]
 			if Geometry2D.is_polygon_clockwise(polygon):
 				holes.push_back(invert_fix_results[i])
 				invert_fix_results.remove_at(i)
+				l -= 1
 			else:
 				i += 1
 		_editing_brush.remove_stroke(selection.stroke)
@@ -985,11 +1051,33 @@ func action_warp_complete():
 		editing_node.edited.emit()
 	action_warp_selections = []
 	undo_redo_strokes_complete("Warp Stroke")
+	_action_rmb = false
 
 
-func _get_warp_selection(stroke: BrushStrokeData, action_postion: Vector2, range: float) -> ActionWarpSelection:
-	var closest_point_on_edge = stroke.polygon_curve.get_closest_point(action_postion)
-	var distance_to_edge = closest_point_on_edge.distance_to(action_postion)
+func _get_warp_selections(mouse_position):
+	action_warp_selections = []
+	for stroke: BrushStrokeData in _editing_brush.strokes:
+		var selection: ActionWarpSelection = _get_warp_selection(stroke, mouse_position, _action_warp_size)
+		if selection:
+			action_warp_selections.push_back(selection)
+
+
+func _get_warp_selection(stroke: BrushStrokeData, action_position: Vector2, range: float) -> ActionWarpSelection:
+	if _action_rmb:
+		var selection := ActionWarpSelection.new(stroke)
+		var l = stroke.polygon.size()
+		for i in l:
+			var distance = stroke.polygon[i].distance_to(action_position)
+			if distance < range:
+				var t = 1.0 - distance / range
+				var weight = _warp_ease(t)
+				selection.add_vertex(i, weight)
+		if selection.get_vertex_count() > 0:
+			return selection
+		return null
+	
+	var closest_point_on_edge = stroke.polygon_curve.get_closest_point(action_position)
+	var distance_to_edge = closest_point_on_edge.distance_to(action_position)
 	
 	if distance_to_edge > 6.0 / _get_brush_zoom():
 		return null
@@ -1005,7 +1093,6 @@ func _get_warp_selection(stroke: BrushStrokeData, action_postion: Vector2, range
 			closest_vertex_i = vertex_i
 	
 	var selection := ActionWarpSelection.new(stroke)
-	action_warp_selections.push_back(selection)
 	
 	selection.add_vertex(closest_vertex_i, 1.0)
 	
@@ -1071,10 +1158,16 @@ func _action_warp_draw(brush):
 
 
 func _warp_ease(t):
-	if _action_rmb:
-		return ease(t, 3.0)
-	else:
-		return ease(t, -1.5)
+	match current_warp_ease:
+		WARP_EASE_SMOOTH:
+			return ease(t, -1.5)
+		WARP_EASE_SHARP:
+			return ease(t, 3.0)
+		WARP_EASE_LINEAR:
+			return t
+		WARP_EASE_RANDOM:
+			return ease(t, -1.5) * randf()
+	
 
 
 class ActionWarpSelection:
@@ -1097,7 +1190,7 @@ class ActionWarpSelection:
 		vertex_indexes.push_back(index)
 		vertex_weights.push_back(weight)
 	
-	func vertex_count():
+	func get_vertex_count() -> int:
 		return vertex_indexes.size()
 
 
@@ -1176,7 +1269,7 @@ func action_fill_try(action_position: Vector2):
 					for stroke_inside in _editing_brush.strokes:
 						fill_stroke.subtract_stroke(stroke_inside)
 					_editing_brush.add_stroke(fill_stroke)
-				
+				stroke.draw()
 				_editing_brush.edited.emit()
 				undo_redo_strokes_complete("Bucket Fill Hole")
 				return
@@ -1603,8 +1696,7 @@ func get_stroke_at_position(action_position, brush = null):
 func _queue_redraw():
 	hud.queue_redraw()
 	if _editing_brush:
-		_editing_brush._forward_draw_requested = true
-		_editing_brush.queue_redraw()
+		_editing_brush._request_forward_draw()
 
 
 func add_custom_script_to_keyframe(keyframe):

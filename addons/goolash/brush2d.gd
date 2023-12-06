@@ -186,6 +186,11 @@ func _draw():
 		GoolashEditor.editor._forward_draw_brush(self)
 
 
+func _request_forward_draw():
+	_forward_draw_requested = true
+	queue_redraw()
+
+
 func draw_stroke_outline(stroke, thickness := 1.0, color: Color = Color.WHITE, alpha := 1.0):
 	thickness /= get_viewport().get_screen_transform().get_scale().x
 	draw_polygon_outline(stroke.polygon, thickness, color, alpha)
