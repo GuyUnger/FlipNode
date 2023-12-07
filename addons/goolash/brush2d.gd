@@ -78,6 +78,7 @@ func add_stroke(stroke: BrushStrokeData):
 func remove_stroke(stroke_data: BrushStrokeData):
 	strokes.erase(stroke_data)
 	remove_child(stroke_data.graphic)
+	stroke_data.graphic = null
 
 
 func init_strokes():

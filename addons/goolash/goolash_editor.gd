@@ -196,19 +196,21 @@ func _init_project_settings():
 var keybind_settings: Dictionary
 
 func _add_keybind(section: String, alias: String, variable: String, default_key: int):
-	var path = "goolash/shortcuts/%s/%s" % [section, alias]
+	section = "shortcuts/%s" % section
 	var character = char(default_key)
 	
+	
 	_add_project_setting(section, alias, character)
-	keybind_settings[variable] = path
+	keybind_settings[variable] = "goolash/%s/%s" % [section, alias]
 
 
 func _add_project_setting(category, name: String, default_value) -> void:
 	var path = "goolash/%s/%s" % [category, name]
-	if ProjectSettings.has_setting(name):
+	
+	if ProjectSettings.has_setting(path):
 		return
-	ProjectSettings.set_setting(name, default_value)
-	ProjectSettings.set_initial_value(name, default_value)
+	ProjectSettings.set_setting(path, default_value)
+	ProjectSettings.set_initial_value(path, default_value)
 
 
 func _load_project_settings(init := false):
@@ -908,9 +910,12 @@ func _forward_draw_brush(brush):
 func _draw_warp_selection(selection: ActionWarpSelection):
 	var zoom = _get_brush_zoom()
 	var stroke = selection.stroke
+	
+	var polygon = stroke.polygon if selection.hole_id == -1 else stroke.holes[selection.hole_id]
+	
 	for i in selection.vertex_indexes.size() - 1:
-		var from = stroke.polygon[selection.vertex_indexes[i]]
-		var to = stroke.polygon[selection.vertex_indexes[i + 1]]
+		var from = polygon[selection.vertex_indexes[i]]
+		var to = polygon[selection.vertex_indexes[i + 1]]
 		var thickness_from = selection.vertex_weights[i]
 		var thickness_to = selection.vertex_weights[i+1]
 		
@@ -1012,7 +1017,10 @@ func action_warp_process(action_position):
 		for i in selection.get_vertex_count():
 			var index = selection.vertex_indexes[i]
 			var weight = selection.vertex_weights[i]
-			selection.stroke.polygon[index] += move_delta * weight
+			if selection.hole_id == -1:
+				selection.stroke.polygon[index] += move_delta * weight
+			else:
+				selection.stroke.holes[selection.hole_id][index] += move_delta * weight
 			selection.stroke.draw()
 
 
@@ -1057,17 +1065,30 @@ func action_warp_complete():
 func _get_warp_selections(mouse_position):
 	action_warp_selections = []
 	for stroke: BrushStrokeData in _editing_brush.strokes:
-		var selection: ActionWarpSelection = _get_warp_selection(stroke, mouse_position, _action_warp_size)
+		var selection: ActionWarpSelection = _get_warp_selection(
+				stroke, stroke.polygon, stroke.polygon_curve,
+				mouse_position, _action_warp_size
+			)
 		if selection:
 			action_warp_selections.push_back(selection)
+		
+		## Holes
+		for i in stroke.holes.size():
+			var selection_hole: ActionWarpSelection = _get_warp_selection(
+					stroke, stroke.holes[i], stroke.hole_curves[i],
+					mouse_position, _action_warp_size
+				)
+			if selection_hole:
+				selection_hole.hole_id = i
+				action_warp_selections.push_back(selection_hole)
 
 
-func _get_warp_selection(stroke: BrushStrokeData, action_position: Vector2, range: float) -> ActionWarpSelection:
+func _get_warp_selection(stroke, polygon, curve, action_position: Vector2, range: float) -> ActionWarpSelection:
 	if _action_rmb:
 		var selection := ActionWarpSelection.new(stroke)
-		var l = stroke.polygon.size()
+		var l = polygon.size()
 		for i in l:
-			var distance = stroke.polygon[i].distance_to(action_position)
+			var distance = polygon[i].distance_to(action_position)
 			if distance < range:
 				var t = 1.0 - distance / range
 				var weight = _warp_ease(t)
@@ -1076,13 +1097,12 @@ func _get_warp_selection(stroke: BrushStrokeData, action_position: Vector2, rang
 			return selection
 		return null
 	
-	var closest_point_on_edge = stroke.polygon_curve.get_closest_point(action_position)
+	var closest_point_on_edge = curve.get_closest_point(action_position)
 	var distance_to_edge = closest_point_on_edge.distance_to(action_position)
 	
 	if distance_to_edge > 6.0 / _get_brush_zoom():
 		return null
 	
-	var polygon = stroke.polygon
 	var l = polygon.size()
 	var closest_vertex_i: int = -1
 	var closest_distance: float = 999.0
@@ -1154,7 +1174,11 @@ func _get_warp_selection(stroke: BrushStrokeData, action_position: Vector2, rang
 func _action_warp_draw(brush):
 	for selection: ActionWarpSelection in action_warp_selections:
 		_draw_warp_selection(selection)
-		brush.draw_polygon_outline(selection.stroke.polygon, 1.0 / _get_brush_zoom(), Color.WHITE, 0.5)
+		if selection.hole_id == -1:
+			brush.draw_polygon_outline(selection.stroke.polygon, 1.0 / _get_brush_zoom(), Color.WHITE, 0.5)
+		else:
+			brush.draw_polygon_outline(selection.stroke.holes[selection.hole_id], 1.0 / _get_brush_zoom(), Color.WHITE, 0.5)
+		
 
 
 func _warp_ease(t):
@@ -1176,6 +1200,8 @@ class ActionWarpSelection:
 	var vertex_weights := []
 	var closest_point: Vector2
 	
+	var hole_id := -1
+	
 	func _init(stroke: BrushStrokeData):
 		self.stroke = stroke
 	
@@ -1193,9 +1219,6 @@ class ActionWarpSelection:
 	func get_vertex_count() -> int:
 		return vertex_indexes.size()
 
-
-class ActionWarpSelectionHole extends ActionWarpSelection:
-	var hole_id := 0
 
 #endregion
 
@@ -1228,6 +1251,7 @@ func action_move_complete():
 	_editing_brush.edited.emit()
 	if editing_node is BrushClip2D:
 		editing_node.edited.emit()
+	
 	undo_redo_strokes_complete("Move Stroke")
 
 #endregion
@@ -1619,10 +1643,13 @@ func _merge_stroke(merging_stroke):
 		_editing_brush.remove_stroke(stroke)
 		if merging_stroke.is_stroke_overlapping(stroke):
 			if merging_stroke.color.to_html() == stroke.color.to_html():
+				# Same color, merge
 				merging_stroke.union_stroke(stroke)
 			else:
+				# Different color, subtract
 				merged_strokes.append_array(stroke.subtract_stroke(merging_stroke))
 		else:
+			# No overlap, no operations
 			merged_strokes.push_back(stroke)
 	
 	merged_strokes.push_back(merging_stroke)

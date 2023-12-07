@@ -118,12 +118,14 @@ func subtract_stroke(stroke: BrushStrokeData) -> Array:
 	
 	for hole in holes:
 		if Geometry2D.intersect_polygons(subtract_polygon, hole).size() > 0:
+			
 			var result_polygons = Geometry2D.merge_polygons(subtract_polygon, hole)
 			for result_polygon in result_polygons:
 				if Geometry2D.is_polygon_clockwise(result_polygon):
-					## island inside hole, make a new stroke
+					## island inside hole, make a new stroke, not sure if this is needed?
 					result_polygon.reverse()
 					subtracted_strokes.push_back(create_stroke(result_polygon))
+					printt("ITS NEEDED?")
 				else:
 					subtract_polygon = result_polygon
 		else:
