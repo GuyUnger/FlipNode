@@ -1,0 +1,219 @@
+[gd_scene load_steps=10 format=3 uid="uid://dg2r2pc80m4n6"]
+
+[ext_resource type="Script" path="res://color_picker.gd" id="1_14mjf"]
+[ext_resource type="Texture2D" uid="uid://cgncliji5i1vv" path="res://addons/goolash/icons/temperature.svg" id="2_xoe2n"]
+
+[sub_resource type="Shader" id="Shader_4ss2x"]
+code = "shader_type canvas_item;
+render_mode blend_mix;
+
+
+uniform float h = 0.0;
+uniform float temperature = 1.0;
+
+
+vec3 hsv2rgb(vec3 hsv) {
+	vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
+	vec3 p = abs(fract(hsv.xxx + K.xyz) * 6.0 - K.www);
+	return hsv.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), hsv.y);
+}
+
+vec3 rgb2hsv(vec3 rgb) {
+	vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
+	vec4 p = mix(vec4(rgb.bg, K.wz), vec4(rgb.gb, K.xy), step(rgb.b, rgb.g));
+	vec4 q = mix(vec4(p.xyw, rgb.r), vec4(rgb.r, p.yzx), step(p.x, rgb.r));
+	
+	float d = q.x - min(q.w, q.y);
+	float e = 1.0e-10;
+	return vec3(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x);
+}
+
+void fragment() {
+	vec2 uv = UV;
+	uv = uv * 1.02 - 0.01;
+	uv = clamp(uv, vec2(0.0), vec2(1.0));
+	
+	vec3 hsv_in = vec3(h, uv.x, 1.0 - uv.y);
+	
+	hsv_in.y = 1.0 - pow(1.0 - hsv_in.y, 1.5);
+	
+	vec3 hsv = hsv_in;
+	
+	hsv.y *= mix(1.0, hsv.z, 0.4);
+	hsv.y = 1.0 - pow(1.0 - hsv.y, 2.0);
+	
+	vec3 color = hsv2rgb(hsv);
+	
+	color = mix(color, hsv2rgb(vec3(0.66, hsv.y, hsv.z)), (1.0 - hsv_in.z) * 0.8 );
+	color = mix(color, hsv2rgb(vec3(0.16, hsv.y, hsv.z)), (1.0 - hsv_in.y) * 0.7 );
+	
+	
+	vec3 blue_yellow = mix(vec3(0.15, 0.4, 0.6), vec3(1.0, 1.0, 0.4), pow(hsv_in.z, 2.0 - uv.x * 1.5) );
+	color = mix(color, blue_yellow, sin(hsv_in.z * PI) * 0.12);
+	
+	color = rgb2hsv(color);
+	color.y = mix(hsv_in.y, 1.0 - pow(1.0 - color.y, 1.5), 0.8);
+	color = hsv2rgb(color);
+	
+	COLOR.rgb = mix(hsv2rgb(hsv_in), color, temperature);
+	COLOR.a = 1.0;
+}"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_0ky5e"]
+shader = SubResource("Shader_4ss2x")
+shader_parameter/h = 0.56875
+shader_parameter/temperature = 1.0
+
+[sub_resource type="Shader" id="Shader_ibu26"]
+code = "shader_type canvas_item;
+render_mode blend_mix;
+
+
+vec3 hsv2rgb(vec3 hsv) {
+	vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
+	vec3 p = abs(fract(hsv.xxx + K.xyz) * 6.0 - K.www);
+	return hsv.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), hsv.y);
+}
+
+
+void fragment() {
+	COLOR.rgb = hsv2rgb(vec3(UV.y, 1.0, 1.0) );
+}"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1rahm"]
+shader = SubResource("Shader_ibu26")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_l4rbg"]
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rvy3c"]
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5vjvl"]
+bg_color = Color(1, 1, 1, 1)
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[node name="ColorPicker" type="PanelContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -1002.0
+offset_bottom = -438.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_14mjf")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 2
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 2
+theme_override_constants/margin_bottom = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 120)
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="MarginContainer/VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="MarginContainer/VBoxContainer/HBoxContainer2/SubViewportContainer"]
+unique_name_in_owner = true
+handle_input_locally = false
+size = Vector2i(126, 120)
+render_target_update_mode = 4
+
+[node name="Palette" type="ColorRect" parent="MarginContainer/VBoxContainer/HBoxContainer2/SubViewportContainer/SubViewport"]
+unique_name_in_owner = true
+material = SubResource("ShaderMaterial_0ky5e")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HuePicker" type="Panel" parent="MarginContainer/VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
+material = SubResource("ShaderMaterial_1rahm")
+custom_minimum_size = Vector2(20, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_l4rbg")
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+texture = ExtResource("2_xoe2n")
+stretch_mode = 2
+
+[node name="Temperature" type="HSlider" parent="MarginContainer/VBoxContainer/HBoxContainer3"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+max_value = 1.0
+step = 0.02
+value = 0.8
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="MarginContainer2" type="MarginContainer" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_bottom = 6
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer2"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer2/HBoxContainer"]
+modulate = Color(1, 1, 1, 0.52549)
+layout_mode = 2
+text = "#"
+
+[node name="LineEditHex" type="LineEdit" parent="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer2/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "000000"
+max_length = 6
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 2
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 2
+theme_override_constants/margin_bottom = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="ColorPreviewTop" type="Panel" parent="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+modulate = Color(0, 0, 0, 1)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_rvy3c")
+
+[node name="ColorPreviewBottom" type="Panel" parent="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_5vjvl")
+
+[connection signal="value_changed" from="MarginContainer/VBoxContainer/HBoxContainer3/Temperature" to="." method="_on_temperature_value_changed"]
