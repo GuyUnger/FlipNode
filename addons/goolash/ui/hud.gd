@@ -147,9 +147,9 @@ func _input(event):
 		GoolashEditor.allow_custom_cursor = true
 		if %Tools.get_rect().has_point(get_local_mouse_position()):
 			GoolashEditor.allow_custom_cursor = false
-		if %ColorPicker.get_rect().has_point(get_local_mouse_position()):
+		if %ColorPicker.get_rect().has_point(%ColorPanels.get_local_mouse_position()):
 			GoolashEditor.allow_custom_cursor = false
-		if %Swatches.get_rect().has_point(get_local_mouse_position()):
+		if %Swatches.get_rect().has_point(%ColorPanels.get_local_mouse_position()):
 			GoolashEditor.allow_custom_cursor = false
 		
 		if %MenuPaintMode.visible:

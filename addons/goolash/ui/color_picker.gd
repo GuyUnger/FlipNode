@@ -1,5 +1,5 @@
 @tool
-extends PanelContainer
+extends Panel
 
 @onready var container: SubViewportContainer = %SubViewportContainer 
 @onready var viewport: SubViewport = %SubViewport
