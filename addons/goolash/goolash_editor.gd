@@ -512,6 +512,7 @@ func _on_key_pressed(event: InputEventKey) -> bool:
 			elif current_tool == TOOL_SELECT:
 				_action_warp_size *= 1 / (2.0 ** (1.0 / 6.0))
 				_action_warp_size_preview_t = 1.0
+				_get_warp_selections(_editing_brush.get_local_mouse_position())
 				return true
 		key_tool_size_increase:
 			if current_tool == TOOL_PAINT:
@@ -521,6 +522,7 @@ func _on_key_pressed(event: InputEventKey) -> bool:
 			elif current_tool == TOOL_SELECT:
 				_action_warp_size *= 2.0 ** (1.0 / 6.0)
 				_action_warp_size_preview_t = 1.0
+				_get_warp_selections(_editing_brush.get_local_mouse_position())
 				return true
 		key_erase_mode:
 			set_erase_mode(true)
@@ -659,7 +661,7 @@ func _process(delta):
 		_queue_redraw()
 	
 	if _action_warp_size_preview_t > 0.0:
-		_action_warp_size_preview_t -= delta
+		_action_warp_size_preview_t -= delta / 0.45
 	
 	_selected_highlight = move_toward(_selected_highlight, 0.0, delta / 0.5)
 
@@ -955,7 +957,8 @@ func _draw_custom_cursor():
 			hud.draw_circle(cursor_position, 2.0, Color.WHITE)
 		TOOL_SELECT:
 			if _action_warp_size_preview_t > 0.0 and action_warp_selections.size() == 0:
-				_draw_circle_outline(hud, cursor_position, _action_warp_size * zoom, Color(1.0, 1.0, 1.0, _action_warp_size_preview_t), 1.0)
+				var color = Color(1.0, 1.0, 1.0, ease(_action_warp_size_preview_t, 0.4) * 0.2)
+				_draw_circle_outline(hud, cursor_position, _action_warp_size * zoom, color, 0.5)
 		TOOL_EYEDROPPER:
 			var preview_size := 20.0
 			for stroke: BrushStrokeData in _editing_brush.strokes:
@@ -1276,10 +1279,11 @@ func action_fill_try(action_position: Vector2):
 		_merge_stroke(stroke_under_mouse)
 		undo_redo_strokes_complete("Bucket Fill Recolor")
 		return
+	var hole_filled := false
+	undo_redo_strokes_start()
 	for stroke: BrushStrokeData in _editing_brush.strokes:
 		for i in stroke.holes.size():
 			if Geometry2D.is_point_in_polygon(action_position, stroke.holes[i]):
-				undo_redo_strokes_start()
 				if stroke.color.to_html() == current_color.to_html():
 					stroke.holes.remove_at(i)
 					for stroke_inside in _editing_brush.strokes:
@@ -1295,8 +1299,9 @@ func action_fill_try(action_position: Vector2):
 					_editing_brush.add_stroke(fill_stroke)
 				stroke.draw()
 				_editing_brush.edited.emit()
-				undo_redo_strokes_complete("Bucket Fill Hole")
-				return
+				hole_filled = true
+	if hole_filled:
+		undo_redo_strokes_complete("Bucket Fill Hole")
 
 #endregion
 

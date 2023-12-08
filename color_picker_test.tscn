@@ -1,7 +1,9 @@
-[gd_scene load_steps=10 format=3 uid="uid://dg2r2pc80m4n6"]
+[gd_scene load_steps=13 format=3 uid="uid://dg2r2pc80m4n6"]
 
 [ext_resource type="Script" path="res://color_picker.gd" id="1_14mjf"]
+[ext_resource type="Script" path="res://addons/goolash/brush2d.gd" id="2_tgr2u"]
 [ext_resource type="Texture2D" uid="uid://cgncliji5i1vv" path="res://addons/goolash/icons/temperature.svg" id="2_xoe2n"]
+[ext_resource type="Script" path="res://addons/goolash/brush_stroke_data.gd" id="3_syvko"]
 
 [sub_resource type="Shader" id="Shader_4ss2x"]
 code = "shader_type canvas_item;
@@ -61,8 +63,14 @@ void fragment() {
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_0ky5e"]
 shader = SubResource("Shader_4ss2x")
-shader_parameter/h = 0.56875
+shader_parameter/h = 0.385898
 shader_parameter/temperature = 1.0
+
+[sub_resource type="Resource" id="Resource_y6xak"]
+script = ExtResource("3_syvko")
+color = Color(0.803922, 0.662745, 0.670588, 1)
+polygon = PackedVector2Array(0.51138, -2.8013, 3.00581, 0.93186, -0.72735, 3.42629, -3.22178, -0.30687, -0.10798, -2.8623)
+holes = Array[PackedVector2Array]([])
 
 [sub_resource type="Shader" id="Shader_ibu26"]
 code = "shader_type canvas_item;
@@ -99,6 +107,7 @@ corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
 
 [node name="ColorPicker" type="PanelContainer"]
+self_modulate = Color(0.486275, 0.615686, 0.4, 1)
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -144,12 +153,31 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
+[node name="SVIndicator" type="Node2D" parent="MarginContainer/VBoxContainer/HBoxContainer2/SubViewportContainer"]
+unique_name_in_owner = true
+position = Vector2(35.2559, 42.5546)
+
+[node name="Brush2D" type="Node2D" parent="MarginContainer/VBoxContainer/HBoxContainer2/SubViewportContainer/SVIndicator"]
+script = ExtResource("2_tgr2u")
+strokes = [SubResource("Resource_y6xak")]
+bounciness = 0.0
+
 [node name="HuePicker" type="Panel" parent="MarginContainer/VBoxContainer/HBoxContainer2"]
 unique_name_in_owner = true
 material = SubResource("ShaderMaterial_1rahm")
 custom_minimum_size = Vector2(20, 0)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_l4rbg")
+
+[node name="HueIndicator" type="ColorRect" parent="MarginContainer/VBoxContainer/HBoxContainer2/HuePicker"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 1)
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 46.3078
+offset_bottom = 47.3078
+grow_horizontal = 2
 
 [node name="HBoxContainer3" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 20)
@@ -167,7 +195,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 1
 max_value = 1.0
 step = 0.02
-value = 0.8
+value = 0.5
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
@@ -212,6 +240,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_rvy3c")
 
 [node name="ColorPreviewBottom" type="Panel" parent="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
+modulate = Color(0.486275, 0.615686, 0.4, 1)
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_5vjvl")

@@ -75,13 +75,12 @@ theme_override_constants/margin_bottom = 5
 layout_mode = 2
 
 [node name="ColorPicker" type="ColorPicker" parent="Colors/MarginContainer/VBoxContainer"]
-unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/margin = 0
 theme_override_constants/sv_width = 0
 theme_override_constants/sv_height = 130
 theme_override_constants/h_width = 18
-color = Color(0.245261, 0.174126, 0.253846, 1)
+color = Color(0.803922, 0.662745, 0.670588, 1)
 can_add_swatches = false
 color_modes_visible = false
 sliders_visible = false
@@ -450,7 +449,8 @@ layout_mode = 2
 text = "Size"
 horizontal_alignment = 1
 
-[node name="Node2D" parent="." instance=ExtResource("17_rwuw1")]
+[node name="ColorPicker" parent="." instance=ExtResource("17_rwuw1")]
+unique_name_in_owner = true
 layout_mode = 1
 offset_left = 996.0
 offset_top = 13.0
@@ -463,29 +463,29 @@ offset_bottom = -437.0
 [connection signal="mouse_entered" from="Swatches" to="." method="_on_colors_mouse_entered"]
 [connection signal="mouse_exited" from="Swatches" to="." method="_on_colors_mouse_exited"]
 [connection signal="pressed" from="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/ButtonUsedColor" to="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/ButtonUsedColor" method="_on_pressed"]
-[connection signal="pressed" from="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@255590" to="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@255590" method="_on_pressed"]
-[connection signal="pressed" from="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@255591" to="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@255591" method="_on_pressed"]
-[connection signal="pressed" from="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@255592" to="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@255592" method="_on_pressed"]
-[connection signal="pressed" from="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@255593" to="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@255593" method="_on_pressed"]
-[connection signal="pressed" from="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@255594" to="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@255594" method="_on_pressed"]
-[connection signal="pressed" from="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@255595" to="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@255595" method="_on_pressed"]
-[connection signal="pressed" from="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@255596" to="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@255596" method="_on_pressed"]
-[connection signal="pressed" from="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@255597" to="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@255597" method="_on_pressed"]
-[connection signal="pressed" from="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@255598" to="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@255598" method="_on_pressed"]
-[connection signal="pressed" from="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@255599" to="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@255599" method="_on_pressed"]
-[connection signal="pressed" from="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@255600" to="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@255600" method="_on_pressed"]
-[connection signal="pressed" from="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@255601" to="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@255601" method="_on_pressed"]
-[connection signal="pressed" from="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@255602" to="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@255602" method="_on_pressed"]
-[connection signal="pressed" from="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@255603" to="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@255603" method="_on_pressed"]
-[connection signal="pressed" from="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@255604" to="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@255604" method="_on_pressed"]
-[connection signal="pressed" from="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@255605" to="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@255605" method="_on_pressed"]
-[connection signal="pressed" from="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@255606" to="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@255606" method="_on_pressed"]
-[connection signal="pressed" from="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@255607" to="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@255607" method="_on_pressed"]
-[connection signal="pressed" from="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@255608" to="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@255608" method="_on_pressed"]
-[connection signal="pressed" from="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@255609" to="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@255609" method="_on_pressed"]
-[connection signal="pressed" from="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@255610" to="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@255610" method="_on_pressed"]
-[connection signal="pressed" from="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@255611" to="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@255611" method="_on_pressed"]
-[connection signal="pressed" from="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@255612" to="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@255612" method="_on_pressed"]
+[connection signal="pressed" from="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@136734" to="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@136734" method="_on_pressed"]
+[connection signal="pressed" from="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@136735" to="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@136735" method="_on_pressed"]
+[connection signal="pressed" from="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@136736" to="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@136736" method="_on_pressed"]
+[connection signal="pressed" from="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@136737" to="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@136737" method="_on_pressed"]
+[connection signal="pressed" from="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@136738" to="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@136738" method="_on_pressed"]
+[connection signal="pressed" from="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@136739" to="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@136739" method="_on_pressed"]
+[connection signal="pressed" from="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@136740" to="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@136740" method="_on_pressed"]
+[connection signal="pressed" from="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@136741" to="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@136741" method="_on_pressed"]
+[connection signal="pressed" from="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@136742" to="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@136742" method="_on_pressed"]
+[connection signal="pressed" from="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@136743" to="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@136743" method="_on_pressed"]
+[connection signal="pressed" from="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@136744" to="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@136744" method="_on_pressed"]
+[connection signal="pressed" from="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@136745" to="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@136745" method="_on_pressed"]
+[connection signal="pressed" from="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@136746" to="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@136746" method="_on_pressed"]
+[connection signal="pressed" from="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@136747" to="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@136747" method="_on_pressed"]
+[connection signal="pressed" from="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@136748" to="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@136748" method="_on_pressed"]
+[connection signal="pressed" from="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@136749" to="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@136749" method="_on_pressed"]
+[connection signal="pressed" from="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@136750" to="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@136750" method="_on_pressed"]
+[connection signal="pressed" from="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@136751" to="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@136751" method="_on_pressed"]
+[connection signal="pressed" from="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@136752" to="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@136752" method="_on_pressed"]
+[connection signal="pressed" from="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@136753" to="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@136753" method="_on_pressed"]
+[connection signal="pressed" from="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@136754" to="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@136754" method="_on_pressed"]
+[connection signal="pressed" from="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@136755" to="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@136755" method="_on_pressed"]
+[connection signal="pressed" from="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@136756" to="Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@136756" method="_on_pressed"]
 [connection signal="pressed" from="Tools/MarginContainer/VBoxContainer/Tools/ButtonSelect" to="." method="_on_button_select_pressed"]
 [connection signal="pressed" from="Tools/MarginContainer/VBoxContainer/Tools/ButtonPaint" to="." method="_on_button_paint_pressed"]
 [connection signal="pressed" from="Tools/MarginContainer/VBoxContainer/Tools/ButtonOval" to="." method="_on_button_oval_pressed"]
