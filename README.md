@@ -35,16 +35,14 @@ Use <kbd>LMB</kbd> to Draw and <kbd>RMB</kbd> to Erase with any tool. To reverse
 <kbd>[</kbd> and <kbd>]</kbd> to shrink/grow tool size.
 
 ## ![Brush2D](https://github.com/GuyUnger/Goolash/assets/7023847/733e6067-de70-457d-8ea5-752eb3c3399d) Brush2D
-### For simple drawings and physics objects.
 
 You can setup the physics mode in the inspector.
 
-## ![BrushClip2D](https://github.com/GuyUnger/Goolash/assets/7023847/1804c5d6-831e-4b21-b4bf-7842e6563ca6) BrushClip2D
-### For animations.
+## ![BrushClip2D](https://github.com/GuyUnger/Goolash/assets/7023847/1804c5d6-831e-4b21-b4bf-7842e6563ca6) BrushAnimation2D
 It's recommended to interact with the Layers and Keyframe nodes from the Timeline panel, they are exposed so you can add any nodes to Keyframes.
 
 ## Timeline
-BrushClips can have their own FPS, if left empty it will use the project default value.
+BrushAnimations can have their own FPS, if left empty it will use the project default value.
 
 ![Onion](https://github.com/GuyUnger/Goolash/assets/7023847/f6701b01-a758-4bb0-8a4e-6a42c6e5937d) Toggle onion skinning to see previews of next/previous frames.
 
