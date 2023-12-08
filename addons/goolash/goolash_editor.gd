@@ -59,7 +59,7 @@ var default_swatches := PackedColorArray([
 		Color("000000"), Color("181923"), Color("37353c"),
 		Color("696764"), Color("c1b3ac"), Color("ffffff"),
 	])
-var current_tool: int = -1
+var current_tool: int = TOOL_PAINT
 var current_tool_override: int = -1
 var current_color: Color = Color.WHITE
 
@@ -950,7 +950,8 @@ func _draw_custom_cursor():
 				_draw_circle_outline(hud, cursor_position, size - 1.0, Color.BLACK, 1.0)
 				_draw_circle_outline(hud, cursor_position, size + 1.0, Color.WHITE, 1.0)
 			else:
-				_draw_circle_outline(hud, cursor_position, _action_paint_erase_size * zoom, Color.BLACK, 1.0, true)
+				var size = _action_paint_erase_size * 0.5 * zoom
+				_draw_circle_outline(hud, cursor_position, size, Color.BLACK, 1.0, true)
 			if not (_current_action == ACTION_PAINT and not _action_rmb):
 				var size = _action_paint_erase_size * 0.5 * zoom
 				_draw_circle_outline(hud, cursor_position, size - 1.0, Color.BLACK, 1.0, true)
