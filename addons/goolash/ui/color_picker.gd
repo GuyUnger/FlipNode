@@ -17,17 +17,22 @@ func _ready():
 	set_process(false)
 
 
+func set_color(color: Color):
+	#TODO: double places where visuals are set
+	var valley = find_valley(color)
+	%ColorPreviewTop.modulate = get_color(valley.x, valley.y, valley.z)
+	%ColorPreviewBottom.modulate = get_color(valley.x, valley.y, valley.z)
+	
+	picking_position = Vector2(valley.y, 1.0 - valley.z) * Vector2(viewport.size)
+	h = valley.x
+	#%HueIndicator.position.y = h * hue_picker.get_rect().size.y
+	
+	queue_redraw()
+	
+	return
+
+
 func _process(delta):
-	#var valley = find_valley(self_modulate)
-	#%ColorPreviewTop.modulate = get_color(valley.x, valley.y, valley.z)
-	#%ColorPreviewBottom.modulate = self_modulate
-	#
-	#%SVIndicator.position = Vector2(valley.y, 1.0 - valley.z) * Vector2(viewport.size)
-	#%HueIndicator.position.y = valley.x * hue_picker.get_rect().size.y
-	#%Palette.material.set_shader_parameter("h", valley.x)
-	#
-	#
-	#return
 	var texture: ViewportTexture = viewport.get_texture()
 	
 	match mode:
@@ -35,20 +40,24 @@ func _process(delta):
 			picking_position = container.get_local_mouse_position()
 			picking_position.x = clamp(picking_position.x, 0, viewport.size.x - 1)
 			picking_position.y = clamp(picking_position.y, 0, viewport.size.y - 1)
-			%SVIndicator.position = picking_position
 		MODE_PICKING_HUE:
 			h = hue_picker.get_local_mouse_position().y / hue_picker.get_rect().size.y
 			h = clamp(h, 0, 1.0)
-			%HueIndicator.position.y = h * hue_picker.get_rect().size.y
-			%Palette.material.set_shader_parameter("h", h)
 	
-	#var color_to = texture.get_image().get_pixel(picking_position.x, picking_position.y)
+	queue_redraw()
+	
 	var sv = picking_position / Vector2(viewport.size)
 	var color_to = get_color(h, sv.x, 1.0 - sv.y)
 	GoolashEditor.editor.current_color = color_to
 	
 	%ColorPreviewTop.modulate = color_to
 	%LineEditHex.text = color_to.to_html()
+
+
+func _draw():
+	draw_circle(picking_position, 2.0, Color.WHITE)
+	%HueIndicator.position.y = h * hue_picker.get_rect().size.y
+	%Palette.material.set_shader_parameter("h", h)
 
 
 func _input(event):

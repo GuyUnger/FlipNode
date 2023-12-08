@@ -33,6 +33,8 @@ var _forward_draw_requested := false
 
 var alpha := 1.0
 
+var static_body = StaticBody2D.new()
+
 func _validate_property(property):
 	match property.name:
 		"bounciness":
@@ -58,13 +60,13 @@ func _ready():
 			PhysicsMode.NONE:
 				init_strokes()
 			PhysicsMode.STATIC:
-				call_deferred("_generate_static_body")
+				call_deferred("generate_static_body")
 				init_strokes()
 			PhysicsMode.RIGID:
 				call_deferred("_generate_rigid_body")
 
 
-func add_stroke(stroke: BrushStrokeData):
+func add_stroke(stroke: BrushStroke):
 	#TODO: not sure if this is the best way to handle stroke data and strokes
 	strokes.push_back(stroke)
 	
@@ -75,7 +77,7 @@ func add_stroke(stroke: BrushStrokeData):
 	stroke_graphic.material = get_override_material(stroke)
 
 
-func remove_stroke(stroke_data: BrushStrokeData):
+func remove_stroke(stroke_data: BrushStroke):
 	strokes.erase(stroke_data)
 	remove_child(stroke_data.graphic)
 	stroke_data.graphic = null
@@ -86,12 +88,12 @@ func init_strokes():
 		init_stroke_graphic(stroke)
 
 
-func move_stroke_to_back(stroke_data: BrushStrokeData):
+func move_stroke_to_back(stroke_data: BrushStroke):
 	strokes.erase(stroke_data)
 	strokes.push_front(stroke_data)
 
 
-func move_stroke_to_front(stroke_data: BrushStrokeData):
+func move_stroke_to_front(stroke_data: BrushStroke):
 	strokes.erase(stroke_data)
 	strokes.push_back(stroke_data)
 
@@ -105,7 +107,7 @@ func redraw_all():
 		init_stroke_graphic(stroke)
 
 
-func init_stroke_graphic(stroke: BrushStrokeData):
+func init_stroke_graphic(stroke: BrushStroke):
 	var stroke_graphic = BrushStroke2D.new()
 	stroke.graphic = stroke_graphic
 	add_child(stroke_graphic)
@@ -113,14 +115,17 @@ func init_stroke_graphic(stroke: BrushStrokeData):
 	stroke.draw()
 
 
-func _generate_static_body():
-	var body = StaticBody2D.new()
-	body.collision_layer = collision_layer
-	body.collision_mask = collision_mask
-	add_child(body)
+func generate_static_body():
+	if not static_body:
+		static_body = StaticBody2D.new()
+	for c in static_body.get_children():
+		c.queue_free()
+	static_body.collision_layer = collision_layer
+	static_body.collision_mask = collision_mask
+	add_child(static_body)
 	for polygon in get_islands():
 		var collision_polygon = CollisionPolygon2D.new()
-		body.add_child(collision_polygon)
+		static_body.add_child(collision_polygon)
 		collision_polygon.polygon = GoolashEditor.douglas_peucker(polygon, 3.0)
 
 
@@ -152,7 +157,7 @@ func _generate_rigid_body():
 		
 		var stroke = BrushStroke2D.new()
 		rigidbody.add_child(stroke)
-		stroke.init(BrushStrokeData.new(polygon, [], strokes[0].color))
+		stroke.init(BrushStroke.new(polygon, [], strokes[0].color))
 
 
 func get_islands():
@@ -174,11 +179,6 @@ func get_islands():
 		islands.push_back(merging_polygon)
 	
 	return islands
-
-
-#func _process(delta):
-	#if Engine.is_editor_hint():
-		#queue_redraw()
 
 
 func _draw():
@@ -223,3 +223,60 @@ func get_override_material(stroke) -> Material:
 	else:
 		var material = GoolashEditor.StrokeRegularMaterial
 		return material
+
+
+func merge_stroke(merging_stroke: BrushStroke):
+	if strokes.has(merging_stroke):
+		remove_stroke(merging_stroke)
+	
+	var merged_strokes := []
+	while strokes.size() > 0:
+		var stroke = strokes[0]
+		remove_stroke(stroke)
+		if merging_stroke.is_stroke_overlapping(stroke):
+			if merging_stroke.color.to_html() == stroke.color.to_html():
+				# Same color, merge
+				merging_stroke.union_stroke(stroke)
+			else:
+				# Different color, subtract
+				merged_strokes.append_array(stroke.subtract_stroke(merging_stroke))
+		else:
+			# No overlap, no operations
+			merged_strokes.push_back(stroke)
+	
+	merged_strokes.push_back(merging_stroke)
+	
+	for stroke in merged_strokes:
+		add_stroke(stroke)
+	
+	edited.emit()
+
+
+func subtract_stroke(subtracting_stroke: BrushStroke):
+	if strokes.has(subtracting_stroke):
+		remove_stroke(subtracting_stroke)
+	
+	var subtracted_strokes := []
+	while strokes.size() > 0:
+		var stroke: BrushStroke = strokes[0]
+		remove_stroke(stroke)
+		subtracted_strokes.append_array(stroke.subtract_stroke(subtracting_stroke))
+	
+	for stroke in subtracted_strokes:
+		add_stroke(stroke)
+	
+	edited.emit()
+
+
+func subtract_polygon(subtracting_polygon: PackedVector2Array):
+	var subtracted_strokes := []
+	
+	while strokes.size() > 0:
+		var stroke: BrushStroke = strokes[0]
+		remove_stroke(stroke)
+		subtracted_strokes.append_array(stroke.subtract_polygon(subtracting_polygon))
+	
+	for stroke in subtracted_strokes:
+		add_stroke(stroke)
+	
+	edited.emit()

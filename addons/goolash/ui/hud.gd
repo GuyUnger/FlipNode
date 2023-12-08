@@ -122,7 +122,7 @@ func _on_color_picker_color_changed(color):
 
 
 func _update_color_picker_color():
-	%ColorPicker.color = GoolashEditor.editor.current_color
+	%ColorPicker.set_color(GoolashEditor.editor.current_color)
 
 
 func show_properties(properties = null):

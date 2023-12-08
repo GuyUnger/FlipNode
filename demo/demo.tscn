@@ -1,6 +1,6 @@
 [gd_scene load_steps=41 format=3 uid="uid://dwb5hc6vf180k"]
 
-[ext_resource type="Script" path="res://addons/goolash/brush_stroke_data.gd" id="4_cmco8"]
+[ext_resource type="Script" path="res://addons/goolash/brush_stroke.gd" id="4_cmco8"]
 [ext_resource type="Script" path="res://addons/goolash/brush2d.gd" id="6_ibm72"]
 
 [sub_resource type="Curve2D" id="Curve2D_6npvw"]

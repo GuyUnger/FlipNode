@@ -1,5 +1,5 @@
 @tool
-class_name BrushStrokeData
+class_name BrushStroke
 extends Resource
 
 @export var color: Color
@@ -9,7 +9,7 @@ extends Resource
 var graphic: BrushStroke2D
 
 ## Curves
-var polygon_curve: Curve2D:
+var polygon_curve: Curve2D: 
 	get:
 		if _curves_dirty:
 			create_curves()
@@ -35,7 +35,7 @@ func draw():
 		graphic.draw_stroke(self)
 
 
-func union_stroke(stroke: BrushStrokeData):
+func union_stroke(stroke: BrushStroke):
 	var polygon_a = polygon.duplicate()
 	var polygon_b = stroke.polygon.duplicate()
 	var holes_a = holes
@@ -104,7 +104,7 @@ func union_polygon(with_polygon: PackedVector2Array):
 	_curves_dirty = true
 
 
-func subtract_stroke(stroke: BrushStrokeData) -> Array:
+func subtract_stroke(stroke: BrushStroke) -> Array:
 	if not is_stroke_overlapping(stroke):
 		return [self]
 	
@@ -184,7 +184,7 @@ func subtract_stroke(stroke: BrushStrokeData) -> Array:
 	return subtracted_strokes
 
 
-func subtract_polygon(subtracting_polygon: PackedVector2Array):
+func subtract_polygon(subtracting_polygon: PackedVector2Array) -> Array:
 	var subtracted_strokes := []
 	var hole_merged := false
 	var merged_holes: Array[PackedVector2Array]
@@ -214,7 +214,7 @@ func subtract_polygon(subtracting_polygon: PackedVector2Array):
 	return subtracted_strokes
 
 
-func mask_stroke(stroke: BrushStrokeData):
+func mask_stroke(stroke: BrushStroke) -> Array:
 	var masked_strokes := []
 	
 	var results = Geometry2D.intersect_polygons(polygon, stroke.polygon)
@@ -246,11 +246,11 @@ func _translate_polygon(polygon: PackedVector2Array, offset: Vector2) -> PackedV
 	return polygon
 
 
-func create_stroke(polygon: PackedVector2Array, holes: Array[PackedVector2Array] = []) -> BrushStrokeData:
-	return BrushStrokeData.new(polygon, holes, color)
+func create_stroke(polygon: PackedVector2Array, holes: Array[PackedVector2Array] = []) -> BrushStroke:
+	return BrushStroke.new(polygon, holes, color)
 
 
-func is_stroke_overlapping(stroke: BrushStrokeData) -> bool:
+func is_stroke_overlapping(stroke: BrushStroke) -> bool:
 	if Geometry2D.intersect_polygons(polygon, stroke.polygon).size() > 0:
 		if _is_inside_hole(stroke) or stroke._is_inside_hole(self):
 			return false
@@ -265,14 +265,14 @@ func is_polygon_overlapping(polygon: PackedVector2Array) -> bool:
 	return false
 
 
-func is_stroke_inside(stroke: BrushStrokeData) -> bool:
+func is_stroke_inside(stroke: BrushStroke) -> bool:
 	if Geometry2D.clip_polygons(polygon, stroke.polygon).size() == 0:
 		return not _is_inside_hole(stroke)
 	else:
 		return false
 
 
-func _is_inside_hole(stroke: BrushStrokeData) -> bool:
+func _is_inside_hole(stroke: BrushStroke) -> bool:
 	return _is_polygon_inside_hole(stroke.polygon)
 
 
@@ -357,4 +357,4 @@ func copy():
 	var holes_copy: Array[PackedVector2Array]
 	for hole in holes:
 		holes_copy.push_back(hole.duplicate())
-	return BrushStrokeData.new(polygon.duplicate(), holes_copy, color)
+	return BrushStroke.new(polygon.duplicate(), holes_copy, color)

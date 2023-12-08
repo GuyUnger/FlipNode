@@ -176,3 +176,4 @@ func remove_layer(layer: BrushLayer2D):
 	layer.owner = null
 	_find_layers()
 	_editing_layer_num = min(_editing_layer_num, layers.size() - 1)
+

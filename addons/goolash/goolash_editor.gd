@@ -46,8 +46,8 @@ static var timeline
 var _current_action: int
 var _action_position_previous: Vector2
 var _action_rmb := false
-var _action_stroke: BrushStrokeData
-var _action_brush_inside: BrushStrokeData
+var _action_stroke: BrushStroke
+var _action_brush_inside: BrushStroke
 
 var default_swatches := PackedColorArray([
 		Color("fc9735"), Color("ff192b"), Color("780d2a"),
@@ -356,7 +356,7 @@ func _edit_start(node):
 func _edit_brush_complete():
 	var i := 0
 	while i < _editing_brush.strokes.size():
-		var stroke_data: BrushStrokeData = _editing_brush.strokes[i]
+		var stroke_data: BrushStroke = _editing_brush.strokes[i]
 		if not stroke_data.is_valid():
 			_editing_brush.remove_stroke(stroke_data)
 		else:
@@ -837,7 +837,7 @@ func _action_start(mouse_position) -> bool:
 			action_fill_try(mouse_position)
 			return true
 		TOOL_EYEDROPPER:
-			for stroke: BrushStrokeData in _editing_brush.strokes:
+			for stroke: BrushStroke in _editing_brush.strokes:
 				if stroke.is_point_inside(mouse_position):
 					current_color = stroke.color
 					hud._update_color_picker_color()
@@ -903,7 +903,7 @@ func _forward_draw_brush(brush):
 	
 	
 	if _selected_highlight > 0.0:
-		for stroke: BrushStrokeData in brush.strokes:
+		for stroke: BrushStroke in brush.strokes:
 			if stroke.polygon.size() < 3 or stroke._erasing:
 				continue
 			brush.draw_stroke_outline(stroke, 1.0, godot_selection_color, ease(_selected_highlight, 0.2))
@@ -961,7 +961,7 @@ func _draw_custom_cursor():
 				_draw_circle_outline(hud, cursor_position, _action_warp_size * zoom, color, 0.5)
 		TOOL_EYEDROPPER:
 			var preview_size := 20.0
-			for stroke: BrushStrokeData in _editing_brush.strokes:
+			for stroke: BrushStroke in _editing_brush.strokes:
 				if stroke.is_point_inside(_editing_brush.get_local_mouse_position()):
 					hud.draw_circle(cursor_position, preview_size, stroke.color)
 					_draw_circle_outline(hud, cursor_position, preview_size, Color.WHITE)
@@ -1029,7 +1029,7 @@ func action_warp_process(action_position):
 
 func action_warp_complete():
 	for selection: ActionWarpSelection in action_warp_selections:
-		_merge_stroke(selection.stroke)
+		_editing_brush.merge_stroke(selection.stroke)
 	for selection: ActionWarpSelection in action_warp_selections:
 		selection.stroke.optimize()
 	for selection: ActionWarpSelection in action_warp_selections:
@@ -1051,7 +1051,7 @@ func action_warp_complete():
 				i += 1
 		_editing_brush.remove_stroke(selection.stroke)
 		for polygon in invert_fix_results:
-			var stroke = BrushStrokeData.new(polygon, [], selection.stroke.color)
+			var stroke = BrushStroke.new(polygon, [], selection.stroke.color)
 			for hole in holes:
 				if stroke.is_polygon_overlapping(hole):
 					stroke.holes.push_back(hole)
@@ -1067,7 +1067,7 @@ func action_warp_complete():
 
 func _get_warp_selections(mouse_position):
 	action_warp_selections = []
-	for stroke: BrushStrokeData in _editing_brush.strokes:
+	for stroke: BrushStroke in _editing_brush.strokes:
 		var selection: ActionWarpSelection = _get_warp_selection(
 				stroke, stroke.polygon, stroke.polygon_curve,
 				mouse_position, _action_warp_size
@@ -1198,14 +1198,14 @@ func _warp_ease(t):
 
 
 class ActionWarpSelection:
-	var stroke: BrushStrokeData
+	var stroke: BrushStroke
 	var vertex_indexes := []
 	var vertex_weights := []
 	var closest_point: Vector2
 	
 	var hole_id := -1
 	
-	func _init(stroke: BrushStrokeData):
+	func _init(stroke: BrushStroke):
 		self.stroke = stroke
 	
 	
@@ -1228,10 +1228,10 @@ class ActionWarpSelection:
 
 #region ACTION MOVE
 
-var action_move_stroke: BrushStrokeData
+var action_move_stroke: BrushStroke
 
 func action_move_try(action_position: Vector2) -> bool:
-	for stroke: BrushStrokeData in _editing_brush.strokes:
+	for stroke: BrushStroke in _editing_brush.strokes:
 		if stroke.is_point_inside(action_position):
 			undo_redo_strokes_start()
 			action_move_stroke = stroke
@@ -1249,7 +1249,7 @@ func action_move_process(action_position: Vector2):
 
 
 func action_move_complete():
-	_merge_stroke(action_move_stroke)
+	_editing_brush.merge_stroke(action_move_stroke)
 	action_move_stroke = null
 	_editing_brush.edited.emit()
 	if editing_node is BrushClip2D:
@@ -1276,12 +1276,12 @@ func action_fill_try(action_position: Vector2):
 	if stroke_under_mouse:
 		undo_redo_strokes_start()
 		stroke_under_mouse.color = current_color
-		_merge_stroke(stroke_under_mouse)
+		_editing_brush.merge_stroke(stroke_under_mouse)
 		undo_redo_strokes_complete("Bucket Fill Recolor")
 		return
 	var hole_filled := false
 	undo_redo_strokes_start()
-	for stroke: BrushStrokeData in _editing_brush.strokes:
+	for stroke: BrushStroke in _editing_brush.strokes:
 		for i in stroke.holes.size():
 			if Geometry2D.is_point_in_polygon(action_position, stroke.holes[i]):
 				if stroke.color.to_html() == current_color.to_html():
@@ -1293,7 +1293,7 @@ func action_fill_try(action_position: Vector2):
 				else:
 					var polygon = stroke.holes[i].duplicate()
 					polygon.reverse()
-					var fill_stroke = BrushStrokeData.new(polygon, [], current_color)
+					var fill_stroke = BrushStroke.new(polygon, [], current_color)
 					for stroke_inside in _editing_brush.strokes:
 						fill_stroke.subtract_stroke(stroke_inside)
 					_editing_brush.add_stroke(fill_stroke)
@@ -1321,7 +1321,7 @@ func action_paint_start(action_position: Vector2):
 	if _action_rmb else
 		current_color
 	)
-	_action_stroke = BrushStrokeData.new([], [], color)
+	_action_stroke = BrushStroke.new([], [], color)
 	if _action_rmb:
 		_action_stroke._erasing = true
 	_editing_brush.add_stroke(_action_stroke)
@@ -1338,7 +1338,7 @@ func action_paint_process(action_position: Vector2):
 	
 	_action_paint_curve_points.push_back(action_position)
 	
-	var brush_polygon = _create_polygon_capsule(_action_position_previous, action_position, brush_size)
+	var brush_polygon = Goolash.create_polygon_line(_action_position_previous, action_position, brush_size)
 	_action_stroke.union_polygon(brush_polygon)
 	_action_position_previous = action_position
 	
@@ -1348,18 +1348,18 @@ func action_paint_process(action_position: Vector2):
 func action_paint_complete():
 	if _action_paint_curve_points.size() >= 4 and not _action_rmb:
 		_editing_brush.remove_stroke(_action_stroke)
-		_action_stroke = BrushStrokeData.new([], [], current_color)
+		_action_stroke = BrushStroke.new([], [], current_color)
 		
 		var curve_catmull_rom = catmull_rom_interpolate(_action_paint_curve_points)
 		for i in range(1, curve_catmull_rom.size()):
 			var brush_size = _action_paint_erase_size if _action_rmb else _action_paint_size
-			var brush_polygon = _create_polygon_capsule(curve_catmull_rom[i-1], curve_catmull_rom[i], brush_size)
+			var brush_polygon = Goolash.create_polygon_line(curve_catmull_rom[i-1], curve_catmull_rom[i], brush_size)
 			_action_stroke.union_polygon(brush_polygon)
 	
 	_action_stroke.optimize()
 	
 	if _action_rmb:
-		_subtract_stroke(_action_stroke)
+		_editing_brush.subtract_stroke(_action_stroke)
 		undo_redo_strokes_complete("Paint Brush Erase")
 	else:
 		if _action_brush_inside:
@@ -1367,14 +1367,14 @@ func action_paint_complete():
 			var masked_strokes = _action_stroke.mask_stroke(_action_brush_inside)
 			for stroke in masked_strokes:
 				stroke.polygon = Geometry2D.offset_polygon(stroke.polygon, 0.01)[0]
-				_merge_stroke(stroke)
+				_editing_brush.merge_stroke(stroke)
 			_action_brush_inside = null
 		elif current_paint_mode == PAINT_MODE_INSIDE or current_paint_mode == PAINT_MODE_BEHIND:
 			_editing_brush.move_stroke_to_back(_action_stroke)
 			
 			_editing_brush.edited.emit()
 		else:
-			_merge_stroke(_action_stroke)
+			_editing_brush.merge_stroke(_action_stroke)
 		undo_redo_strokes_complete("Paint Brush Draw")
 	_editing_brush.edited.emit()
 	if editing_node is BrushClip2D:
@@ -1413,23 +1413,6 @@ func catmull_rom_interpolate(points) -> PackedVector2Array:
 	return interpolated_points
 
 
-func _create_polygon_capsule(start_position: Vector2, end_position: Vector2, size: float) -> PackedVector2Array:
-	var angle = start_position.angle_to_point(end_position)
-	var start_polygon := []
-	var end_polygon := []
-	var mid_left := []
-	var mid_right := []
-	
-	var points := 16.0
-	for i in points:
-		start_polygon.push_back(start_position + Vector2.DOWN.rotated(angle + i / points * PI) * size)
-	
-	var middle_points = floor(start_position.distance_to(end_position) / size)
-	
-	for i in points:
-		end_polygon.push_back(end_position + Vector2.DOWN.rotated(angle + PI + i / points * PI) * size)
-	return PackedVector2Array(start_polygon + end_polygon)
-
 #endregion
 
 
@@ -1466,13 +1449,13 @@ func action_oval_complete(action_position):
 			Input.is_key_pressed(KEY_SHIFT),
 			Input.is_key_pressed(KEY_ALT)
 	)
-	var stroke := BrushStrokeData.new(polygon, [], current_color)
+	var stroke := BrushStroke.new(polygon, [], current_color)
 	
 	if _action_rmb:
-		_subtract_stroke(stroke)
+		_editing_brush.subtract_stroke(stroke)
 		undo_redo_strokes_complete("Oval Brush Erase")
 	else:
-		_merge_stroke(stroke)
+		_editing_brush.merge_stroke(stroke)
 		undo_redo_strokes_complete("Oval Brush Draw")
 
 
@@ -1539,13 +1522,13 @@ func action_rect_complete(action_position):
 			Input.is_key_pressed(KEY_SHIFT),
 			Input.is_key_pressed(KEY_ALT)
 	)
-	var stroke := BrushStrokeData.new(polygon, [], current_color)
+	var stroke := BrushStroke.new(polygon, [], current_color)
 	
 	if _action_rmb:
-		_subtract_stroke(stroke)
+		_editing_brush.subtract_stroke(stroke)
 		undo_redo_strokes_complete("Rect Brush Erase")
 	else:
-		_merge_stroke(stroke)
+		_editing_brush.merge_stroke(stroke)
 		undo_redo_strokes_complete("Rect Brush Draw")
 
 
@@ -1604,7 +1587,7 @@ func action_shape_start(action_position):
 	if _action_rmb else
 		current_color
 	)
-	_action_stroke = BrushStrokeData.new([], [], color)
+	_action_stroke = BrushStroke.new([], [], color)
 	if _action_rmb:
 		_action_stroke._erasing = true
 	_editing_brush.add_stroke(_action_stroke)
@@ -1627,60 +1610,14 @@ func action_shape_process(action_position):
 
 func action_shape_complete():
 	if _action_rmb:
-		_subtract_stroke(_action_stroke)
+		_editing_brush.subtract_stroke(_action_stroke)
 		undo_redo_strokes_complete("Shape Brush Erase")
 	else:
-		_merge_stroke(_action_stroke)
+		_editing_brush.merge_stroke(_action_stroke)
 		undo_redo_strokes_complete("Shape Brush Draw")
 
 #endregion
 
-
-#region BRUSH OPERATIONS
-
-func _merge_stroke(merging_stroke):
-	if _editing_brush.strokes.has(merging_stroke):
-		_editing_brush.remove_stroke(merging_stroke)
-	
-	var merged_strokes := []
-	while _editing_brush.strokes.size() > 0:
-		var stroke = _editing_brush.strokes[0]
-		_editing_brush.remove_stroke(stroke)
-		if merging_stroke.is_stroke_overlapping(stroke):
-			if merging_stroke.color.to_html() == stroke.color.to_html():
-				# Same color, merge
-				merging_stroke.union_stroke(stroke)
-			else:
-				# Different color, subtract
-				merged_strokes.append_array(stroke.subtract_stroke(merging_stroke))
-		else:
-			# No overlap, no operations
-			merged_strokes.push_back(stroke)
-	
-	merged_strokes.push_back(merging_stroke)
-	
-	for stroke in merged_strokes:
-		_editing_brush.add_stroke(stroke)
-	
-	_editing_brush.edited.emit()
-
-
-func _subtract_stroke(subtracting_stroke):
-	var subtracted_strokes := []
-	
-	if _editing_brush.strokes.has(subtracting_stroke):
-		_editing_brush.remove_stroke(subtracting_stroke)
-	while _editing_brush.strokes.size() > 0:
-		var stroke: BrushStrokeData = _editing_brush.strokes[0]
-		_editing_brush.remove_stroke(stroke)
-		subtracted_strokes.append_array(stroke.subtract_stroke(subtracting_stroke))
-	
-	for stroke in subtracted_strokes:
-		_editing_brush.add_stroke(stroke)
-	
-	_editing_brush.edited.emit()
-
-#endregion
 
 
 func _get_editing_brush():
@@ -1719,7 +1656,7 @@ func _get_erase_color() -> Color:
 func get_stroke_at_position(action_position, brush = null):
 	if brush == null:
 		brush = _editing_brush
-	for stroke: BrushStrokeData in brush.strokes:
+	for stroke: BrushStroke in brush.strokes:
 		if stroke.is_point_inside(action_position):
 			return stroke
 	return null

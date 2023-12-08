@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://addons/goolash/brush_clip2d.gd" id="1_hc62x"]
 [ext_resource type="Script" path="res://addons/goolash/brush_layer2d.gd" id="2_h4sv3"]
-[ext_resource type="Script" path="res://addons/goolash/brush_stroke_data.gd" id="2_r3qu0"]
+[ext_resource type="Script" path="res://addons/goolash/brush_stroke.gd" id="2_r3qu0"]
 [ext_resource type="Script" path="res://addons/goolash/brush_keyframe2d.gd" id="3_rk7bc"]
 [ext_resource type="Script" path="res://addons/goolash/brush2d.gd" id="5_5c2ir"]
 

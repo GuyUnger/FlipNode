@@ -1,7 +1,7 @@
 @tool
 class_name BrushStroke2D extends CanvasGroup
 
-var stroke_data: BrushStrokeData
+var stroke_data: BrushStroke
 
 func _ready():
 	show_behind_parent = true
