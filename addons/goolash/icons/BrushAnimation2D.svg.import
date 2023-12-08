@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://c40dtlehg5ppd"
-path="res://.godot/imported/BrushClip2D.svg-688ab16f3e78f4b1e7e87200e75c2450.ctex"
+path="res://.godot/imported/BrushAnimation2D.svg-30d0c854288c549c7ae00f47ebdbdbb8.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/goolash/icons/BrushClip2D.svg"
-dest_files=["res://.godot/imported/BrushClip2D.svg-688ab16f3e78f4b1e7e87200e75c2450.ctex"]
+source_file="res://addons/goolash/icons/BrushAnimation2D.svg"
+dest_files=["res://.godot/imported/BrushAnimation2D.svg-30d0c854288c549c7ae00f47ebdbdbb8.ctex"]
 
 [params]
 
