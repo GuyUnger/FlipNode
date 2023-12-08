@@ -66,8 +66,8 @@ var current_color: Color = Color.WHITE
 var current_paint_mode := PAINT_MODE_FRONT
 var current_warp_ease := WARP_EASE_SMOOTH
 
-var _action_paint_size: float = 8.0
-var _action_paint_erase_size: float = 16.0
+var _action_paint_size: float = 16.0
+var _action_paint_erase_size: float = 32.0
 
 var _action_warp_size: float = 60.0
 var _action_warp_cut_angle: float = deg_to_rad(30.0)
@@ -112,7 +112,7 @@ func _enter_tree():
 	_init_project_settings()
 	_load_project_settings(true)
 	
-	add_custom_type("BrushClip2D", "Node2D", load("res://addons/goolash/brush_clip2d.gd"), null)
+	add_custom_type("BrushAnimation2D", "Node2D", load("res://addons/goolash/brush_animation2d.gd"), null)
 	
 	EditorInterface.get_selection().selection_changed.connect(_on_selection_changed)
 	
@@ -253,7 +253,7 @@ func _on_settings_changed():
 
 
 func _exit_tree() -> void:
-	remove_custom_type("BrushClip2D")
+	remove_custom_type("BrushAnimation2D")
 	
 	remove_control_from_bottom_panel(timeline)
 	if is_instance_valid(timeline):
@@ -277,7 +277,7 @@ func _exit_tree() -> void:
 func _handles(object) -> bool:
 	#if not button_select_mode.button_pressed:
 		#return false
-	if object is BrushClip2D or object is BrushKeyframe2D or object is Brush2D or object is Brush3D or object is BrushClip3D:
+	if object is BrushAnimation2D or object is BrushKeyframe2D or object is Brush2D or object is Brush3D or object is BrushClip3D:
 		return true
 	return false
 
@@ -289,12 +289,12 @@ func _on_selection_changed():
 	
 	if selected_nodes.size() == 1:
 		var selected_node = selected_nodes[0]
-		if selected_node is BrushClip2D:
-			select_brush_clip(selected_node)
+		if selected_node is BrushAnimation2D:
+			select_brush_animation(selected_node)
 			return
 		elif selected_node is BrushKeyframe2D:
 			var keyframe: BrushKeyframe2D = selected_node
-			select_brush_clip(keyframe.get_clip())
+			select_brush_animation(keyframe.get_clip())
 			keyframe.get_clip().goto(keyframe.frame_num)
 			selected_keyframe = keyframe
 			
@@ -309,7 +309,7 @@ func _on_selection_changed():
 			return
 		elif selected_node is BrushLayer2D:
 			var layer: BrushLayer2D = selected_node
-			select_brush_clip(layer.get_clip())
+			select_brush_animation(layer.get_clip())
 			set_editing_layer_num(layer.layer_num)
 			return
 		elif selected_node is Brush3D:
@@ -317,13 +317,13 @@ func _on_selection_changed():
 			editing_node = selected_node
 			return
 		elif selected_node is BrushClip3D:
-			select_brush_clip(selected_node.brush_clip2d)
+			select_brush_animation(selected_node.brush_animation2d)
 			editing_node = selected_node
 			return
 	
 	if editing_node:
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-		timeline.load_brush_clip(null)
+		timeline.load_brush_animation(null)
 		_edit_brush_complete()
 	
 
@@ -333,9 +333,9 @@ func _select_brush(brush):
 	is_editing = button_select_mode.button_pressed
 
 
-func select_brush_clip(clip):
+func select_brush_animation(clip):
 	_edit_start(clip)
-	timeline.load_brush_clip(clip)
+	timeline.load_brush_animation(clip)
 	make_bottom_panel_item_visible(timeline)
 	clip.draw()
 	clip.init()
@@ -384,20 +384,20 @@ func _input(event):
 func _navigation_input(event):
 	match event.keycode:
 		key_play:
-			if editing_node is BrushClip2D or editing_node is BrushClip3D:
+			if editing_node is BrushAnimation2D or editing_node is BrushClip3D:
 				if editing_node.is_playing:
 					editing_node.stop()
 				else:
 					editing_node.play()
 				return true
 		key_frame_previous:
-			if editing_node is BrushClip2D or editing_node is BrushClip3D:
+			if editing_node is BrushAnimation2D or editing_node is BrushClip3D:
 				editing_node.stop()
 				selected_keyframe = null
 				if editing_node.previous_frame():
 					return true
 		key_frame_next:
-			if editing_node is BrushClip2D or editing_node is BrushClip3D:
+			if editing_node is BrushAnimation2D or editing_node is BrushClip3D:
 				editing_node.stop()
 				selected_keyframe = null
 				if editing_node.next_frame():
@@ -946,13 +946,15 @@ func _draw_custom_cursor():
 	match _get_current_tool():
 		TOOL_PAINT:
 			if not (_current_action == ACTION_PAINT and _action_rmb):
-				_draw_circle_outline(hud, cursor_position, _action_paint_size * zoom, Color.BLACK, 1.0)
-				_draw_circle_outline(hud, cursor_position, _action_paint_size * zoom + 2.0, Color.WHITE, 1.0)
+				var size = _action_paint_size * 0.5 * zoom
+				_draw_circle_outline(hud, cursor_position, size - 1.0, Color.BLACK, 1.0)
+				_draw_circle_outline(hud, cursor_position, size + 1.0, Color.WHITE, 1.0)
 			else:
 				_draw_circle_outline(hud, cursor_position, _action_paint_erase_size * zoom, Color.BLACK, 1.0, true)
 			if not (_current_action == ACTION_PAINT and not _action_rmb):
-				_draw_circle_outline(hud, cursor_position, _action_paint_erase_size * zoom, Color.BLACK, 1.0, true)
-				_draw_circle_outline(hud, cursor_position, _action_paint_erase_size * zoom, Color(1.0, 1.0, 1.0, 0.2), 1.0, true)
+				var size = _action_paint_erase_size * 0.5 * zoom
+				_draw_circle_outline(hud, cursor_position, size - 1.0, Color.BLACK, 1.0, true)
+				_draw_circle_outline(hud, cursor_position, size + 1.0, Color(1.0, 1.0, 1.0, 0.2), 1.0, true)
 			
 			hud.draw_circle(cursor_position, 2.0, Color.WHITE)
 		TOOL_SELECT:
@@ -1058,7 +1060,7 @@ func action_warp_complete():
 			_editing_brush.add_stroke(stroke)
 	
 	_editing_brush.edited.emit()
-	if editing_node is BrushClip2D:
+	if editing_node is BrushAnimation2D:
 		editing_node.edited.emit()
 	action_warp_selections = []
 	undo_redo_strokes_complete("Warp Stroke")
@@ -1252,7 +1254,7 @@ func action_move_complete():
 	_editing_brush.merge_stroke(action_move_stroke)
 	action_move_stroke = null
 	_editing_brush.edited.emit()
-	if editing_node is BrushClip2D:
+	if editing_node is BrushAnimation2D:
 		editing_node.edited.emit()
 	
 	undo_redo_strokes_complete("Move Stroke")
@@ -1377,7 +1379,7 @@ func action_paint_complete():
 			_editing_brush.merge_stroke(_action_stroke)
 		undo_redo_strokes_complete("Paint Brush Draw")
 	_editing_brush.edited.emit()
-	if editing_node is BrushClip2D:
+	if editing_node is BrushAnimation2D:
 		editing_node.edited.emit()
 
 
@@ -1623,10 +1625,10 @@ func action_shape_complete():
 func _get_editing_brush():
 	if not editing_node:
 		_editing_brush = null
-	elif editing_node is BrushClip2D:
+	elif editing_node is BrushAnimation2D:
 		_editing_brush = editing_node.layers[editing_node._editing_layer_num].get_frame(editing_node.current_frame)
 	elif editing_node is BrushClip3D:
-		_editing_brush = editing_node.brush_clip2d.layers[editing_node._editing_layer_num].get_frame(editing_node.current_frame)
+		_editing_brush = editing_node.brush_animation2d.layers[editing_node._editing_layer_num].get_frame(editing_node.current_frame)
 	elif editing_node is Brush3D:
 		_editing_brush = editing_node.brush2d
 	else:
@@ -1688,14 +1690,14 @@ static func is_editable(node):
 #region Layers
 
 func set_editing_layer_num(value):
-	if editing_node and editing_node is BrushClip2D:
+	if editing_node and editing_node is BrushAnimation2D:
 		editing_node._editing_layer_num = value
 		editing_layer_changed.emit()
 		_get_editing_brush()
 
 
 func get_editing_layer_num() -> int:
-	if editing_node and editing_node is BrushClip2D:
+	if editing_node and editing_node is BrushAnimation2D:
 		return editing_node._editing_layer_num
 	return 0
 
@@ -1717,7 +1719,7 @@ func remove_layer(layer: BrushLayer2D):
 
 
 func create_layer():
-	if not editing_node or not editing_node is BrushClip2D:
+	if not editing_node or not editing_node is BrushAnimation2D:
 		return
 	
 	var layer = editing_node._create_layer()

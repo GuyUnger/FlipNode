@@ -1,6 +1,6 @@
 @tool
 @icon("res://addons/goolash/icons/BrushAnimation2D.svg")
-class_name BrushClip2D
+class_name BrushAnimation2D
 extends Node2D
 
 signal frame_changed

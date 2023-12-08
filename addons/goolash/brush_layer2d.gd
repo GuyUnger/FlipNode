@@ -259,9 +259,9 @@ func bake_tweenframes():
 			tweenframes_baked[frame_num] = from.transform.interpolate_with(to.transform, t)
 
 
-func get_clip() -> BrushClip2D:
+func get_clip() -> BrushAnimation2D:
 	var parent = get_parent()
-	if parent is BrushClip2D:
+	if parent is BrushAnimation2D:
 		return parent
 	return null
 

@@ -28,7 +28,7 @@ func _ready():
 	super()
 
 
-func get_clip() -> BrushClip2D:
+func get_clip() -> BrushAnimation2D:
 	return get_parent().get_parent()
 
 

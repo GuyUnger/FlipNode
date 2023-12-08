@@ -43,7 +43,7 @@ func _update_used_colors():
 	_used_colors = []
 	for c in %DefaultSwatches.get_children():
 		_used_colors.push_back(c.self_modulate.to_html())
-	if GoolashEditor.editor.editing_node is BrushClip2D:
+	if GoolashEditor.editor.editing_node is BrushAnimation2D:
 		for layer in GoolashEditor.editor.editing_node.layers:
 			for keyframe in layer.keyframes:
 				for stroke in keyframe.strokes:

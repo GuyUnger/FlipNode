@@ -8,7 +8,7 @@ const LAYER_HEIGHT = 36
 const TimelineLayerFrames = preload("res://addons/goolash/ui/timeline_layer_frames.tscn")
 const TimelineLayerInfo = preload("res://addons/goolash/ui/timeline_layer_info.tscn")
 
-var brush_clip: BrushClip2D
+var brush_animation: BrushAnimation2D
 
 var scrubbing := false
 
@@ -28,44 +28,44 @@ func _ready():
 	%LineEditOnionFrames.text = str(GoolashEditor.onion_skin_frames)
 
 
-func load_brush_clip(brush_clip: BrushClip2D):
-	if self.brush_clip == brush_clip:
+func load_brush_animation(brush_animation: BrushAnimation2D):
+	if self.brush_animation == brush_animation:
 		return
-	if is_instance_valid(self.brush_clip):
-		self.brush_clip.frame_changed.disconnect(_on_frame_changed)
-		self.brush_clip.edited.disconnect(_on_brush_clip_edited)
-	self.brush_clip = brush_clip
+	if is_instance_valid(self.brush_animation):
+		self.brush_animation.frame_changed.disconnect(_on_frame_changed)
+		self.brush_animation.edited.disconnect(_on_brush_animation_edited)
+	self.brush_animation = brush_animation
 	
 	## Handle if a BrushClip or null is loaded
-	var brush_clip_selected := brush_clip != null
-	%Timeline.visible = brush_clip_selected
-	%LabelNoBrushClip.visible = not brush_clip_selected
-	if not brush_clip_selected:
+	var brush_animation_selected := brush_animation != null
+	%Timeline.visible = brush_animation_selected
+	%LabelNoBrushClip.visible = not brush_animation_selected
+	if not brush_animation_selected:
 		custom_minimum_size.y = 30.0
 		size.y = 30.0
 		return
 	
 	## FPS
 	input_fps.placeholder_text = str(Goolash.default_fps)
-	if brush_clip.fps_override == 0:
+	if brush_animation.fps_override == 0:
 		input_fps.text = ""
 	else:
-		input_fps.text = str(brush_clip.fps_override)
+		input_fps.text = str(brush_animation.fps_override)
 	
-	%ButtonAutoPlay.button_pressed = brush_clip.auto_play
-	%ButtonLoop.button_pressed = brush_clip.looping
+	%ButtonAutoPlay.button_pressed = brush_animation.auto_play
+	%ButtonLoop.button_pressed = brush_animation.looping
 	
 	_load_layers()
 	
-	var is_editable = GoolashEditor.is_editable(brush_clip)
+	var is_editable = GoolashEditor.is_editable(brush_animation)
 	%LayersContainer.visible = is_editable
 	%EditorOptions.visible = is_editable
 	if not is_editable:
 		custom_minimum_size.y = 30.0
 		size.y = 30.0
 	
-	brush_clip.frame_changed.connect(_on_frame_changed)
-	brush_clip.edited.connect(_on_brush_clip_edited)
+	brush_animation.frame_changed.connect(_on_frame_changed)
+	brush_animation.edited.connect(_on_brush_animation_edited)
 	update_timeline_length()
 
 
@@ -73,13 +73,13 @@ func _on_frame_changed():
 	update_timeline_length()
 
 
-func _on_brush_clip_edited():
+func _on_brush_animation_edited():
 	update_timeline_length()
 
 
 func update_timeline_length():
 	frame_indicator.position.x = GoolashEditor.editor.editing_node.current_frame * FRAME_WIDTH + FRAME_WIDTH * 0.5
-	var end_pos = brush_clip.frame_count * FRAME_WIDTH
+	var end_pos = brush_animation.frame_count * FRAME_WIDTH
 	%AreaActive.size.x = end_pos
 	%AreaInactive.position.x = end_pos
 	%AreaInactive.size.x = %FrameCounts.size.x - end_pos
@@ -109,13 +109,13 @@ func _load_layers():
 	for layer_frames in layers_frames.get_children():
 		layer_frames.queue_free()
 	
-	if not GoolashEditor.is_editable(brush_clip):
+	if not GoolashEditor.is_editable(brush_animation):
 		return
 	
-	for layer in brush_clip.layers:
+	for layer in brush_animation.layers:
 		_add_layer(layer)
 	
-	custom_minimum_size.y = 60.0 + brush_clip.layers.size() * LAYER_HEIGHT
+	custom_minimum_size.y = 60.0 + brush_animation.layers.size() * LAYER_HEIGHT
 	size.y = max(size.y, custom_minimum_size.y + 20.0)
 
 
@@ -132,7 +132,7 @@ func _add_layer(layer):
 
 func _on_button_add_layer_pressed():
 	GoolashEditor.editor.create_layer()
-	GoolashEditor.editor.set_editing_layer_num(brush_clip.layers.size() - 1)
+	GoolashEditor.editor.set_editing_layer_num(brush_animation.layers.size() - 1)
 
 
 func _on_layer_added_or_removed():
@@ -175,11 +175,11 @@ func _on_line_edit_onion_frames_text_submitted(new_text):
 
 func _on_line_edit_onion_frames_focus_exited():
 	GoolashEditor.onion_skin_frames = max(int(%LineEditOnionFrames.text), 1)
-	brush_clip.draw()
+	brush_animation.draw()
 
 
 func _input(event) -> void:
-	if not visible or not is_instance_valid(brush_clip):
+	if not visible or not is_instance_valid(brush_animation):
 		return
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT:
@@ -233,21 +233,21 @@ func _process(delta):
 	if scrubbing:
 		var tl_node = %FrameCounts
 		var to_frame = int(floor((get_local_mouse_position().x - tl_node.position.x + 1) / FRAME_WIDTH))
-		to_frame = clamp(to_frame, 0, brush_clip.frame_count - 1)
-		brush_clip.goto_and_stop(to_frame)
+		to_frame = clamp(to_frame, 0, brush_animation.frame_count - 1)
+		brush_animation.goto_and_stop(to_frame)
 
 
 func _on_button_loop_toggled(toggled_on):
-	brush_clip.looping = toggled_on
-	if is_instance_valid(brush_clip):
-		brush_clip.draw()
+	brush_animation.looping = toggled_on
+	if is_instance_valid(brush_animation):
+		brush_animation.draw()
 
 
 func _on_button_auto_play_toggled(toggled_on):
-	brush_clip.auto_play = toggled_on
+	brush_animation.auto_play = toggled_on
 
 
 func _on_button_onion_toggled(toggled_on):
 	GoolashEditor.onion_skin_enabled = toggled_on
-	if is_instance_valid(brush_clip):
-		brush_clip.draw()
+	if is_instance_valid(brush_animation):
+		brush_animation.draw()

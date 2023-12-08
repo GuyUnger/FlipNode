@@ -3,8 +3,8 @@
 [ext_resource type="Script" path="res://addons/goolash/brush3d.gd" id="1_tk2fs"]
 [ext_resource type="Script" path="res://addons/goolash/brush2d.gd" id="2_encgk"]
 [ext_resource type="Script" path="res://addons/goolash/brush_stroke.gd" id="3_qh0tp"]
-[ext_resource type="Script" path="res://addons/goolash/brush_clip2d.gd" id="4_ow8dj"]
-[ext_resource type="Script" path="res://addons/goolash/brush_clip3d.gd" id="4_qylcv"]
+[ext_resource type="Script" path="res://addons/goolash/brush_animation2d.gd" id="4_ow8dj"]
+[ext_resource type="Script" path="res://addons/goolash/brush_animation3d.gd" id="4_qylcv"]
 [ext_resource type="Script" path="res://addons/goolash/brush_layer2d.gd" id="5_1h4aw"]
 [ext_resource type="Script" path="res://addons/goolash/brush_keyframe2d.gd" id="6_0cinf"]
 

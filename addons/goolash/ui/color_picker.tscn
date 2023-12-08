@@ -61,8 +61,8 @@ void fragment() {
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_0ky5e"]
 shader = SubResource("Shader_4ss2x")
-shader_parameter/h = 0.26875
-shader_parameter/temperature = 1.0
+shader_parameter/h = 0.652748
+shader_parameter/temperature = 0.0
 
 [sub_resource type="Shader" id="Shader_ibu26"]
 code = "shader_type canvas_item;
@@ -133,7 +133,7 @@ stretch = true
 [node name="SubViewport" type="SubViewport" parent="MarginContainer/VBoxContainer/HBoxContainer2/SubViewportContainer"]
 unique_name_in_owner = true
 handle_input_locally = false
-size = Vector2i(2, 2)
+size = Vector2i(126, 120)
 render_target_update_mode = 4
 
 [node name="Palette" type="ColorRect" parent="MarginContainer/VBoxContainer/HBoxContainer2/SubViewportContainer/SubViewport"]
@@ -158,8 +158,7 @@ custom_minimum_size = Vector2(0, 1)
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
-offset_top = 46.3078
-offset_bottom = 47.3078
+offset_bottom = 1.0
 grow_horizontal = 2
 
 [node name="HBoxContainer3" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]

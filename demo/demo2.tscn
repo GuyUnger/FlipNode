@@ -1,6 +1,6 @@
 [gd_scene load_steps=71 format=3 uid="uid://d2ikapvprfyl5"]
 
-[ext_resource type="Script" path="res://addons/goolash/brush_clip2d.gd" id="1_hc62x"]
+[ext_resource type="Script" path="res://addons/goolash/brush_animation2d.gd" id="1_hc62x"]
 [ext_resource type="Script" path="res://addons/goolash/brush_layer2d.gd" id="2_h4sv3"]
 [ext_resource type="Script" path="res://addons/goolash/brush_stroke.gd" id="2_r3qu0"]
 [ext_resource type="Script" path="res://addons/goolash/brush_keyframe2d.gd" id="3_rk7bc"]
