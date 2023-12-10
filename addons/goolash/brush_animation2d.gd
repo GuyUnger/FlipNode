@@ -10,13 +10,16 @@ signal edited
 	get:
 		return current_frame
 	set(value):
-		if looping:
+		if free_after_playing and not Engine.is_editor_hint():
+			if value > _frame_count:
+				queue_free()
+		elif looping:
 			value %= _frame_count
 		else:
 			value = clamp(value, 0, _frame_count - 1)
 		current_frame = value
 		if Engine.is_editor_hint():
-			#TODO: replace this with 
+			#TODO: replace this with signal?
 			GoolashEditor.editor._get_editing_brush()
 		draw()
 		frame_changed.emit()
@@ -42,6 +45,8 @@ var next_frame_delay := 0.0
 
 var _editing_layer_num := 0 #Stored here so it can be remembered during the session 
 
+#TODO: turn this into an enum with looping
+@export var free_after_playing := false
 
 func _validate_property(property):
 	var hidden = ["labels", "_frame_count"]

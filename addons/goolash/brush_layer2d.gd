@@ -26,6 +26,7 @@ func _ready():
 		bake_tweenframes()
 		find_keyframes()
 	else:
+		find_keyframes()
 		set_process(false)
 
 

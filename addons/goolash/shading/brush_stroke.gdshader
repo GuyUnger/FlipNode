@@ -16,6 +16,21 @@ void fragment() {
 	COLOR.rgb = modulate.rgb;
 	vec2 uv = SCREEN_UV;
 	
-	COLOR.a = texture(screen_texture, SCREEN_UV).r;
+	// Anti-alias
+	float a = 0.0;
+	float directions = 8.0;
+	float quality = 4.0;
+	float size = 4.0;
+	for (float angle = 0.0; angle < TAU; angle += TAU / directions) {
+		vec2 offset = vec2(cos(angle), sin(angle));
+		for (float i = 1.0; i <= quality; i += 1.0) {
+			vec3 sample = texture(screen_texture, uv + offset * i / quality * size * SCREEN_PIXEL_SIZE).rgb;
+			a += max(max(sample.r, sample.g), sample.b);
+		}
+	}
+	a /= directions * quality;
+	a = smoothstep(0.3, 0.6, a);
+	
+	COLOR.a = a * modulate.a;
 	
 }

@@ -7,6 +7,8 @@ var t_since_on_floor := 0.0
 
 var allow_jump_break := false
 
+@export var car: RigidBody2D
+
 func _physics_process(delta):
 	if is_on_floor():
 		t_since_on_floor = 0.0
@@ -36,6 +38,6 @@ func _physics_process(delta):
 	
 	var ground = get_parent().get_node("Brush2D")
 	if Input.is_action_just_pressed("ui_down"):
-		var polygon = Goolash.create_polygon_circle(position, 100.0)
+		var polygon = Goolash.create_polygon_circle(position + Vector2.UP * 30.0, 120.0)
 		ground.subtract_polygon(polygon)
 		ground.generate_static_body()

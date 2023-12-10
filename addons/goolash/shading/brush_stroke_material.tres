@@ -5,5 +5,5 @@
 
 [resource]
 shader = ExtResource("1_q401f")
-shader_parameter/goolash_frame = 312.0
+shader_parameter/goolash_frame = 392.0
 shader_parameter/goolash_boil_noise = ExtResource("2_0k8fg")
