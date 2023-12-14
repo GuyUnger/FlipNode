@@ -1,4 +1,4 @@
-[gd_scene load_steps=3 format=3 uid="uid://cavcwjpdd1cqx"]
+[gd_scene load_steps=3 format=3 uid="uid://tpg7vxubne1p"]
 
 [ext_resource type="Material" uid="uid://8hs3p3kogtk3" path="res://addons/goolash/shading/brush_stroke_material.tres" id="1_ddrc7"]
 [ext_resource type="Script" path="res://addons/goolash/brush_stroke2d.gd" id="2_akkcy"]

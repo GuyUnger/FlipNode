@@ -11,25 +11,10 @@ var mode := 1
 var picking_position: Vector2
 
 var h := 0.0
-var temperature: float = 1.0
+var temperature: float = 0.0
 
 func _ready():
 	set_process(false)
-
-
-func set_color(color: Color):
-	#TODO: double places where visuals are set
-	var valley = find_valley(color)
-	%ColorPreviewTop.modulate = get_color(valley.x, valley.y, valley.z)
-	%ColorPreviewBottom.modulate = get_color(valley.x, valley.y, valley.z)
-	
-	picking_position = Vector2(valley.y, 1.0 - valley.z) * Vector2(viewport.size)
-	h = valley.x
-	#%HueIndicator.position.y = h * hue_picker.get_rect().size.y
-	
-	queue_redraw()
-	
-	return
 
 
 func _process(delta):
@@ -161,3 +146,28 @@ func get_color(h: float, s: float, v: float) -> Color:
 	var c = Color(color.x, color.y, color.z)
 	
 	return c
+
+
+
+func set_color(color: Color):
+	#TODO: double places where visuals are set
+	var valley = find_valley(color)
+	%ColorPreviewTop.modulate = get_color(valley.x, valley.y, valley.z)
+	%ColorPreviewBottom.modulate = get_color(valley.x, valley.y, valley.z)
+	
+	picking_position = Vector2(valley.y, 1.0 - valley.z) * Vector2(viewport.size)
+	h = valley.x
+	#%HueIndicator.position.y = h * hue_picker.get_rect().size.y
+	
+	queue_redraw()
+	
+	return
+
+
+func _on_line_edit_hex_text_submitted(new_text):
+	%LineEditHex.release_focus()
+
+
+func _on_line_edit_hex_focus_exited():
+	if Color.html_is_valid(%LineEditHex.text):
+		set_color(Color(%LineEditHex.text))

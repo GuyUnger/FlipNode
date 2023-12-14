@@ -5,7 +5,7 @@ var stroke_data: BrushStroke
 
 func _ready():
 	show_behind_parent = true
-
+	use_mipmaps = true
 
 func draw_stroke(stroke_data):
 	self_modulate = stroke_data.color

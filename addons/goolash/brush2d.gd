@@ -3,8 +3,6 @@
 class_name Brush2D
 extends Node2D
 
-#const BrushStroke2D = preload("res://addons/goolash/brush_stroke2d.tscn")
-
 signal edited
 
 @export var strokes: Array

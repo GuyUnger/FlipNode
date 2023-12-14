@@ -72,7 +72,7 @@ func display_frame(frame_num):
 				GoolashEditor.onion_skin_enabled and
 				not get_clip().is_playing and
 				GoolashEditor.editor.editing_node == get_clip() and
-				get_clip().scene_file_path == ""
+				GoolashEditor.is_editable(get_clip())
 		):
 			onion_skin_frames = GoolashEditor.onion_skin_frames
 		

@@ -61,7 +61,7 @@ void fragment() {
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_0ky5e"]
 shader = SubResource("Shader_4ss2x")
-shader_parameter/h = 0.831784
+shader_parameter/h = 0.493552
 shader_parameter/temperature = 0.0
 
 [sub_resource type="Shader" id="Shader_ibu26"]
@@ -137,7 +137,7 @@ stretch = true
 [node name="SubViewport" type="SubViewport" parent="MarginContainer/VBoxContainer/HBoxContainer2/SubViewportContainer"]
 unique_name_in_owner = true
 handle_input_locally = false
-size = Vector2i(2, 2)
+size = Vector2i(127, 120)
 render_target_update_mode = 4
 
 [node name="Palette" type="ColorRect" parent="MarginContainer/VBoxContainer/HBoxContainer2/SubViewportContainer/SubViewport"]
@@ -181,7 +181,6 @@ size_flags_horizontal = 3
 size_flags_vertical = 1
 max_value = 1.0
 step = 0.02
-value = 0.5
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
@@ -232,3 +231,5 @@ size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_5vjvl")
 
 [connection signal="value_changed" from="MarginContainer/VBoxContainer/HBoxContainer3/Temperature" to="." method="_on_temperature_value_changed"]
+[connection signal="focus_exited" from="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer2/HBoxContainer/LineEditHex" to="." method="_on_line_edit_hex_focus_exited"]
+[connection signal="text_submitted" from="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer2/HBoxContainer/LineEditHex" to="." method="_on_line_edit_hex_text_submitted"]
