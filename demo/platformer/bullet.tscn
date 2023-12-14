@@ -1,0 +1,33 @@
+[gd_scene load_steps=7 format=3 uid="uid://byvldtwjv6nyx"]
+
+[ext_resource type="Script" path="res://addons/goolash/brush2d.gd" id="1_6v307"]
+[ext_resource type="Script" path="res://demo/platformer/bullet.gd" id="1_omq6p"]
+[ext_resource type="Script" path="res://addons/goolash/brush_stroke.gd" id="2_n50ql"]
+
+[sub_resource type="Resource" id="Resource_7dqy1"]
+script = ExtResource("2_n50ql")
+color = Color(1, 0.85098, 0, 1)
+polygon = PackedVector2Array(19.2275, -22.7052, 27.309, -17.3053, 29.1812, -11.7603, 24.8053, -16.809, 15.75, -19.9492, 7.89022, -18.9825, 3.7703, -16.2297, -1.809, -9.3053, -3.9492, -2.25, -3.84948, 8.33832, -1.809, 13.8053, 12.2725, 23.2052, 13.4971, 23.3258, 6.74999, 24.4492, -24.25, 24.4492, -33.2297, 20.7297, -35.9825, 16.6098, -36.9492, 9.75, -36.7052, -4.72749, -33.2297, -11.2297, -18.7275, -18.7052, -0.98874, -20.8272, 16.75, -22.9492)
+holes = Array[PackedVector2Array]([])
+
+[sub_resource type="Resource" id="Resource_3ngki"]
+script = ExtResource("2_n50ql")
+color = Color(1, 1, 1, 1)
+polygon = PackedVector2Array(12.2725, 23.2052, -1.809, 13.8053, -3.84948, 8.33832, -3.9492, -2.25, -1.809, -9.3053, 3.7703, -16.2297, 7.89022, -18.9825, 15.75, -19.9492, 24.8053, -16.809, 31.309, -9.3053, 33.2052, -4.72749, 33.4492, 6.74999, 31.309, 13.8053, 25.7297, 19.7297, 21.6098, 22.4825, 14.75, 23.4492)
+holes = Array[PackedVector2Array]([])
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_gh4xx"]
+radius = 4.0
+
+[node name="Bullet" type="CharacterBody2D"]
+collision_layer = 0
+script = ExtResource("1_omq6p")
+
+[node name="Brush2D" type="Node2D" parent="."]
+scale = Vector2(0.613808, 0.613808)
+script = ExtResource("1_6v307")
+strokes = [SubResource("Resource_7dqy1"), SubResource("Resource_3ngki")]
+bounciness = 0.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_gh4xx")

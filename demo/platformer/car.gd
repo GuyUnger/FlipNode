@@ -90,7 +90,7 @@ func _integrate_forces(state):
 			airspin = 0.0
 			boosts = 1
 	
-	if boosts > 0 and Input.is_action_just_pressed("ui_accept"):
+	if boosts > 0 and Input.is_action_just_pressed("jump"):
 		boost_t = 1.0
 		boosts -= 1
 		
@@ -156,14 +156,29 @@ func _physics_process(delta):
 		if last_smoke_spawn_pos.distance_to(closest_floor_position) > 70.0:
 			last_smoke_spawn_pos = closest_floor_position
 			var smoke = Smoke.instantiate()
-			smoke.scale = Vector2.ONE * (linear_velocity.length() / 2000.0 + 0.15) * randf_range(0.8, 1.2)
-			
+			smoke.scale = Vector2.ONE * (linear_velocity.length() / 2000.0 + 0.15)
+			smoke.scale *= 1.0 - (closest_floor_distance / 100.0)
+			smoke.scale *= randf_range(0.7, 1.3)
 			if linear_velocity.rotated(-PI * 0.5).dot(closest_floor_normal) < 0.0:
 				smoke.scale.x *= -1.0
 			
 			get_parent().add_child(smoke)
 			smoke.position = closest_floor_position
 			smoke.rotation = closest_floor_normal.angle() + PI * 0.5
+	
+	if reload_t > 0.0:
+		reload_t = move_toward(reload_t, 0.0, delta)
+	elif Input.is_action_pressed("attack"):
+		reload_t += 0.04
+		var bullet = Bullet.instantiate()
+		bullet.position = position
+		bullet.velocity = aim_direction * 1000.0
+		bullet.rotation = aim_direction.angle()
+		get_parent().add_child(bullet)
+		
 
 const Smoke = preload("res://demo/platformer/smoke.tscn")
 var last_smoke_spawn_pos := Vector2()
+
+const Bullet = preload("res://demo/platformer/bullet.tscn")
+var reload_t := 0.0
