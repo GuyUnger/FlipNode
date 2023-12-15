@@ -1,4 +1,3 @@
-@tool
 @icon("res://addons/goolash/icons/Brush2D.svg")
 class_name Brush2D
 extends Node2D
@@ -48,7 +47,7 @@ func _validate_property(property):
 
 
 func _ready():
-	if Engine.is_editor_hint():
+	if GoolashEditor.is_editor_hint():
 		init_strokes()
 		get_tree().process_frame.connect(queue_redraw)
 	else:
@@ -180,9 +179,9 @@ func get_islands():
 
 
 func _draw():
-	if Engine.is_editor_hint() and _forward_draw_requested:
+	if _forward_draw_requested:
 		_forward_draw_requested = false
-		GoolashEditor.editor._forward_draw_brush(self)
+		GoolashEditor._forward_draw_brush(self)
 
 
 func _request_forward_draw():

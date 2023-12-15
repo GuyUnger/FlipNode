@@ -1,4 +1,3 @@
-@tool
 extends Control
 
 const ButtonUsedColor = preload("res://addons/goolash/ui/button_used_color.tscn")
@@ -23,6 +22,8 @@ var _used_colors := []
 
 
 func _ready():
+	GoolashEditor.hud = self
+	await get_tree().process_frame
 	_update_default_swatches()
 	_update_color_picker_color()
 
@@ -31,26 +32,26 @@ func _update_default_swatches():
 	for button in %DefaultSwatches.get_children():
 		button.queue_free()
 	
-	for color in GoolashEditor.editor.default_swatches:
+	for color in GoolashEditor.default_swatches:
 		_add_swatch(color, %DefaultSwatches)
 
 
 func _update_used_colors():
-	if GoolashEditor.editor.editing_node == null:
+	if GoolashEditor.editing_node == null:
 		return
 	for button in %UsedColors.get_children():
 		button.queue_free()
 	_used_colors = []
 	for c in %DefaultSwatches.get_children():
 		_used_colors.push_back(c.self_modulate.to_html())
-	if GoolashEditor.editor.editing_node is BrushAnimation2D:
-		for layer in GoolashEditor.editor.editing_node.layers:
+	if GoolashEditor.editing_node is BrushAnimation2D:
+		for layer in GoolashEditor.editing_node.layers:
 			for keyframe in layer.keyframes:
 				for stroke in keyframe.strokes:
 					if not _used_colors.has(stroke.color.to_html()):
 						_add_swatch(stroke.color, %UsedColors)
 	else:
-		for stroke in GoolashEditor.editor._editing_brush.strokes:
+		for stroke in GoolashEditor._editing_brush.strokes:
 			if not _used_colors.has(stroke.color.to_html()):
 				_add_swatch(stroke.color, %UsedColors)
 
@@ -116,13 +117,13 @@ func select_tool(tool):
 
 
 func _on_color_picker_color_changed(color):
-	if GoolashEditor.editor.current_color == color:
+	if GoolashEditor.current_color == color:
 		return
-	GoolashEditor.editor.current_color = color
+	GoolashEditor.current_color = color
 
 
 func _update_color_picker_color():
-	%ColorPicker.set_color(GoolashEditor.editor.current_color)
+	%ColorPicker.set_color(GoolashEditor.current_color)
 
 
 func show_properties(properties = null):
@@ -139,7 +140,7 @@ func set_pressed(button: Button):
 
 
 func _draw():
-	GoolashEditor.editor._forward_draw_hud()
+	GoolashEditor._forward_draw_hud()
 
 
 func _input(event):

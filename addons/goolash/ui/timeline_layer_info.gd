@@ -47,8 +47,9 @@ func set_visibility(value: bool):
 
 
 func _on_line_edit_name_focus_entered():
-	EditorInterface.inspect_object(null)
-	EditorInterface.inspect_object(layer)
+	pass
+	#EditorInterface.inspect_object(null)
+	#EditorInterface.inspect_object(layer)
 
 
 func _on_button_delete_pressed():

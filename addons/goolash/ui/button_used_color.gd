@@ -1,4 +1,3 @@
-@tool
 extends Button
 
 @export var is_default := false
@@ -13,5 +12,5 @@ func set_color(color: Color):
 
 
 func _on_pressed():
-	GoolashEditor.editor.current_color = self_modulate
+	GoolashEditor.current_color = self_modulate
 	GoolashEditor.hud._update_color_picker_color()

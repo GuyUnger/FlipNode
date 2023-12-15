@@ -1,0 +1,34 @@
+[gd_scene load_steps=5 format=3 uid="uid://8fj60qbdc2xf"]
+
+[ext_resource type="Script" path="res://main.gd" id="1_r5i7k"]
+[ext_resource type="PackedScene" uid="uid://kx2i7hym1cbq" path="res://addons/goolash/ui/hud.tscn" id="1_xc181"]
+[ext_resource type="PackedScene" uid="uid://83afmn7xmr1c" path="res://addons/goolash/ui/timeline.tscn" id="2_fprvc"]
+[ext_resource type="Script" path="res://addons/goolash/brush2d.gd" id="4_mmog0"]
+
+[node name="Main" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_r5i7k")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HUD" parent="VBoxContainer" instance=ExtResource("1_xc181")]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Timeline" parent="VBoxContainer" instance=ExtResource("2_fprvc")]
+layout_mode = 2
+
+[node name="Brush2D" type="Node2D" parent="."]
+unique_name_in_owner = true
+script = ExtResource("4_mmog0")

@@ -1,5 +1,4 @@
-@tool
-class_name GoolashEditor extends EditorPlugin
+extends Control
 
 signal editing_layer_changed
 signal selected_keyframe_changed
@@ -11,18 +10,16 @@ enum {WARP_EASE_SMOOTH, WARP_EASE_SHARP, WARP_EASE_LINEAR, WARP_EASE_RANDOM}
 
 enum {MAIN_SCREEN_2D, MAIN_SCREEN_3D, MAIN_SCREEN_SCRIPT}
 
-static var editor: GoolashEditor
-
-static var godot_accent_color: Color
-static var godot_selection_color: Color
+var godot_accent_color: Color
+var godot_selection_color: Color
 
 const TextureEyedropper = preload("res://addons/goolash/icons/ColorPick.svg")
 const TextureFill = preload("res://addons/goolash/icons/CursorBucket.svg")
 const StrokeEraseMaterial = preload("res://addons/goolash/shading/brush_erase_material.tres")
 const StrokeRegularMaterial = preload("res://addons/goolash/shading/brush_stroke_material.tres")
 
-static var KEYFRAME_SCRIPT
-static var KEYFRAME_SCRIPT_CUSTOM
+var KEYFRAME_SCRIPT
+var KEYFRAME_SCRIPT_CUSTOM
 
 var key_add_frame := KEY_5
 var key_add_keyframe := KEY_6
@@ -40,8 +37,8 @@ var key_tool_size_decrease := KEY_BRACKETLEFT
 var key_tool_size_increase := KEY_BRACKETRIGHT
 var key_erase_mode := KEY_X
 
-static var hud
-static var timeline
+var hud
+var timeline
 
 var _current_action: int
 var _action_position_previous: Vector2
@@ -81,10 +78,10 @@ static var erase_mode := false
 
 var editing_node
 var _editing_brush: Brush2D
-static var selected_keyframe: BrushKeyframe2D:
+var selected_keyframe: BrushKeyframe2D:
 	set(value):
 		selected_keyframe = value
-		editor.selected_keyframe_changed.emit()
+		selected_keyframe_changed.emit()
 var is_editing := false
 var _selected_highlight: float = 0.0
 
@@ -93,61 +90,31 @@ var canvas_transform_previous
 static var allow_custom_cursor := true
 var allow_hide_cursor := false
 
-var button_select_mode: Button
-
 var _strokes_before := []
 
 var shader_anti_alias := false
 var shader_boil := false
 
 
-func _enter_tree():
-	editor = self
+func _ready():
 	set_process(false)
-	
-	godot_accent_color = EditorInterface.get_editor_settings().get_setting("interface/theme/accent_color")
-	godot_selection_color = EditorInterface.get_editor_settings().get_setting("text_editor/theme/highlighting/selection_color")
 	
 	
 	_init_project_settings()
 	_load_project_settings(true)
 	
-	add_custom_type("BrushAnimation2D", "Node2D", load("res://addons/goolash/brush_animation2d.gd"), null)
-	
-	EditorInterface.get_selection().selection_changed.connect(_on_selection_changed)
-	
-	
-	hud = load("res://addons/goolash/ui/hud.tscn").instantiate()
-	hud.visible = false
-	hud.theme = EditorInterface.get_editor_theme()
-	EditorInterface.get_editor_viewport_2d().get_parent().get_parent().add_child(hud)
-	
-	timeline = load("res://addons/goolash/ui/timeline.tscn").instantiate()
-	add_control_to_bottom_panel(timeline, "Timeline")
+	#EditorInterface.get_selection().selection_changed.connect(_on_selection_changed)
 	
 	ProjectSettings.settings_changed.connect(_on_settings_changed)
-	
-	add_autoload_singleton("Goolash", "res://addons/goolash/goolash.gd")
-	
-	var toolbar = get_editor_interface().get_editor_main_screen().get_child(0).get_child(0).get_child(0).get_child(0)
-	button_select_mode = toolbar.get_child(0)
-	var button_move_mode: Button = toolbar.get_child(2)
-	var button_rotate_mode: Button = toolbar.get_child(4)
-	var button_scale_mode: Button = toolbar.get_child(6)
-	
-	button_select_mode.pressed.connect(_on_mode_changed)
-	button_move_mode.pressed.connect(_on_mode_changed)
-	button_rotate_mode.pressed.connect(_on_mode_changed)
-	button_scale_mode.pressed.connect(_on_mode_changed)
 	
 	KEYFRAME_SCRIPT = preload("res://addons/goolash/brush_keyframe2d.gd")
 	KEYFRAME_SCRIPT_CUSTOM = preload("res://addons/goolash/frame_script.gd")
 
 
 func _on_mode_changed():
-	is_editing = is_instance_valid(editing_node) and button_select_mode.button_pressed
+	is_editing = is_instance_valid(editing_node)
 	
-	EditorInterface.inspect_object(editing_node)
+	#EditorInterface.inspect_object(editing_node)
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
 
@@ -252,28 +219,6 @@ func _on_settings_changed():
 	_load_project_settings()
 
 
-func _exit_tree() -> void:
-	remove_custom_type("BrushAnimation2D")
-	
-	remove_control_from_bottom_panel(timeline)
-	if is_instance_valid(timeline):
-		timeline.queue_free()
-	
-	if is_instance_valid(hud):
-		hud.queue_free()
-	
-	
-	var toolbar = get_editor_interface().get_editor_main_screen().get_child(0).get_child(0).get_child(0).get_child(0)
-	var button_move_mode: Button = toolbar.get_child(2)
-	var button_rotate_mode: Button = toolbar.get_child(4)
-	var button_scale_mode: Button = toolbar.get_child(6)
-	
-	button_select_mode.pressed.disconnect(_on_mode_changed)
-	button_move_mode.pressed.disconnect(_on_mode_changed)
-	button_rotate_mode.pressed.disconnect(_on_mode_changed)
-	button_scale_mode.pressed.disconnect(_on_mode_changed)
-
-
 func _handles(object) -> bool:
 	#if not button_select_mode.button_pressed:
 		#return false
@@ -282,64 +227,62 @@ func _handles(object) -> bool:
 	return false
 
 
-func _on_selection_changed():
-	var selection := get_editor_interface().get_selection()
-	var selected_nodes = selection.get_selected_nodes()
-	selected_keyframe = null
-	
-	if selected_nodes.size() == 1:
-		var selected_node = selected_nodes[0]
-		if selected_node is BrushAnimation2D:
-			select_brush_animation(selected_node)
-			return
-		elif selected_node is BrushKeyframe2D:
-			var keyframe: BrushKeyframe2D = selected_node
-			select_brush_animation(keyframe.get_clip())
-			keyframe.get_clip().goto(keyframe.frame_num)
-			selected_keyframe = keyframe
-			
-			for timeline_keyframe in get_tree().get_nodes_in_group("timeline_keyframes"):
-				if timeline_keyframe.keyframe == keyframe:
-					timeline_keyframe.grab_focus()
-			
-			set_editing_layer_num(keyframe.get_layer().layer_num)
-			return
-		elif selected_node is Brush2D:
-			_select_brush(selected_nodes[0])
-			return
-		elif selected_node is BrushLayer2D:
-			var layer: BrushLayer2D = selected_node
-			select_brush_animation(layer.get_clip())
-			set_editing_layer_num(layer.layer_num)
-			return
-		elif selected_node is Brush3D:
-			_select_brush(selected_node.brush2d)
-			editing_node = selected_node
-			return
-		elif selected_node is BrushClip3D:
-			select_brush_animation(selected_node.brush_animation2d)
-			editing_node = selected_node
-			return
-	
-	if editing_node:
-		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-		timeline.load_brush_animation(null)
-		_edit_brush_complete()
-	
+#func _on_selection_changed():
+	#var selection := get_editor_interface().get_selection()
+	#var selected_nodes = selection.get_selected_nodes()
+	#selected_keyframe = null
+	#
+	#if selected_nodes.size() == 1:
+		#var selected_node = selected_nodes[0]
+		#if selected_node is BrushAnimation2D:
+			#select_brush_animation(selected_node)
+			#return
+		#elif selected_node is BrushKeyframe2D:
+			#var keyframe: BrushKeyframe2D = selected_node
+			#select_brush_animation(keyframe.get_clip())
+			#keyframe.get_clip().goto(keyframe.frame_num)
+			#selected_keyframe = keyframe
+			#
+			#for timeline_keyframe in get_tree().get_nodes_in_group("timeline_keyframes"):
+				#if timeline_keyframe.keyframe == keyframe:
+					#timeline_keyframe.grab_focus()
+			#
+			#set_editing_layer_num(keyframe.get_layer().layer_num)
+			#return
+		#elif selected_node is Brush2D:
+			#_select_brush(selected_nodes[0])
+			#return
+		#elif selected_node is BrushLayer2D:
+			#var layer: BrushLayer2D = selected_node
+			#select_brush_animation(layer.get_clip())
+			#set_editing_layer_num(layer.layer_num)
+			#return
+		#elif selected_node is Brush3D:
+			#_select_brush(selected_node.brush2d)
+			#editing_node = selected_node
+			#return
+		#elif selected_node is BrushClip3D:
+			#select_brush_animation(selected_node.brush_animation2d)
+			#editing_node = selected_node
+			#return
+	#
+	#if editing_node:
+		#Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+		#timeline.load_brush_animation(null)
+		#_edit_brush_complete()
 
 
 func _select_brush(brush):
 	_edit_start(brush)
-	is_editing = button_select_mode.button_pressed
+	is_editing = true
 
 
 func select_brush_animation(clip):
 	_edit_start(clip)
 	timeline.load_brush_animation(clip)
-	make_bottom_panel_item_visible(timeline)
 	clip.draw()
 	clip.init()
-	is_editing = button_select_mode.button_pressed
+	is_editing = true
 	return
 
 
@@ -375,10 +318,10 @@ func _edit_brush_complete():
 func _input(event):
 	if Input.is_key_pressed(KEY_CTRL):
 		return
-	if not (_is_main_screen_visible(MAIN_SCREEN_2D) or _is_main_screen_visible(MAIN_SCREEN_3D)):
-		return
 	if event is InputEventKey and event.is_pressed():
 		_navigation_input(event)
+	
+	_forward_canvas_gui_input(event)
 
 
 func _navigation_input(event):
@@ -558,9 +501,6 @@ func _on_input_key_ctrl_pressed() -> bool:
 
 
 func _input_mouse(event: InputEventMouse) -> bool:
-	if not button_select_mode.button_pressed:
-		return false
-	
 	var mouse_position: Vector2
 	if editing_node is Brush3D or editing_node is BrushClip3D:
 		mouse_position = event.position + Vector2.ONE * 250.0
@@ -569,6 +509,7 @@ func _input_mouse(event: InputEventMouse) -> bool:
 			return true
 		mouse_position = _editing_brush.get_viewport_transform().affine_inverse() * event.position
 		mouse_position = _editing_brush.to_local(mouse_position)
+		mouse_position = _editing_brush.get_local_mouse_position()
 	
 	if event is InputEventMouseButton:
 		var event_mouse_button: InputEventMouseButton = event
@@ -607,8 +548,6 @@ func _on_mouse_motion(mouse_position):
 
 
 func _on_mouse_button_pressed(mouse_position: Vector2, right_mouse_button := false) -> bool:
-	if not button_select_mode.button_pressed:
-		return false
 	if _current_action != ACTION_NONE:
 		return true
 	_action_rmb = right_mouse_button != erase_mode
@@ -639,7 +578,7 @@ func _process(delta):
 		_queue_redraw()
 	
 	allow_hide_cursor = (
-			EditorInterface.get_editor_main_screen().get_child(0).visible and
+			#EditorInterface.get_editor_main_screen().get_child(0).visible and
 			hud.get_rect().has_point(hud.get_local_mouse_position()) and
 			allow_custom_cursor and 
 			DisplayServer.window_is_focused() and
@@ -798,29 +737,27 @@ func _remove_keyframe():
 		undo_redo.commit_action()
 
 
-static func set_tool(tool):
-	editor._set_tool(tool)
+func set_tool(tool):
+	_set_tool(tool)
 	hud.select_tool(tool)
 
 
 func _set_tool(tool):
 	current_tool = tool
-	if not button_select_mode.button_pressed:
-		button_select_mode.emit_signal("pressed")
 
 
-static func set_erase_mode(value):
+func set_erase_mode(value):
 	erase_mode = value
 	hud.set_erase_mode(value)
 
 
-static func set_paint_mode(paint_mode):
-	editor.current_paint_mode = paint_mode
+func set_paint_mode(paint_mode):
+	current_paint_mode = paint_mode
 	hud.set_paint_mode(paint_mode)
 
 
-static func set_warp_ease(warp_ease):
-	editor.current_warp_ease = warp_ease
+func set_warp_ease(warp_ease):
+	current_warp_ease = warp_ease
 	hud.set_warp_ease(warp_ease)
 
 
@@ -1676,11 +1613,8 @@ func add_custom_script_to_keyframe(keyframe):
 		keyframe.set_script(KEYFRAME_SCRIPT_CUSTOM.duplicate())
 		keyframe.has_custom_script = true
 		keyframe.edited.emit()
-	EditorInterface.inspect_object(keyframe.get_script())
+	#EditorInterface.inspect_object(keyframe.get_script())
 
-
-func _is_main_screen_visible(screen: int):
-	return EditorInterface.get_editor_main_screen().get_child(screen).visible
 
 
 static func is_editable(node):
@@ -1748,8 +1682,8 @@ func undo_redo_strokes_complete(name):
 	undo_redo.create_action(name)
 	undo_redo.add_undo_property(_editing_brush, "strokes", _strokes_before)
 	undo_redo.add_do_property(_editing_brush, "strokes", strokes_after)
-	undo_redo.add_do_method(_editing_brush, "redraw_all")
-	undo_redo.add_undo_method(_editing_brush, "redraw_all")
+	undo_redo.add_do_method(_editing_brush.redraw_all)
+	undo_redo.add_undo_method(_editing_brush.redraw_all)
 	
 	undo_redo.commit_action(false)
 
@@ -1869,3 +1803,11 @@ static func douglas_peucker(points: PackedVector2Array, tolerance := 1.0, level 
 	else:
 		return PackedVector2Array([points[0], points[points.size() - 1]])
 
+var undo_redo = UndoRedo.new()
+
+func get_undo_redo():
+	return undo_redo
+
+
+func is_editor_hint():
+	return true

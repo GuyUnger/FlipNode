@@ -1,4 +1,3 @@
-@tool
 class_name Timeline
 extends Control
 
@@ -19,6 +18,8 @@ var scrubbing := false
 @onready var input_fps = %LineEditFPS
 
 func _ready():
+	GoolashEditor.timeline = self
+	await get_tree().process_frame
 	frame_indicator.modulate = GoolashEditor.godot_accent_color
 	
 	%LabelNoBrushClip.visible = true

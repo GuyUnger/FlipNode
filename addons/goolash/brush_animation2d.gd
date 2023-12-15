@@ -10,7 +10,7 @@ signal edited
 	get:
 		return current_frame
 	set(value):
-		if free_after_playing and not Engine.is_editor_hint():
+		if free_after_playing and not GoolashEditor.is_editor_hint():
 			if value > _frame_count:
 				queue_free()
 		elif looping:
@@ -18,7 +18,7 @@ signal edited
 		else:
 			value = clamp(value, 0, _frame_count - 1)
 		current_frame = value
-		if Engine.is_editor_hint():
+		if GoolashEditor.is_editor_hint():
 			#TODO: replace this with signal?
 			GoolashEditor.editor._get_editing_brush()
 		draw()
@@ -56,7 +56,7 @@ func _validate_property(property):
 
 func _ready():
 	_find_layers()
-	if Engine.is_editor_hint():
+	if GoolashEditor.is_editor_hint():
 		init()
 		stop()
 	else:

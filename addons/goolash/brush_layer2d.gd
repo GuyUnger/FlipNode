@@ -21,7 +21,7 @@ enum {TWEENFRAME_TRANSFORM, TWEENFRAME_FRAMENUM}
 
 
 func _ready():
-	if Engine.is_editor_hint():
+	if GoolashEditor.is_editor_hint():
 		update_keyframe_endpoints()
 		bake_tweenframes()
 		find_keyframes()
@@ -66,7 +66,7 @@ func update_keyframe_endpoints():
 
 func display_frame(frame_num):
 	transform = tweenframes_baked[min(frame_num, frame_count-1)]
-	if Engine.is_editor_hint():
+	if GoolashEditor.is_editor_hint():
 		var onion_skin_frames := 0
 		if (
 				GoolashEditor.onion_skin_enabled and
