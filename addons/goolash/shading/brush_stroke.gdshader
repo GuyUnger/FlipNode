@@ -24,8 +24,7 @@ void fragment() {
 	for (float angle = 0.0; angle < TAU; angle += TAU / directions) {
 		vec2 offset = vec2(cos(angle), sin(angle));
 		for (float i = 1.0; i <= quality; i += 1.0) {
-			vec3 sample = texture(screen_texture, uv + offset * i / quality * size * SCREEN_PIXEL_SIZE).rgb;
-			a += max(max(sample.r, sample.g), sample.b);
+			a += texture(screen_texture, uv + offset * i / quality * size * SCREEN_PIXEL_SIZE).r;
 		}
 	}
 	a /= directions * quality;
