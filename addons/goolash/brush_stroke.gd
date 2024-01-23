@@ -3,10 +3,11 @@ class_name BrushStroke
 extends Resource
 
 @export var color: Color
+@export var false_hole_polygon: PackedVector2Array
 @export var polygon: PackedVector2Array
 @export var holes:  Array[PackedVector2Array]
 
-var graphic: BrushStroke2D
+var polygon2d: Polygon2D
 
 ## Curves
 var polygon_curve: Curve2D: 
@@ -23,6 +24,7 @@ var _curves_dirty := true
 
 var _erasing := false
 
+var brush: Brush2D
 
 func _init(polygon := PackedVector2Array(), holes: Array[PackedVector2Array] = [], color: Color = Color.WHITE):
 	self.polygon = polygon
@@ -30,9 +32,25 @@ func _init(polygon := PackedVector2Array(), holes: Array[PackedVector2Array] = [
 	self.color = color
 
 
-func draw():
-	if graphic:
-		graphic.draw_stroke(self)
+func init(brush: Brush2D):
+	self.brush = brush
+	polygon2d = Polygon2D.new()
+	draw()
+
+
+func draw() -> void:
+	if Engine.is_editor_hint():
+		generate_false_hole_polygon()
+	
+	if not polygon2d.get_parent():
+		brush.add_child(polygon2d)
+	
+	polygon2d.polygon = false_hole_polygon
+	polygon2d.color = color
+
+
+func clear():
+	polygon2d.get_parent().remove_child(polygon2d)
 
 
 func union_stroke(stroke: BrushStroke):
@@ -57,20 +75,25 @@ func union_stroke(stroke: BrushStroke):
 		else:
 			var polygons_clipped = Geometry2D.clip_polygons(hole_a, polygon_b)
 			for p in polygons_clipped:
+				p.reverse()
 				merged_holes.push_front(p)
 	
 	for hole_b in holes_b:
 		if Geometry2D.intersect_polygons(hole_b, polygon_a).size() == 0:
+			if not Geometry2D.is_polygon_clockwise(hole_b):
+				hole_b.reverse()
 			merged_holes.push_back(hole_b)
 		else:
 			var polygons_clipped = Geometry2D.clip_polygons(hole_b, polygon_a)
 			for p in polygons_clipped:
+				p.reverse()
 				merged_holes.push_front(p)
 	
 	for hole_a in holes_a:
 		for hole_b in holes_b:
 			var interected_holes = Geometry2D.intersect_polygons(hole_a, hole_b)
 			for intersected_hole in interected_holes:
+				intersected_hole.reverse()
 				merged_holes.push_back(intersected_hole)
 	
 	polygon = merged_polygon
@@ -97,6 +120,8 @@ func union_polygon(with_polygon: PackedVector2Array):
 			holes.remove_at(i)
 			var polygons_clipped = Geometry2D.clip_polygons(hole, with_polygon)
 			for p in polygons_clipped:
+				if not Geometry2D.is_polygon_clockwise(p):
+					p.reverse()
 				holes.push_front(p)
 				i += 1
 		else:
@@ -118,22 +143,24 @@ func subtract_stroke(stroke: BrushStroke) -> Array:
 	
 	for hole in holes:
 		if Geometry2D.intersect_polygons(subtract_polygon, hole).size() > 0:
-			
 			var result_polygons = Geometry2D.merge_polygons(subtract_polygon, hole)
 			for result_polygon in result_polygons:
 				if Geometry2D.is_polygon_clockwise(result_polygon):
 					## island inside hole, make a new stroke, not sure if this is needed?
 					result_polygon.reverse()
 					subtracted_strokes.push_back(create_stroke(result_polygon))
-					printt("ITS NEEDED?")
 				else:
 					subtract_polygon = result_polygon
 		else:
+			if not Geometry2D.is_polygon_clockwise(hole):
+				hole.reverse()
 			subtracted_holes.push_back(hole)
 		
 		for hole_a in stroke.holes:
 			var results = Geometry2D.intersect_polygons(hole, hole_a)
-			holes_in_holes.append_array(results)
+			for result in results:
+				result.reverse()
+				holes_in_holes.push_back(result)
 	
 	for hole_b in stroke.holes:
 		var results = Geometry2D.intersect_polygons(polygon, hole_b)
@@ -152,7 +179,9 @@ func subtract_stroke(stroke: BrushStroke) -> Array:
 	
 	if Geometry2D.clip_polygons(subtract_polygon, polygon).size() == 0:
 		## hole added
+		subtract_polygon.reverse()
 		subtracted_holes.push_back(subtract_polygon)
+		
 		holes = subtracted_holes
 		subtracted_strokes.push_back(self)
 		return subtracted_strokes
@@ -307,7 +336,10 @@ func optimize(tolerance := 1.0) -> void:
 		#hole_polygon = Geometry2D.offset_polygon(hole_polygon, 0.0)[0]
 		var hole_curve = polygon_to_curve(hole_polygon, tolerance)
 		hole_curves.push_back(hole_curve)
-		holes[i] = hole_curve.get_baked_points()
+		var optimized_hole = hole_curve.get_baked_points()
+		if not Geometry2D.is_polygon_clockwise(optimized_hole):
+			optimized_hole.reverse()
+		holes[i] = optimized_hole
 
 
 func create_curves():
@@ -321,10 +353,66 @@ func create_curves():
 
 func polygon_to_curve(polygon: PackedVector2Array, bake_interval: float) -> Curve2D:
 	var curve := Curve2D.new()
-	curve.bake_interval = bake_interval * 20.0
+	curve.bake_interval = bake_interval * 16.0
 	for vertex in polygon:
 		curve.add_point(vertex)
 	return curve
+
+
+func generate_false_hole_polygon():
+	false_hole_polygon = polygon
+	
+	var holes_ordered := []
+	
+	for hole_i in holes.size():
+		var hole = holes[hole_i]
+		var left := 999999.0
+		var left_vertex_id
+		for id in hole.size():
+			if hole[id].x < left:
+				left = hole[id].x
+				left_vertex_id = id
+		holes_ordered.push_back([left, hole_i, left_vertex_id])
+	
+	holes_ordered.sort_custom(_sort_holes)
+	
+	for hole_ordered in holes_ordered:
+		var hole: PackedVector2Array = holes[hole_ordered[1]]
+		if not Geometry2D.is_polygon_clockwise(hole):
+			push_error("Counter-Clockwise Hole Detected. Error Error.", hole_ordered)
+		var left_vertex_id = hole_ordered[2]
+		var left_vertex = hole[left_vertex_id]
+		var closest_distance := 999999.0
+		var closest_intersect_i
+		var closest_intersect_position
+		for i in false_hole_polygon.size() - 1:
+			var intersect = Geometry2D.segment_intersects_segment(
+					false_hole_polygon[i], false_hole_polygon[i+1],
+					left_vertex, left_vertex + Vector2.LEFT * 9999999.0
+				)
+			
+			if intersect:
+				var distance = left_vertex.distance_to(intersect)
+				if distance < closest_distance:
+					closest_distance = distance
+					closest_intersect_i = i
+					closest_intersect_position = intersect
+		
+		var hole_before = hole
+		hole = hole.slice(left_vertex_id) +  hole.slice(0, left_vertex_id + 1)
+		
+		var intersect = PackedVector2Array([closest_intersect_position])
+		false_hole_polygon = (
+				false_hole_polygon.slice(0, closest_intersect_i + 1) +
+				intersect + hole + intersect +
+				false_hole_polygon.slice(closest_intersect_i + 1)
+			)
+	
+	return false_hole_polygon
+
+
+func _sort_holes(a, b):
+	return a[0] < b[0]
 
 
 func is_polygon_valid(polygon):
@@ -345,11 +433,18 @@ func is_polygon_valid(polygon):
 		if not is_nan(ar):
 			area += ar
 	
-	return area > 16.0
+	return area > 4 ** 2
 
 
 func is_valid() -> bool:
 	return is_polygon_valid(polygon)
+
+
+func get_vertex_count() -> int:
+	var count = polygon.size()
+	for hole in holes:
+		count += hole.size()
+	return count
 
 
 func copy():

@@ -44,3 +44,4 @@ rendering/anti-alias=true
 [rendering]
 
 environment/defaults/default_clear_color=Color(0.862745, 0.854902, 0.815686, 1)
+anti_aliasing/quality/msaa_2d=2

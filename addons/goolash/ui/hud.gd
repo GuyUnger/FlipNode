@@ -25,6 +25,18 @@ var _used_colors := []
 func _ready():
 	_update_default_swatches()
 	_update_color_picker_color()
+	
+	GoolashEditor.editor.brush_edited.connect(_update_brush_stats)
+	GoolashEditor.editor.selected_brush_changed.connect(_update_brush_stats)
+
+
+func _update_brush_stats():
+	var brush = GoolashEditor.editor._editing_brush
+	var strokes = brush.strokes.size()
+	var vertices = 0
+	for stroke in brush.strokes:
+		vertices += stroke.get_vertex_count()
+	%Stats.text = "strokes: %s\nvertices: %s" % [strokes, vertices]
 
 
 func _update_default_swatches():

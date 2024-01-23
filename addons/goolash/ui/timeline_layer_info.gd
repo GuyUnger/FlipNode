@@ -4,7 +4,7 @@ extends Panel
 const IconVisibilityVisible = preload("res://addons/goolash/icons/GuiVisibilityVisible.svg")
 const IconVisibilityHidden = preload("res://addons/goolash/icons/GuiVisibilityHidden.svg")
 
-var layer: BrushLayer2D
+var node
 
 @export var style_normal := StyleBoxEmpty.new()
 @export var style_active: StyleBoxFlat
@@ -18,14 +18,19 @@ func init(layer):
 
 
 func _on_goolash_editing_layer_changed():
-	if not is_instance_valid(layer):
+	if not is_instance_valid(node):
 		GoolashEditor.editor.editing_layer_changed.disconnect(_on_goolash_editing_layer_changed)
 		return
 	update_style()
 
 
 func update_style():
-	add_theme_stylebox_override("panel", style_active if GoolashEditor.editor.get_editing_layer_num() == layer.layer_num else style_normal)
+	var active := false
+	if node is BrushLayer2D:
+		active = GoolashEditor.editor.get_editing_layer_num() == node.layer_num
+	else:
+		active = EditorInterface.get_selection().get_selected_nodes()[0] == node
+	add_theme_stylebox_override("panel", style_active if active else style_normal)
 
 
 func _on_line_edit_name_text_submitted(new_text):
@@ -33,7 +38,7 @@ func _on_line_edit_name_text_submitted(new_text):
 
 
 func _on_line_edit_name_focus_exited():
-	layer.name = %LineEditName.text
+	node.name = %LineEditName.text
 
 
 func _on_button_visible_toggled(toggled_on):
@@ -43,13 +48,14 @@ func _on_button_visible_toggled(toggled_on):
 func set_visibility(value: bool):
 	%ButtonVisible.button_pressed = not value
 	%ButtonVisible.icon = IconVisibilityVisible if value else IconVisibilityHidden
-	layer.visible = value
+	node.visible = value
 
 
 func _on_line_edit_name_focus_entered():
 	EditorInterface.inspect_object(null)
-	EditorInterface.inspect_object(layer)
+	EditorInterface.inspect_object(node)
 
 
 func _on_button_delete_pressed():
-	GoolashEditor.editor.remove_layer(layer)
+	if node is BrushLayer2D:
+		GoolashEditor.editor.remove_layer(node)

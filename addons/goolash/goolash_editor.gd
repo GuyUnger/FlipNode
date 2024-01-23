@@ -3,9 +3,11 @@ class_name GoolashEditor extends EditorPlugin
 
 signal editing_layer_changed
 signal selected_keyframe_changed
+signal selected_brush_changed
+signal brush_edited
 
-enum {TOOL_SELECT, TOOL_PAINT, TOOL_FILL, TOOL_EYEDROPPER, TOOL_OVAL, TOOL_RECT, TOOL_SHAPE}
-enum {ACTION_NONE, ACTION_WARP, ACTION_PAINT, ACTION_OVAL, ACTION_RECT, ACTION_SHAPE, ACTION_MOVE, ACTION_SELECT_RECT}
+enum {TOOL_SELECT, TOOL_PAINT, TOOL_FILL, TOOL_EYEDROPPER, TOOL_OVAL, TOOL_RECT, TOOL_SHAPE, TOOL_SMOOTH}
+enum {ACTION_NONE, ACTION_WARP, ACTION_PAINT, ACTION_OVAL, ACTION_RECT, ACTION_SHAPE, ACTION_MOVE, ACTION_SELECT_RECT, ACTION_SMOOTH}
 enum {PAINT_MODE_FRONT, PAINT_MODE_BEHIND, PAINT_MODE_INSIDE}
 enum {WARP_EASE_SMOOTH, WARP_EASE_SHARP, WARP_EASE_LINEAR, WARP_EASE_RANDOM}
 
@@ -19,7 +21,7 @@ static var godot_selection_color: Color
 const TextureEyedropper = preload("res://addons/goolash/icons/ColorPick.svg")
 const TextureFill = preload("res://addons/goolash/icons/CursorBucket.svg")
 const StrokeEraseMaterial = preload("res://addons/goolash/shading/brush_erase_material.tres")
-const StrokeRegularMaterial = preload("res://addons/goolash/shading/brush_stroke_material.tres")
+const StrokeRegularMaterial = null
 
 static var KEYFRAME_SCRIPT
 static var KEYFRAME_SCRIPT_CUSTOM
@@ -106,7 +108,7 @@ func _enter_tree():
 	set_process(false)
 	
 	godot_accent_color = EditorInterface.get_editor_settings().get_setting("interface/theme/accent_color")
-	godot_selection_color = EditorInterface.get_editor_settings().get_setting("text_editor/theme/highlighting/selection_color")
+	godot_selection_color = Color("ff8000")
 	
 	
 	_init_project_settings()
@@ -190,8 +192,7 @@ func _init_project_settings():
 	_add_keybind("timeline", "add_keyframe", "key_add_keyframe", KEY_6)
 	_add_keybind("timeline", "add_blank_keyframe", "key_add_keyframe_blank", KEY_7)
 	_add_keybind("timeline", "add_script_to_keyframe", "key_add_script", KEY_9)
-	
-	
+
 
 var keybind_settings: Dictionary
 
@@ -281,6 +282,7 @@ func _handles(object) -> bool:
 		return true
 	return false
 
+#region Node Selection
 
 func _on_selection_changed():
 	var selection := get_editor_interface().get_selection()
@@ -288,53 +290,57 @@ func _on_selection_changed():
 	selected_keyframe = null
 	
 	if selected_nodes.size() == 1:
-		var selected_node = selected_nodes[0]
-		if selected_node is BrushAnimation2D:
-			select_brush_animation(selected_node)
-			return
-		elif selected_node is BrushKeyframe2D:
-			var keyframe: BrushKeyframe2D = selected_node
-			select_brush_animation(keyframe.get_clip())
-			keyframe.get_clip().goto(keyframe.frame_num)
-			selected_keyframe = keyframe
-			
-			for timeline_keyframe in get_tree().get_nodes_in_group("timeline_keyframes"):
-				if timeline_keyframe.keyframe == keyframe:
-					timeline_keyframe.grab_focus()
-			
-			set_editing_layer_num(keyframe.get_layer().layer_num)
-			return
-		elif selected_node is Brush2D:
-			_select_brush(selected_nodes[0])
-			return
-		elif selected_node is BrushLayer2D:
-			var layer: BrushLayer2D = selected_node
-			select_brush_animation(layer.get_clip())
-			set_editing_layer_num(layer.layer_num)
-			return
-		elif selected_node is Brush3D:
-			_select_brush(selected_node.brush2d)
-			editing_node = selected_node
-			return
-		elif selected_node is BrushClip3D:
-			select_brush_animation(selected_node.brush_animation2d)
-			editing_node = selected_node
+		if select_node(selected_nodes[0]):
 			return
 	
 	if editing_node:
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 		timeline.load_brush_animation(null)
-		_edit_brush_complete()
-	
+		_edit_node_brush_complete()
 
 
-func _select_brush(brush):
-	_edit_start(brush)
+func select_node(selected_node):
+	if selected_node is BrushAnimation2D:
+		_select_node_brush_animation(selected_node)
+		return true
+	elif selected_node is BrushKeyframe2D:
+		var keyframe: BrushKeyframe2D = selected_node
+		_select_node_brush_animation(keyframe.get_clip())
+		keyframe.get_clip().goto(keyframe.frame_num)
+		selected_keyframe = keyframe
+		
+		for timeline_keyframe in get_tree().get_nodes_in_group("timeline_keyframes"):
+			if timeline_keyframe.keyframe == keyframe:
+				timeline_keyframe.grab_focus()
+		
+		set_editing_layer_num(keyframe.get_layer().layer_num)
+		return true
+	elif selected_node is Brush2D:
+		_select_node_brush(selected_node)
+		return true
+	elif selected_node is BrushLayer2D:
+		var layer: BrushLayer2D = selected_node
+		_select_node_brush_animation(layer.get_clip())
+		set_editing_layer_num(layer.layer_num)
+		return true
+	elif selected_node is Brush3D:
+		_select_node_brush(selected_node.brush2d)
+		editing_node = selected_node
+		return true
+	elif selected_node is BrushClip3D:
+		_select_node_brush_animation(selected_node.brush_animation2d)
+		editing_node = selected_node
+		return true
+	return false
+
+
+func _select_node_brush(brush):
+	_edit_node_start(brush)
 	is_editing = button_select_mode.button_pressed
 
 
-func select_brush_animation(clip):
-	_edit_start(clip)
+func _select_node_brush_animation(clip):
+	_edit_node_start(clip)
 	timeline.load_brush_animation(clip)
 	make_bottom_panel_item_visible(timeline)
 	clip.draw()
@@ -343,17 +349,18 @@ func select_brush_animation(clip):
 	return
 
 
-func _edit_start(node):
+func _edit_node_start(node):
 	editing_node = node
 	_get_editing_brush()
 	_selected_highlight = 1.0
 	
 	hud.visible = true
 	hud._update_used_colors()
+	selected_brush_changed.emit()
 	set_process(is_editable(editing_node))
 
 
-func _edit_brush_complete():
+func _edit_node_brush_complete():
 	var i := 0
 	while i < _editing_brush.strokes.size():
 		var stroke_data: BrushStroke = _editing_brush.strokes[i]
@@ -365,20 +372,46 @@ func _edit_brush_complete():
 	var previous_editing = editing_node
 	_queue_redraw()
 	editing_node = null
-	#previous_editing.draw()
 	hud.visible = false
 	set_process(false)
 
+#endregion
 
-#region INPUT
+#region Input
 
 func _input(event):
 	if Input.is_key_pressed(KEY_CTRL):
 		return
 	if not (_is_main_screen_visible(MAIN_SCREEN_2D) or _is_main_screen_visible(MAIN_SCREEN_3D)):
 		return
-	if event is InputEventKey and event.is_pressed():
-		_navigation_input(event)
+	if editing_node:
+		if event is InputEventKey and event.is_pressed():
+			_navigation_input(event)
+	#else:
+		#TODO: this needs much more work before its usable and not annoying
+		#if event is InputEventMouseButton:
+			#if event.button_index == MOUSE_BUTTON_LEFT:
+				#if event.pressed:
+					#try_select_children(get_tree().root)
+
+func try_select_children(parent):
+	var children: Array = parent.get_children()
+	children.reverse()
+	for child in children:
+		if child is Brush2D:
+			for stroke in child.strokes:
+				if Geometry2D.is_point_in_polygon(child.get_local_mouse_position(), stroke.polygon):
+					select(child)
+					return true
+		if try_select_children(child):
+			return true
+	return false
+
+func select(child):
+	await get_tree().process_frame
+	EditorInterface.inspect_object(child)
+	EditorInterface.get_selection().add_node(child)
+	_on_selection_changed()
 
 
 func _navigation_input(event):
@@ -512,7 +545,7 @@ func _on_key_pressed(event: InputEventKey) -> bool:
 			elif current_tool == TOOL_SELECT:
 				_action_warp_size *= 1 / (2.0 ** (1.0 / 6.0))
 				_action_warp_size_preview_t = 1.0
-				_get_warp_selections(_editing_brush.get_local_mouse_position())
+				_get_edge_selections(_editing_brush.get_local_mouse_position(), _action_warp_size, current_warp_ease)
 				return true
 		key_tool_size_increase:
 			if current_tool == TOOL_PAINT:
@@ -522,7 +555,7 @@ func _on_key_pressed(event: InputEventKey) -> bool:
 			elif current_tool == TOOL_SELECT:
 				_action_warp_size *= 2.0 ** (1.0 / 6.0)
 				_action_warp_size_preview_t = 1.0
-				_get_warp_selections(_editing_brush.get_local_mouse_position())
+				_get_edge_selections(_editing_brush.get_local_mouse_position(), _action_warp_size, current_warp_ease)
 				return true
 		key_erase_mode:
 			set_erase_mode(true)
@@ -603,8 +636,9 @@ func _on_mouse_motion(mouse_position):
 	match _get_current_tool():
 		TOOL_SELECT:
 			if _current_action == ACTION_NONE:
-				_get_warp_selections(mouse_position)
-
+				_get_edge_selections(mouse_position, _action_warp_size, current_warp_ease)
+		TOOL_SMOOTH:
+			action_smooth_mouse_motion(mouse_position)
 
 func _on_mouse_button_pressed(mouse_position: Vector2, right_mouse_button := false) -> bool:
 	if not button_select_mode.button_pressed:
@@ -625,7 +659,6 @@ func _on_mouse_button_released(mouse_position):
 
 #endregion
 
-
 func _process(delta):
 	if not is_instance_valid(editing_node):
 		set_process(false)
@@ -637,6 +670,10 @@ func _process(delta):
 	if get_viewport().canvas_transform != canvas_transform_previous:
 		canvas_transform_previous = editing_node.get_viewport().get_screen_transform()
 		_queue_redraw()
+	
+	match _current_action:
+		ACTION_SMOOTH:
+			_action_smooth_process(delta)
 	
 	allow_hide_cursor = (
 			EditorInterface.get_editor_main_screen().get_child(0).visible and
@@ -851,6 +888,9 @@ func _action_start(mouse_position) -> bool:
 		TOOL_SHAPE:
 			action_shape_start(mouse_position)
 			return true
+		TOOL_SMOOTH:
+			action_smooth_start(mouse_position)
+			return true
 	return false
 
 
@@ -872,7 +912,7 @@ func _current_action_complete(mouse_position):
 	_current_action = ACTION_NONE
 
 
-func _forward_draw_brush(brush):
+func _forward_draw_brush(brush: Brush2D):
 	var cursor_position = brush.get_local_mouse_position()
 	
 	match _current_action:
@@ -893,31 +933,46 @@ func _forward_draw_brush(brush):
 		TOOL_SELECT:
 			if _current_action == ACTION_NONE:
 				var zoom = _get_brush_zoom()
-				for selection in action_warp_selections:
-						_draw_warp_selection(selection)
-						brush.draw_circle(selection.closest_point, 5.0 / zoom, Color.WHITE)
-						_draw_circle_outline(brush, selection.closest_point, 8.0 / zoom, Color.WHITE, 1.0 / zoom)
-						
-						_draw_circle_outline(brush, selection.closest_point, _action_warp_size, Color(0.0, 0.0, 0.0, 0.2), 0.5 / zoom)
-						_draw_circle_outline(brush, selection.closest_point, _action_warp_size, Color(1.0, 1.0, 1.0, 0.3), 0.5 / zoom)
-	
+				for selection in edge_selections:
+					_draw_warp_selection(selection)
+					brush.draw_circle(selection.closest_point, 5.0 / zoom, Color.WHITE)
+					_draw_circle_outline(brush, selection.closest_point, 8.0 / zoom, Color.WHITE, 1.0 / zoom)
+					
+					_draw_circle_outline(brush, selection.closest_point, _action_warp_size, Color(0.0, 0.0, 0.0, 0.2), 0.5 / zoom)
+					_draw_circle_outline(brush, selection.closest_point, _action_warp_size, Color(1.0, 1.0, 1.0, 0.3), 0.5 / zoom)
+		TOOL_SMOOTH:
+			var zoom = _get_brush_zoom()
+			for selection in edge_selections:
+				_draw_warp_selection(selection)
+				brush.draw_circle(selection.closest_point, 5.0 / zoom, Color.WHITE)
+				_draw_circle_outline(brush, selection.closest_point, 8.0 / zoom, Color.WHITE, 1.0 / zoom)
+				
+				_draw_circle_outline(brush, selection.closest_point, _action_warp_size, Color(0.0, 0.0, 0.0, 0.2), 0.5 / zoom)
+				_draw_circle_outline(brush, selection.closest_point, _action_warp_size, Color(1.0, 1.0, 1.0, 0.3), 0.5 / zoom)
 	
 	if _selected_highlight > 0.0:
+		draw_brush_highlight(brush)
+
+
+func draw_brush_highlight(brush: Brush2D):
+		if _selected_highlight > 0.6 and fmod(_selected_highlight / 0.3, 1.0) > 0.5:
+			return
+		var thickness = 2.0 / editing_node.global_scale.x
 		for stroke: BrushStroke in brush.strokes:
 			if stroke.polygon.size() < 3 or stroke._erasing:
 				continue
-			brush.draw_stroke_outline(stroke, 1.0, godot_selection_color, ease(_selected_highlight, 0.2))
+			brush.draw_stroke_outline(stroke, thickness, godot_selection_color, ease(_selected_highlight, 0.2))
 
 
-func _draw_warp_selection(selection: ActionWarpSelection):
+func _draw_warp_selection(selection: EdgeSelection):
 	var zoom = _get_brush_zoom()
 	var stroke = selection.stroke
 	
 	var polygon = stroke.polygon if selection.hole_id == -1 else stroke.holes[selection.hole_id]
 	
-	for i in selection.vertex_indexes.size() - 1:
-		var from = polygon[selection.vertex_indexes[i]]
-		var to = polygon[selection.vertex_indexes[i + 1]]
+	for i in selection.vertex_indices.size() - 1:
+		var from = polygon[selection.vertex_indices[i]]
+		var to = polygon[selection.vertex_indices[i + 1]]
 		var thickness_from = selection.vertex_weights[i]
 		var thickness_to = selection.vertex_weights[i+1]
 		
@@ -959,7 +1014,7 @@ func _draw_custom_cursor():
 			
 			hud.draw_circle(cursor_position, 2.0, Color.WHITE)
 		TOOL_SELECT:
-			if _action_warp_size_preview_t > 0.0 and action_warp_selections.size() == 0:
+			if _action_warp_size_preview_t > 0.0 and edge_selections.size() == 0:
 				var color = Color(1.0, 1.0, 1.0, ease(_action_warp_size_preview_t, 0.4) * 0.2)
 				_draw_circle_outline(hud, cursor_position, _action_warp_size * zoom, color, 0.5)
 		TOOL_EYEDROPPER:
@@ -991,22 +1046,23 @@ func _draw_circle_outline(target, draw_position: Vector2, size: float, color: Co
 		target.draw_polyline(PackedVector2Array(points), color, width, true)
 
 
-## ACTIONS
+## Actions
 
-#region ACTION WARP
-var action_warp_selections: Array
+#region Action Warp
+
+var edge_selections: Array
 
 func action_warp_try(action_position: Vector2) -> bool:
-	_get_warp_selections(action_position)
+	_get_edge_selections(action_position, _action_warp_size, current_warp_ease)
 	#var selections := []
 	#for stroke in _editing_brush.strokes:
 		#var selection = _get_warp_selection(stroke, action_position, _action_warp_size)
 		#if selection:
 			#selections.push_back(selection)
 	
-	#action_warp_selections = selections
-	if action_warp_selections.size() > 0:
-		for selection in action_warp_selections:
+	#edge_selections = selections
+	if edge_selections.size() > 0:
+		for selection in edge_selections:
 			_editing_brush.move_stroke_to_front(selection.stroke)
 		undo_redo_strokes_start()
 		_current_action = ACTION_WARP
@@ -1019,9 +1075,9 @@ func action_warp_process(action_position):
 	var move_delta = action_position - _action_position_previous
 	_action_position_previous = action_position
 	
-	for selection: ActionWarpSelection in action_warp_selections:
+	for selection: EdgeSelection in edge_selections:
 		for i in selection.get_vertex_count():
-			var index = selection.vertex_indexes[i]
+			var index = selection.vertex_indices[i]
 			var weight = selection.vertex_weights[i]
 			if selection.hole_id == -1:
 				selection.stroke.polygon[index] += move_delta * weight
@@ -1031,11 +1087,11 @@ func action_warp_process(action_position):
 
 
 func action_warp_complete():
-	for selection: ActionWarpSelection in action_warp_selections:
+	for selection: EdgeSelection in edge_selections:
 		_editing_brush.merge_stroke(selection.stroke)
-	for selection: ActionWarpSelection in action_warp_selections:
+	for selection: EdgeSelection in edge_selections:
 		selection.stroke.optimize()
-	for selection: ActionWarpSelection in action_warp_selections:
+	for selection: EdgeSelection in edge_selections:
 		if Geometry2D.is_polygon_clockwise(selection.stroke.polygon):
 			selection.stroke.polygon.reverse()
 		var invert_fix_results = Geometry2D.offset_polygon(selection.stroke.polygon, -0.01, Geometry2D.JOIN_ROUND)
@@ -1063,173 +1119,43 @@ func action_warp_complete():
 	_editing_brush.edited.emit()
 	if editing_node is BrushAnimation2D:
 		editing_node.edited.emit()
-	action_warp_selections = []
+	edge_selections = []
 	undo_redo_strokes_complete("Warp Stroke")
 	_action_rmb = false
 
 
-func _get_warp_selections(mouse_position):
-	action_warp_selections = []
+func _get_edge_selections(mouse_position, range: float, ease_mode):
+	edge_selections = []
 	for stroke: BrushStroke in _editing_brush.strokes:
-		var selection: ActionWarpSelection = _get_warp_selection(
+		var selection: EdgeSelection = _get_edge_selection(
 				stroke, stroke.polygon, stroke.polygon_curve,
-				mouse_position, _action_warp_size
+				mouse_position, range, ease_mode
 			)
 		if selection:
-			action_warp_selections.push_back(selection)
+			edge_selections.push_back(selection)
 		
 		## Holes
 		for i in stroke.holes.size():
-			var selection_hole: ActionWarpSelection = _get_warp_selection(
+			var selection_hole: EdgeSelection = _get_edge_selection(
 					stroke, stroke.holes[i], stroke.hole_curves[i],
-					mouse_position, _action_warp_size
+					mouse_position, range, ease_mode
 				)
 			if selection_hole:
 				selection_hole.hole_id = i
-				action_warp_selections.push_back(selection_hole)
-
-
-func _get_warp_selection(stroke, polygon, curve, action_position: Vector2, range: float) -> ActionWarpSelection:
-	if _action_rmb:
-		var selection := ActionWarpSelection.new(stroke)
-		var l = polygon.size()
-		for i in l:
-			var distance = polygon[i].distance_to(action_position)
-			if distance < range:
-				var t = 1.0 - distance / range
-				var weight = _warp_ease(t)
-				selection.add_vertex(i, weight)
-		if selection.get_vertex_count() > 0:
-			return selection
-		return null
-	
-	var closest_point_on_edge = curve.get_closest_point(action_position)
-	var distance_to_edge = closest_point_on_edge.distance_to(action_position)
-	
-	if distance_to_edge > 6.0 / _get_brush_zoom():
-		return null
-	
-	var l = polygon.size()
-	var closest_vertex_i: int = -1
-	var closest_distance: float = 999.0
-	for vertex_i in l:
-		var dist = closest_point_on_edge.distance_to(polygon[vertex_i])
-		if dist < closest_distance:
-			closest_distance = dist
-			closest_vertex_i = vertex_i
-	
-	var selection := ActionWarpSelection.new(stroke)
-	
-	selection.add_vertex(closest_vertex_i, 1.0)
-	
-	## travel clockwise of dragging point 👉
-	var total_dist := 0.0
-	for i in int(l * 0.5):
-		var vertex_i = (closest_vertex_i + i + 1) % l
-		var vertex_i_prev = (closest_vertex_i + i) % l
-		#var vertex_i_next = (closest_vertex_i + i + 1) % l
-		
-		#var angle_prev = polygon[vertex_i_prev].angle_to_point(polygon[vertex_i])
-		#var angle_next = polygon[vertex_i].angle_to_point(polygon[vertex_i_next])
-		#if (angle_difference(angle_prev, angle_next)) > _action_warp_cut_angle:
-			#break
-		
-		var dist = polygon[vertex_i].distance_to(polygon[vertex_i_prev])
-		
-		total_dist += dist
-		if total_dist > range:
-			## passed range, stop looking ✋
-			break
-		
-		var weight = 1.0 - (total_dist / range)
-		weight = _warp_ease(weight)
-		selection.add_vertex(vertex_i, weight)
-	
-	## this is just so the preview line can be drawn in a straight line
-	selection.vertex_indexes.reverse()
-	selection.vertex_weights.reverse()
-	
-	## travel counterclockwise of dragging point 👈
-	total_dist = 0.0
-	for i in int(l * 0.5):
-		var vertex_i = (closest_vertex_i - i - 1 + l) % l
-		var vertex_i_prev = (closest_vertex_i - i + l) % l
-		#var vertex_i_next = (closest_vertex_i + l - i + 1) % l
-		
-		#var angle_prev = polygon[vertex_i_prev].angle_to_point(polygon[vertex_i])
-		#var angle_next = polygon[vertex_i].angle_to_point(polygon[vertex_i_next])
-		#if abs(angle_difference(angle_prev, angle_next)) > _action_warp_cut_angle:
-			#break
-		
-		var dist = polygon[vertex_i].distance_to(polygon[vertex_i_prev])
-		
-		total_dist += dist
-		if total_dist > range:
-			## passed range, stop looking ✋
-			break
-		
-		var weight = 1.0 - (total_dist / range)
-		weight = _warp_ease(weight)
-		selection.add_vertex(vertex_i, weight)
-	
-	selection.closest_point = closest_point_on_edge
-	
-	return selection
+				edge_selections.push_back(selection_hole)
 
 
 func _action_warp_draw(brush):
-	for selection: ActionWarpSelection in action_warp_selections:
+	for selection: EdgeSelection in edge_selections:
 		_draw_warp_selection(selection)
 		if selection.hole_id == -1:
 			brush.draw_polygon_outline(selection.stroke.polygon, 1.0 / _get_brush_zoom(), Color.WHITE, 0.5)
 		else:
 			brush.draw_polygon_outline(selection.stroke.holes[selection.hole_id], 1.0 / _get_brush_zoom(), Color.WHITE, 0.5)
-		
-
-
-func _warp_ease(t):
-	match current_warp_ease:
-		WARP_EASE_SMOOTH:
-			return ease(t, -1.5)
-		WARP_EASE_SHARP:
-			return ease(t, 3.0)
-		WARP_EASE_LINEAR:
-			return t
-		WARP_EASE_RANDOM:
-			return ease(t, -1.5) * randf()
-	
-
-
-class ActionWarpSelection:
-	var stroke: BrushStroke
-	var vertex_indexes := []
-	var vertex_weights := []
-	var closest_point: Vector2
-	
-	var hole_id := -1
-	
-	func _init(stroke: BrushStroke):
-		self.stroke = stroke
-	
-	
-	func add_vertex(index: int, weight: float):
-		var i = vertex_indexes.find(index)
-		if i != -1:
-			## already has this vertex, use the heighest weight
-			weight = max(vertex_weights[i], weight)
-			return
-		
-		vertex_indexes.push_back(index)
-		vertex_weights.push_back(weight)
-	
-	func get_vertex_count() -> int:
-		return vertex_indexes.size()
-
 
 #endregion
 
-
-#region ACTION MOVE
+#region Action Move
 
 var action_move_stroke: BrushStroke
 
@@ -1262,8 +1188,7 @@ func action_move_complete():
 
 #endregion
 
-
-#region ACTION FILL
+#region Action Fill
 
 func action_fill_try(action_position: Vector2):
 	if _action_rmb:
@@ -1308,8 +1233,7 @@ func action_fill_try(action_position: Vector2):
 
 #endregion
 
-
-#region ACTION BRUSH
+#region Action Brush
 
 var _action_paint_curve_points := []
 
@@ -1418,8 +1342,7 @@ func catmull_rom_interpolate(points) -> PackedVector2Array:
 
 #endregion
 
-
-#region ACTION OVAL
+#region Action Oval
 
 func action_oval_start(action_position):
 	_current_action = ACTION_OVAL
@@ -1492,8 +1415,7 @@ func create_oval_polygon(center: Vector2, size: Vector2, noise := 0.05) -> Packe
 
 #endregion
 
-
-#region ACTION RECT
+#region Action Rect
 
 func action_rect_start(action_position):
 	_current_action = ACTION_RECT
@@ -1576,8 +1498,7 @@ func create_line_polygon(from, to, vertices_per_side, noise: Vector2):
 
 #endregion
 
-
-#region ACTION SHAPE
+#region Action Shape
 
 func action_shape_start(action_position):
 	undo_redo_strokes_start()
@@ -1621,10 +1542,55 @@ func action_shape_complete():
 
 #endregion
 
+#region Action Smooth
 
+func action_smooth_start(action_position):
+	_current_action = ACTION_SMOOTH
+	_update_smooth_region()
+
+
+func action_smooth_mouse_motion(action_position):
+	_update_smooth_region()
+
+
+func _action_smooth_process(delta):
+	for selection: EdgeSelection in edge_selections:
+		var stroke = selection.stroke
+		for i in selection.vertex_indices:
+			if selection.hole_id == -1:
+				stroke.polygon[i] = _smooth_polygon_point(stroke.polygon, i, delta)
+			else:
+				stroke.holes[selection.hole_id][i] = _smooth_polygon_point(stroke.holes[selection.hole_id], i, delta)
+		stroke.draw()
+
+
+func _smooth_polygon_point(polygon: PackedVector2Array, i: int, delta: float):
+	var current = polygon[i]
+	var before = polygon[(i - 1) % polygon.size()]
+	var after = polygon[(i + 1) % polygon.size()]
+	
+	var angle_before = current.angle_to_point(before)
+	var angle_after = current.angle_to_point(after)
+	var angle = angle_difference(angle_before, angle_after)
+	
+	if angle < PI * 0.7:
+		return current
+	else:
+		return lerp(current, lerp(before, after, 0.5), delta)
+
+
+func _update_smooth_region():
+	_get_edge_selections(_editing_brush.get_local_mouse_position(), 100.0, WARP_EASE_SMOOTH)
+
+
+#endregion
+
+
+## Get
 
 func _get_editing_brush():
 	if not editing_node:
+		_editing_brush.edited.disconnect(_editing_brush_edited)
 		_editing_brush = null
 	elif editing_node is BrushAnimation2D:
 		_editing_brush = editing_node.layers[editing_node._editing_layer_num].get_frame(editing_node.current_frame)
@@ -1634,6 +1600,9 @@ func _get_editing_brush():
 		_editing_brush = editing_node.brush2d
 	else:
 		_editing_brush = editing_node
+	
+	if _editing_brush:
+		_editing_brush.edited.connect(_editing_brush_edited)
 
 
 func _get_current_layer():
@@ -1665,6 +1634,139 @@ func get_stroke_at_position(action_position, brush = null):
 	return null
 
 
+## 
+
+#region Edge Select
+
+func _get_edge_selection(stroke, polygon, curve, action_position: Vector2, range: float, ease_mode) -> EdgeSelection:
+	if _action_rmb:
+		var selection := EdgeSelection.new(stroke)
+		var l = polygon.size()
+		for i in l:
+			var distance = polygon[i].distance_to(action_position)
+			if distance < range:
+				var t = 1.0 - distance / range
+				var weight = _warp_ease(t, ease_mode)
+				selection.add_vertex(i, weight)
+		if selection.get_vertex_count() > 0:
+			return selection
+		return null
+	
+	var closest_point_on_edge = curve.get_closest_point(action_position)
+	var distance_to_edge = closest_point_on_edge.distance_to(action_position)
+	
+	if distance_to_edge > 6.0 / _get_brush_zoom():
+		return null
+	
+	var l = polygon.size()
+	var closest_vertex_i: int = -1
+	var closest_distance: float = 999.0
+	for vertex_i in l:
+		var dist = closest_point_on_edge.distance_to(polygon[vertex_i])
+		if dist < closest_distance:
+			closest_distance = dist
+			closest_vertex_i = vertex_i
+	
+	var selection := EdgeSelection.new(stroke)
+	
+	selection.add_vertex(closest_vertex_i, 1.0)
+	
+	## travel clockwise of dragging point 👉
+	var total_dist := 0.0
+	for i in int(l * 0.5):
+		var vertex_i = (closest_vertex_i + i + 1) % l
+		var vertex_i_prev = (closest_vertex_i + i) % l
+		#var vertex_i_next = (closest_vertex_i + i + 1) % l
+		
+		#var angle_prev = polygon[vertex_i_prev].angle_to_point(polygon[vertex_i])
+		#var angle_next = polygon[vertex_i].angle_to_point(polygon[vertex_i_next])
+		#if (angle_difference(angle_prev, angle_next)) > _action_warp_cut_angle:
+			#break
+		
+		var dist = polygon[vertex_i].distance_to(polygon[vertex_i_prev])
+		
+		total_dist += dist
+		if total_dist > range:
+			## passed range, stop looking ✋
+			break
+		
+		var weight = 1.0 - (total_dist / range)
+		weight = _warp_ease(weight, ease_mode)
+		selection.add_vertex(vertex_i, weight)
+	
+	## this is just so the preview line can be drawn in a straight line
+	selection.vertex_indices.reverse()
+	selection.vertex_weights.reverse()
+	
+	## travel counterclockwise of dragging point 👈
+	total_dist = 0.0
+	for i in int(l * 0.5):
+		var vertex_i = (closest_vertex_i - i - 1 + l) % l
+		var vertex_i_prev = (closest_vertex_i - i + l) % l
+		#var vertex_i_next = (closest_vertex_i + l - i + 1) % l
+		
+		#var angle_prev = polygon[vertex_i_prev].angle_to_point(polygon[vertex_i])
+		#var angle_next = polygon[vertex_i].angle_to_point(polygon[vertex_i_next])
+		#if abs(angle_difference(angle_prev, angle_next)) > _action_warp_cut_angle:
+			#break
+		
+		var dist = polygon[vertex_i].distance_to(polygon[vertex_i_prev])
+		
+		total_dist += dist
+		if total_dist > range:
+			## passed range, stop looking ✋
+			break
+		
+		var weight = 1.0 - (total_dist / range)
+		weight = _warp_ease(weight, ease_mode)
+		selection.add_vertex(vertex_i, weight)
+	
+	selection.closest_point = closest_point_on_edge
+	
+	return selection
+
+
+
+func _warp_ease(t, mode):
+	match mode:
+		WARP_EASE_SMOOTH:
+			return ease(t, -1.5)
+		WARP_EASE_SHARP:
+			return ease(t, 3.0)
+		WARP_EASE_LINEAR:
+			return t
+		WARP_EASE_RANDOM:
+			return ease(t, -1.5) * randf()
+
+
+class EdgeSelection:
+	var stroke: BrushStroke
+	var vertex_indices := []
+	var vertex_weights := []
+	var closest_point: Vector2
+	
+	var hole_id := -1
+	
+	func _init(stroke: BrushStroke):
+		self.stroke = stroke
+	
+	
+	func add_vertex(index: int, weight: float):
+		var i = vertex_indices.find(index)
+		if i != -1:
+			## already has this vertex, use the heighest weight
+			weight = max(vertex_weights[i], weight)
+			return
+		
+		vertex_indices.push_back(index)
+		vertex_weights.push_back(weight)
+	
+	func get_vertex_count() -> int:
+		return vertex_indices.size()
+
+
+#endregion
+
 func _queue_redraw():
 	hud.queue_redraw()
 	if _editing_brush:
@@ -1685,7 +1787,6 @@ func _is_main_screen_visible(screen: int):
 
 static func is_editable(node):
 	return node.scene_file_path == "" or node.get_tree().edited_scene_root == node
-
 
 
 #region Layers
@@ -1735,7 +1836,8 @@ func create_layer():
 
 #endregion
 
-#region UNDO/REDO
+
+#region Undo/Redo
 
 func undo_redo_strokes_start():
 	_strokes_before = _editing_brush.get_strokes_duplicate()
@@ -1756,7 +1858,15 @@ func undo_redo_strokes_complete(name):
 #endregion
 
 
-#region SHADER
+#region Signals
+
+func _editing_brush_edited():
+	brush_edited.emit()
+
+#endregion
+
+
+#region Shader
 
 func write_shader(anti_alias: bool, boiling: bool):
 	var shader_source = "shader_type canvas_item;
@@ -1821,7 +1931,7 @@ void fragment() {
 #endregion
 
 
-static func douglas_peucker(points: PackedVector2Array, tolerance := 1.0, level := 0) -> PackedVector2Array:
+static func douglas_peucker(points: PackedVector2Array, tolerance := 1.0) -> PackedVector2Array:
 	if points.size() < 3:
 		return points
 	
@@ -1862,8 +1972,8 @@ static func douglas_peucker(points: PackedVector2Array, tolerance := 1.0, level 
 	
 	## If the maximum distance is greater than the tolerance, recursively simplify
 	if dmax > tolerance:
-		var results1 = douglas_peucker(points.slice(0, index+1), tolerance, level + 1)
-		var results2 = douglas_peucker(points.slice(index), tolerance, level + 1)
+		var results1 = douglas_peucker(points.slice(0, index+1), tolerance)
+		var results2 = douglas_peucker(points.slice(index), tolerance)
 		
 		return results1 + results2.slice(1)
 	else:

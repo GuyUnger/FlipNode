@@ -8,7 +8,7 @@ extends Panel
 enum {MODE_NONE, MODE_PICKING_COLOR, MODE_PICKING_HUE}
 var mode := 1
 
-var picking_position: Vector2
+var sv: Vector2
 
 var h := 0.0
 var temperature: float = 0.0
@@ -22,17 +22,16 @@ func _process(delta):
 	
 	match mode:
 		MODE_PICKING_COLOR:
-			picking_position = container.get_local_mouse_position()
-			picking_position.x = clamp(picking_position.x, 0, viewport.size.x - 1)
-			picking_position.y = clamp(picking_position.y, 0, viewport.size.y - 1)
+			sv = container.get_local_mouse_position() / Vector2(viewport.size)
+			sv.x = clamp(sv.x, 0, 1)
+			sv.y = clamp(1.0 - sv.y, 0, 1)
 		MODE_PICKING_HUE:
 			h = hue_picker.get_local_mouse_position().y / hue_picker.get_rect().size.y
 			h = clamp(h, 0, 1.0)
 	
 	queue_redraw()
 	
-	var sv = picking_position / Vector2(viewport.size)
-	var color_to = get_color(h, sv.x, 1.0 - sv.y)
+	var color_to = get_color(h, sv.x, sv.y)
 	GoolashEditor.editor.current_color = color_to
 	
 	%ColorPreviewTop.modulate = color_to
@@ -40,9 +39,13 @@ func _process(delta):
 
 
 func _draw():
-	draw_circle(picking_position, 2.0, Color.WHITE)
+	var sv_picker_position = Vector2(sv.x, 1.0 - sv.y) * Vector2(viewport.size)
+	draw_circle(sv_picker_position, 2.0, Color.WHITE)
 	%HueIndicator.position.y = h * hue_picker.get_rect().size.y
 	%Palette.material.set_shader_parameter("h", h)
+	var color = get_color(h, sv.x, sv.y)
+	%ColorPreviewTop.modulate = color
+	%ColorPreviewBottom.modulate = color
 
 
 func _input(event):
@@ -60,6 +63,7 @@ func _input(event):
 
 
 func _on_temperature_value_changed(value):
+	temperature = value
 	%Palette.material.set_shader_parameter("temperature", value)
 
 
@@ -148,20 +152,16 @@ func get_color(h: float, s: float, v: float) -> Color:
 	return c
 
 
-
-func set_color(color: Color):
-	#TODO: double places where visuals are set
-	var valley = find_valley(color)
-	%ColorPreviewTop.modulate = get_color(valley.x, valley.y, valley.z)
-	%ColorPreviewBottom.modulate = get_color(valley.x, valley.y, valley.z)
-	
-	picking_position = Vector2(valley.y, 1.0 - valley.z) * Vector2(viewport.size)
-	h = valley.x
-	#%HueIndicator.position.y = h * hue_picker.get_rect().size.y
+func set_color(color: Color, use_temperature := false):
+	if not use_temperature:
+		sv = Vector2(color.s, color.v)
+		h = color.h
+	else:
+		var valley = find_valley(color)
+		sv = Vector2(valley.y, 1.0 - valley.z)
+		h = valley.x
 	
 	queue_redraw()
-	
-	return
 
 
 func _on_line_edit_hex_text_submitted(new_text):

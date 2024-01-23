@@ -64,26 +64,19 @@ func _ready():
 				call_deferred("_generate_rigid_body")
 
 
-func add_stroke(stroke: BrushStroke):
-	#TODO: not sure if this is the best way to handle stroke data and strokes
-	strokes.push_back(stroke)
-	
-	var stroke_graphic = BrushStroke2D.new()
-	stroke.graphic = stroke_graphic
-	add_child(stroke_graphic)
-	stroke.draw()
-	stroke_graphic.material = get_override_material(stroke)
-
-
-func remove_stroke(stroke_data: BrushStroke):
-	strokes.erase(stroke_data)
-	remove_child(stroke_data.graphic)
-	stroke_data.graphic = null
-
-
 func init_strokes():
 	for stroke in strokes:
-		init_stroke_graphic(stroke)
+		stroke.init(self)
+
+
+func add_stroke(stroke: BrushStroke):
+	strokes.push_back(stroke)
+	stroke.init(self)
+
+
+func remove_stroke(stroke: BrushStroke):
+	strokes.erase(stroke)
+	stroke.clear()
 
 
 func move_stroke_to_back(stroke_data: BrushStroke):
@@ -97,20 +90,8 @@ func move_stroke_to_front(stroke_data: BrushStroke):
 
 
 func redraw_all():
-	for child in get_children():
-		if child is BrushStroke2D:
-			remove_child(child)
-	
 	for stroke in strokes:
-		init_stroke_graphic(stroke)
-
-
-func init_stroke_graphic(stroke: BrushStroke):
-	var stroke_graphic = BrushStroke2D.new()
-	stroke.graphic = stroke_graphic
-	add_child(stroke_graphic)
-	stroke_graphic.material = get_override_material(stroke)
-	stroke.draw()
+		stroke.draw()
 
 
 func generate_static_body():
@@ -153,9 +134,10 @@ func _generate_rigid_body():
 		rigidbody.add_child(collision_polygon)
 		collision_polygon.polygon = GoolashEditor.douglas_peucker(polygon, 3.0)
 		
-		var stroke = BrushStroke2D.new()
-		rigidbody.add_child(stroke)
-		stroke.init(BrushStroke.new(polygon, [], strokes[0].color))
+		var polygon2d = Polygon2D.new()
+		polygon2d.polygon = polygon
+		polygon2d.color = strokes[0].color
+		rigidbody.add_child(polygon2d)
 
 
 func get_islands():
