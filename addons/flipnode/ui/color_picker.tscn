@@ -1,0 +1,339 @@
+[gd_scene load_steps=24 format=3 uid="uid://dg2r2pc80m4n6"]
+
+[ext_resource type="Script" path="res://addons/flipnode/ui/color_picker.gd" id="1_14mjf"]
+[ext_resource type="Texture2D" uid="uid://cgncliji5i1vv" path="res://addons/flipnode/icons/temperature.svg" id="2_xoe2n"]
+[ext_resource type="Script" path="res://addons/flipnode/brush2d.gd" id="3_bhoa1"]
+[ext_resource type="Script" path="res://addons/flipnode/stroke.gd" id="4_7a0n8"]
+
+[sub_resource type="Shader" id="Shader_4ss2x"]
+code = "shader_type canvas_item;
+render_mode blend_mix;
+
+
+uniform float h = 0.0;
+uniform float temperature = 1.0;
+
+
+vec3 hsv2rgb(vec3 hsv) {
+	vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
+	vec3 p = abs(fract(hsv.xxx + K.xyz) * 6.0 - K.www);
+	return hsv.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), hsv.y);
+}
+
+vec3 rgb2hsv(vec3 rgb) {
+	vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
+	vec4 p = mix(vec4(rgb.bg, K.wz), vec4(rgb.gb, K.xy), step(rgb.b, rgb.g));
+	vec4 q = mix(vec4(p.xyw, rgb.r), vec4(rgb.r, p.yzx), step(p.x, rgb.r));
+	
+	float d = q.x - min(q.w, q.y);
+	float e = 1.0e-10;
+	return vec3(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x);
+}
+
+void fragment() {
+	vec2 uv = UV;
+	uv = uv * 1.02 - 0.01;
+	uv = clamp(uv, vec2(0.0), vec2(1.0));
+	
+	vec3 hsv_in = vec3(h, uv.x, 1.0 - uv.y);
+	
+	hsv_in.y = 1.0 - pow(1.0 - hsv_in.y, 1.5);
+	
+	vec3 hsv = hsv_in;
+	
+	hsv.y *= mix(1.0, hsv.z, 0.4);
+	hsv.y = 1.0 - pow(1.0 - hsv.y, 2.0);
+	
+	vec3 color = hsv2rgb(hsv);
+	
+	color = mix(color, hsv2rgb(vec3(0.66, hsv.y, hsv.z)), (1.0 - hsv_in.z) * 0.8 );
+	color = mix(color, hsv2rgb(vec3(0.16, hsv.y, hsv.z)), (1.0 - hsv_in.y) * 0.7 );
+	
+	
+	vec3 blue_yellow = mix(vec3(0.15, 0.4, 0.6), vec3(1.0, 1.0, 0.4), pow(hsv_in.z, 2.0 - uv.x * 1.5) );
+	color = mix(color, blue_yellow, sin(hsv_in.z * PI) * 0.12);
+	
+	color = rgb2hsv(color);
+	color.y = mix(hsv_in.y, 1.0 - pow(1.0 - color.y, 1.5), 0.8);
+	color = hsv2rgb(color);
+	
+	COLOR.rgb = mix(hsv2rgb(hsv_in), color, temperature);
+	COLOR.a = 1.0;
+}"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_0ky5e"]
+shader = SubResource("Shader_4ss2x")
+shader_parameter/h = 0.0
+shader_parameter/temperature = 0.0
+
+[sub_resource type="Shader" id="Shader_ibu26"]
+code = "shader_type canvas_item;
+render_mode blend_mix;
+
+
+vec3 hsv2rgb(vec3 hsv) {
+	vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
+	vec3 p = abs(fract(hsv.xxx + K.xyz) * 6.0 - K.www);
+	return hsv.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), hsv.y);
+}
+
+
+void fragment() {
+	COLOR.rgb = hsv2rgb(vec3(UV.y, 1.0, 1.0) );
+}"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1rahm"]
+shader = SubResource("Shader_ibu26")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_l4rbg"]
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rvy3c"]
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5vjvl"]
+bg_color = Color(1, 1, 1, 1)
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="Resource" id="Resource_dpdow"]
+script = ExtResource("4_7a0n8")
+color = Color(0, 0, 0, 1)
+unified_polygon = PackedVector2Array(0.91145, -1.26663, 1.55375, -1.00057, 2.04535, -0.50897, 2.31139, 0.1333, 2.31139, 0.36889, 2.31134, 0.36894, 2.34266, 0.41581, 2.29605, 0.44493, 2.31139, 0.46789, 2.31139, 0.82852, 1.82376, 1.74083, 1.2457, 2.12707, 0.56383, 2.26271, -0.11801, 2.12707, -0.69606, 1.74083, -1.08231, 1.16277, -1.21794, 0.48091, -1.08231, -0.20093, -0.69606, -0.77899, -0.11801, -1.16524, 0.56383, -1.30086)
+polygon = PackedVector2Array(0.91145, -1.26663, 1.55375, -1.00057, 2.04535, -0.50897, 2.31139, 0.1333, 2.31139, 0.36889, 2.31134, 0.36894, 2.34266, 0.41581, 2.29605, 0.44493, 2.31139, 0.46789, 2.31139, 0.82852, 1.82376, 1.74083, 1.2457, 2.12707, 0.56383, 2.26271, -0.11801, 2.12707, -0.69606, 1.74083, -1.08231, 1.16277, -1.21794, 0.48091, -1.08231, -0.20093, -0.69606, -0.77899, -0.11801, -1.16524, 0.56383, -1.30086)
+holes = Array[PackedVector2Array]([])
+
+[sub_resource type="Resource" id="Resource_o3nb0"]
+script = ExtResource("4_7a0n8")
+color = Color(1, 1, 1, 1)
+unified_polygon = PackedVector2Array(0.91145, -1.26663, 1.55375, -1.00058, 2.04535, -0.50898, 2.31139, 0.13331, 2.31139, 0.82853, 1.82376, 1.74084, 1.2457, 2.12708, 0.56384, 2.26272, -0.11802, 2.12708, -0.69607, 1.74084, -1.08232, 1.16278, -1.21795, 0.48092, -1.08232, -0.20093, -0.69607, -0.77899, -0.11802, -1.16524, 0.56384, -1.30087)
+polygon = PackedVector2Array(0.91145, -1.26663, 2.31139, 0.82853, 0.56384, 2.26272, -1.21795, 0.48092, 0.56384, -1.30087)
+holes = Array[PackedVector2Array]([])
+
+[sub_resource type="Resource" id="Resource_1twkk"]
+script = ExtResource("4_7a0n8")
+color = Color(1, 1, 1, 1)
+unified_polygon = PackedVector2Array(0.91145, -1.26663, 1.55375, -1.00058, 2.04535, -0.50898, 2.31139, 0.13331, 2.31139, 0.82853, 1.82376, 1.74084, 1.2457, 2.12708, 0.56384, 2.26272, -0.11802, 2.12708, -0.69607, 1.74084, -1.08232, 1.16278, -1.21795, 0.48092, -1.08232, -0.20093, -0.69607, -0.77899, -0.11802, -1.16524, 0.56384, -1.30087)
+polygon = PackedVector2Array(0.91145, -1.26663, 2.31139, 0.82853, 0.56384, 2.26272, -1.21795, 0.48092, 0.56384, -1.30087)
+holes = Array[PackedVector2Array]([])
+
+[sub_resource type="Resource" id="Resource_ao1k6"]
+script = ExtResource("4_7a0n8")
+color = Color(1, 1, 1, 1)
+unified_polygon = PackedVector2Array(0.91145, -1.26663, 1.55375, -1.00058, 2.04535, -0.50898, 2.31139, 0.13331, 2.31139, 0.82853, 1.82376, 1.74084, 1.2457, 2.12708, 0.56384, 2.26272, -0.11802, 2.12708, -0.69607, 1.74084, -1.08232, 1.16278, -1.21795, 0.48092, -1.08232, -0.20093, -0.69607, -0.77899, -0.11802, -1.16524, 0.56384, -1.30087)
+polygon = PackedVector2Array(0.91145, -1.26663, 0.56384, 2.26272, 0.56384, -1.30087)
+holes = Array[PackedVector2Array]([])
+
+[sub_resource type="Resource" id="Resource_74q05"]
+script = ExtResource("4_7a0n8")
+color = Color(1, 1, 1, 1)
+unified_polygon = PackedVector2Array(0.91145, -1.26663, 1.55375, -1.00058, 2.04535, -0.50898, 2.31139, 0.13331, 2.31139, 0.82853, 1.82376, 1.74084, 1.2457, 2.12708, 0.56384, 2.26272, -0.11802, 2.12708, -0.69607, 1.74084, -1.08232, 1.16278, -1.21795, 0.48092, -1.08232, -0.20093, -0.69607, -0.77899, -0.11802, -1.16524, 0.56384, -1.30087)
+polygon = PackedVector2Array(0.91145, -1.26663, 0.56384, -1.30087)
+holes = Array[PackedVector2Array]([])
+
+[sub_resource type="Resource" id="Resource_curoo"]
+script = ExtResource("4_7a0n8")
+color = Color(1, 1, 1, 1)
+unified_polygon = PackedVector2Array(0.91145, -1.26663, 1.55375, -1.00058, 2.04535, -0.50898, 2.31139, 0.13331, 2.31139, 0.82853, 1.82376, 1.74084, 1.2457, 2.12708, 0.56384, 2.26272, -0.11802, 2.12708, -0.69607, 1.74084, -1.08232, 1.16278, -1.21795, 0.48092, -1.08232, -0.20093, -0.69607, -0.77899, -0.11802, -1.16524, 0.56384, -1.30087)
+polygon = PackedVector2Array(0.91145, -1.26663, 0.56384, -1.30087)
+holes = Array[PackedVector2Array]([])
+
+[sub_resource type="Resource" id="Resource_4xirl"]
+script = ExtResource("4_7a0n8")
+color = Color(1, 1, 1, 1)
+unified_polygon = PackedVector2Array(0.91145, -1.26663, 1.55375, -1.00058, 2.04535, -0.50898, 2.31139, 0.1333, 2.31139, 0.20774, 2.91592, 0.34227, 3.00752, 0.55456, 2.83123, 0.64863, 2.31139, 0.53228, 2.31139, 0.82852, 1.82376, 1.74083, 1.2457, 2.12707, 0.56384, 2.26271, -0.11801, 2.12707, -0.69606, 1.74083, -1.08231, 1.16277, -1.21794, 0.48091, -1.08231, -0.20093, -0.69606, -0.77899, -0.11801, -1.16524, 0.56384, -1.30087)
+polygon = PackedVector2Array(0.91145, -1.26663, 1.55375, -1.00058, 2.04535, -0.50898, 2.31139, 0.1333, 2.31139, 0.20774, 2.91592, 0.34227, 3.00752, 0.55456, 2.83123, 0.64863, 2.31139, 0.53228, 2.31139, 0.82852, 1.82376, 1.74083, 1.2457, 2.12707, 0.56384, 2.26271, -0.11801, 2.12707, -0.69606, 1.74083, -1.08231, 1.16277, -1.21794, 0.48091, -1.08231, -0.20093, -0.69606, -0.77899, -0.11801, -1.16524, 0.56384, -1.30087)
+holes = Array[PackedVector2Array]([])
+
+[sub_resource type="Resource" id="Resource_g8ukq"]
+script = ExtResource("4_7a0n8")
+color = Color(1, 1, 1, 1)
+unified_polygon = PackedVector2Array(0.91145, -1.26663, 1.55375, -1.00058, 2.04535, -0.50898, 2.31139, 0.13331, 2.31139, 0.82853, 1.82376, 1.74084, 1.2457, 2.12708, 0.56384, 2.26272, -0.11802, 2.12708, -0.69607, 1.74084, -1.08232, 1.16278, -1.21795, 0.48092, -1.08232, -0.20093, -0.69607, -0.77899, -0.11802, -1.16524, 0.56384, -1.30087)
+polygon = PackedVector2Array(0.91145, -1.26663, 2.31139, 0.82853, 0.56384, 2.26272, -1.21795, 0.48092, 0.56384, -1.30087)
+holes = Array[PackedVector2Array]([])
+
+[sub_resource type="Resource" id="Resource_sb06t"]
+script = ExtResource("4_7a0n8")
+color = Color(1, 1, 1, 1)
+unified_polygon = PackedVector2Array(0.91145, -1.26663, 1.55375, -1.00058, 2.04535, -0.50898, 2.31139, 0.13331, 2.31139, 0.82853, 1.82376, 1.74084, 1.2457, 2.12708, 0.56384, 2.26272, -0.11802, 2.12708, -0.69607, 1.74084, -1.08232, 1.16278, -1.21795, 0.48092, -1.08232, -0.20093, -0.69607, -0.77899, -0.11802, -1.16524, 0.56384, -1.30087)
+polygon = PackedVector2Array(0.91145, -1.26663, 2.31139, 0.82853, 0.56384, 2.26272, -1.21795, 0.48092, 0.56384, -1.30087)
+holes = Array[PackedVector2Array]([])
+
+[sub_resource type="Resource" id="Resource_ufyqn"]
+script = ExtResource("4_7a0n8")
+color = Color(1, 1, 1, 1)
+unified_polygon = PackedVector2Array(0.91145, -1.26663, 1.55375, -1.00058, 2.04535, -0.50898, 2.31139, 0.13331, 2.31139, 0.82853, 1.82376, 1.74084, 1.2457, 2.12708, 0.56384, 2.26272, -0.11802, 2.12708, -0.69607, 1.74084, -1.08232, 1.16278, -1.21795, 0.48092, -1.08232, -0.20093, -0.69607, -0.77899, -0.11802, -1.16524, 0.56384, -1.30087)
+polygon = PackedVector2Array(0.91145, -1.26663, 0.56384, 2.26272, 0.56384, -1.30087)
+holes = Array[PackedVector2Array]([])
+
+[sub_resource type="Resource" id="Resource_kke26"]
+script = ExtResource("4_7a0n8")
+color = Color(1, 1, 1, 1)
+unified_polygon = PackedVector2Array(0.91145, -1.26663, 1.55375, -1.00058, 2.04535, -0.50898, 2.31139, 0.13331, 2.31139, 0.82853, 1.82376, 1.74084, 1.2457, 2.12708, 0.56384, 2.26272, -0.11802, 2.12708, -0.69607, 1.74084, -1.08232, 1.16278, -1.21795, 0.48092, -1.08232, -0.20093, -0.69607, -0.77899, -0.11802, -1.16524, 0.56384, -1.30087)
+polygon = PackedVector2Array(0.91145, -1.26663, 0.56384, -1.30087)
+holes = Array[PackedVector2Array]([])
+
+[sub_resource type="Resource" id="Resource_x7pjl"]
+script = ExtResource("4_7a0n8")
+color = Color(1, 1, 1, 1)
+unified_polygon = PackedVector2Array(0.91145, -1.26663, 1.55375, -1.00058, 2.04535, -0.50898, 2.31139, 0.13331, 2.31139, 0.82853, 1.82376, 1.74084, 1.2457, 2.12708, 0.56384, 2.26272, -0.11802, 2.12708, -0.69607, 1.74084, -1.08232, 1.16278, -1.21795, 0.48092, -1.08232, -0.20093, -0.69607, -0.77899, -0.11802, -1.16524, 0.56384, -1.30087)
+polygon = PackedVector2Array(0.91145, -1.26663, 0.56384, -1.30087)
+holes = Array[PackedVector2Array]([])
+
+[node name="ColorPicker" type="Panel"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -997.0
+offset_bottom = -447.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_14mjf")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 120)
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="MarginContainer/VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="MarginContainer/VBoxContainer/HBoxContainer2/SubViewportContainer"]
+unique_name_in_owner = true
+handle_input_locally = false
+size = Vector2i(70, 120)
+render_target_update_mode = 4
+
+[node name="Palette" type="ColorRect" parent="MarginContainer/VBoxContainer/HBoxContainer2/SubViewportContainer/SubViewport"]
+unique_name_in_owner = true
+material = SubResource("ShaderMaterial_0ky5e")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HuePicker" type="Panel" parent="MarginContainer/VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
+material = SubResource("ShaderMaterial_1rahm")
+custom_minimum_size = Vector2(20, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_l4rbg")
+
+[node name="HueIndicator" type="ColorRect" parent="MarginContainer/VBoxContainer/HBoxContainer2/HuePicker"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 1)
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 1.0
+grow_horizontal = 2
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+texture = ExtResource("2_xoe2n")
+stretch_mode = 2
+
+[node name="Temperature" type="HSlider" parent="MarginContainer/VBoxContainer/HBoxContainer3"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+max_value = 1.0
+step = 0.02
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="MarginContainer2" type="MarginContainer" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_bottom = 6
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer2"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer2/HBoxContainer"]
+modulate = Color(1, 1, 1, 0.52549)
+layout_mode = 2
+text = "#"
+
+[node name="LineEditHex" type="LineEdit" parent="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer2/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "000000"
+max_length = 6
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 2
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 2
+theme_override_constants/margin_bottom = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="ColorPreviewTop" type="Panel" parent="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+modulate = Color(0, 0, 0, 1)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_rvy3c")
+
+[node name="ColorPreviewBottom" type="Panel" parent="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+modulate = Color(0, 0, 0, 1)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_5vjvl")
+
+[node name="Indicator" type="Node2D" parent="."]
+position = Vector2(-0.5, 119.5)
+
+[node name="Indicator" type="Node2D" parent="Indicator"]
+scale = Vector2(1.21733, 1.21733)
+script = ExtResource("3_bhoa1")
+strokes = [SubResource("Resource_dpdow")]
+bounciness = 0.0
+lods = [[SubResource("Resource_o3nb0")], [SubResource("Resource_1twkk")], [SubResource("Resource_ao1k6")], [SubResource("Resource_74q05")], [SubResource("Resource_curoo")]]
+bounds = Rect2(-1.21794, -1.30086, 3.5606, 3.56357)
+
+[node name="Indicator2" type="Node2D" parent="Indicator"]
+script = ExtResource("3_bhoa1")
+strokes = [SubResource("Resource_4xirl")]
+bounciness = 0.0
+lods = [[SubResource("Resource_g8ukq")], [SubResource("Resource_sb06t")], [SubResource("Resource_ufyqn")], [SubResource("Resource_kke26")], [SubResource("Resource_x7pjl")]]
+bounds = Rect2(-1.21795, -1.30087, 3.52934, 3.56359)
+
+[connection signal="value_changed" from="MarginContainer/VBoxContainer/HBoxContainer3/Temperature" to="." method="_on_temperature_value_changed"]
+[connection signal="focus_exited" from="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer2/HBoxContainer/LineEditHex" to="." method="_on_line_edit_hex_focus_exited"]
+[connection signal="text_submitted" from="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer2/HBoxContainer/LineEditHex" to="." method="_on_line_edit_hex_text_submitted"]

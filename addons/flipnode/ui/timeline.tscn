@@ -1,0 +1,380 @@
+[gd_scene load_steps=11 format=3 uid="uid://83afmn7xmr1c"]
+
+[ext_resource type="Texture2D" uid="uid://ba2hxmxea6m1a" path="res://addons/flipnode/icons/PagePrevious.svg" id="1_mqbbs"]
+[ext_resource type="Texture2D" uid="uid://cy0je6d77bnw2" path="res://addons/flipnode/icons/Play.svg" id="1_vtfin"]
+[ext_resource type="Script" path="res://addons/flipnode/ui/timeline.gd" id="1_x5p0l"]
+[ext_resource type="Texture2D" uid="uid://ntomq1ouceco" path="res://addons/flipnode/icons/PageNext.svg" id="3_w0qs8"]
+[ext_resource type="Texture2D" uid="uid://m5wq1j1x5deq" path="res://addons/flipnode/icons/AutoPlay.svg" id="4_qdy44"]
+[ext_resource type="Texture2D" uid="uid://sp3bibddihdm" path="res://addons/flipnode/icons/Loop.svg" id="6_7ikk7"]
+[ext_resource type="Texture2D" uid="uid://djjrjid7ltt80" path="res://addons/flipnode/icons/Onion.svg" id="6_d6fgv"]
+[ext_resource type="Texture2D" uid="uid://cl88p0t1ojo5m" path="res://addons/flipnode/icons/Add.svg" id="7_0x6bv"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_h5x24"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_jl8sy"]
+
+[node name="Timeline" type="Control"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_x5p0l")
+
+[node name="LabelNoBrushClip" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Select a BrushAnimation2D node to edit animations."
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Timeline" type="VBoxContainer" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Timeline"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="LayerOptionsContainer" type="Control" parent="Timeline/HBoxContainer"]
+custom_minimum_size = Vector2(230, 25)
+layout_mode = 2
+
+[node name="LayerOptions" type="HBoxContainer" parent="Timeline/HBoxContainer/LayerOptionsContainer"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+offset_left = -6.5
+offset_right = 236.5
+offset_bottom = 25.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ButtonPreviousFrame" type="Button" parent="Timeline/HBoxContainer/LayerOptionsContainer/LayerOptions"]
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 2
+tooltip_text = "Previous Frame (A)"
+icon = ExtResource("1_mqbbs")
+flat = true
+icon_alignment = 1
+
+[node name="ButtonPlay" type="Button" parent="Timeline/HBoxContainer/LayerOptionsContainer/LayerOptions"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 2
+tooltip_text = "Play/Pause (S)"
+toggle_mode = true
+icon = ExtResource("1_vtfin")
+flat = true
+icon_alignment = 1
+
+[node name="ButtonNextFrame" type="Button" parent="Timeline/HBoxContainer/LayerOptionsContainer/LayerOptions"]
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 2
+tooltip_text = "Next Frame (D)"
+icon = ExtResource("3_w0qs8")
+flat = true
+icon_alignment = 1
+
+[node name="VSeparator2" type="VSeparator" parent="Timeline/HBoxContainer/LayerOptionsContainer/LayerOptions"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Timeline/HBoxContainer/LayerOptionsContainer/LayerOptions"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 9
+text = "FPS"
+
+[node name="LineEditFPS" type="LineEdit" parent="Timeline/HBoxContainer/LayerOptionsContainer/LayerOptions"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/minimum_character_width = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_h5x24")
+placeholder_text = "30"
+flat = true
+select_all_on_focus = true
+
+[node name="ButtonAutoPlay" type="Button" parent="Timeline/HBoxContainer/LayerOptionsContainer/LayerOptions"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 2
+tooltip_text = "Toggle Autoplay"
+toggle_mode = true
+icon = ExtResource("4_qdy44")
+flat = true
+icon_alignment = 1
+
+[node name="ButtonLoop" type="Button" parent="Timeline/HBoxContainer/LayerOptionsContainer/LayerOptions"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 2
+tooltip_text = "Toggle Autoplay"
+toggle_mode = true
+icon = ExtResource("6_7ikk7")
+flat = true
+icon_alignment = 1
+
+[node name="VSeparator3" type="VSeparator" parent="Timeline/HBoxContainer/LayerOptionsContainer/LayerOptions"]
+layout_mode = 2
+
+[node name="VSeparator3" type="VSeparator" parent="Timeline/HBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 1
+
+[node name="FrameCounts" type="Control" parent="Timeline/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 25)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="AreaActive" type="ColorRect" parent="Timeline/HBoxContainer/FrameCounts"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_right = 114.0
+offset_bottom = 28.0
+color = Color(1, 1, 1, 0.12)
+
+[node name="AreaInactive" type="ColorRect" parent="Timeline/HBoxContainer/FrameCounts"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 114.0
+offset_right = 920.0
+offset_bottom = 28.0
+color = Color(0, 0, 0, 0.26)
+
+[node name="FrameIndicator" type="Control" parent="Timeline/HBoxContainer/FrameCounts"]
+unique_name_in_owner = true
+modulate = Color(0.239216, 0.521569, 0.94902, 1)
+z_index = 1
+custom_minimum_size = Vector2(10, 100)
+layout_mode = 1
+anchors_preset = 0
+offset_left = 6.0
+offset_right = 16.0
+offset_bottom = 100.0
+size_flags_horizontal = 0
+
+[node name="Line" type="ColorRect" parent="Timeline/HBoxContainer/FrameCounts/FrameIndicator"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -1.0
+offset_right = -9.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Top" type="Polygon2D" parent="Timeline/HBoxContainer/FrameCounts/FrameIndicator"]
+position = Vector2(0, 25)
+polygon = PackedVector2Array(-6, 0, -6, -25, 6, -25, 6, 0, 0, 4)
+
+[node name="FrameNumbers" type="HBoxContainer" parent="Timeline/HBoxContainer/FrameCounts"]
+unique_name_in_owner = true
+z_index = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 0
+
+[node name="VSeparator4" type="VSeparator" parent="Timeline/HBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 1
+
+[node name="FrameOptions" type="HBoxContainer" parent="Timeline/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ButtonAddFrame" type="Button" parent="Timeline/HBoxContainer/FrameOptions"]
+visible = false
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 2
+toggle_mode = true
+button_pressed = true
+icon = ExtResource("7_0x6bv")
+flat = true
+icon_alignment = 1
+
+[node name="ButtonAddKeyframe" type="Button" parent="Timeline/HBoxContainer/FrameOptions"]
+visible = false
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 2
+toggle_mode = true
+button_pressed = true
+icon = ExtResource("7_0x6bv")
+flat = true
+icon_alignment = 1
+
+[node name="ButtonAddKeyframeBlank" type="Button" parent="Timeline/HBoxContainer/FrameOptions"]
+visible = false
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 2
+toggle_mode = true
+button_pressed = true
+icon = ExtResource("7_0x6bv")
+flat = true
+icon_alignment = 1
+
+[node name="ButtonRemoveKeyframe" type="Button" parent="Timeline/HBoxContainer/FrameOptions"]
+visible = false
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 2
+toggle_mode = true
+button_pressed = true
+icon = ExtResource("7_0x6bv")
+flat = true
+icon_alignment = 1
+
+[node name="ButtonRemoveFrame" type="Button" parent="Timeline/HBoxContainer/FrameOptions"]
+visible = false
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 2
+toggle_mode = true
+button_pressed = true
+icon = ExtResource("7_0x6bv")
+flat = true
+icon_alignment = 1
+
+[node name="ButtonAddTweenframe" type="Button" parent="Timeline/HBoxContainer/FrameOptions"]
+visible = false
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 2
+toggle_mode = true
+button_pressed = true
+icon = ExtResource("7_0x6bv")
+flat = true
+icon_alignment = 1
+
+[node name="VSeparator5" type="VSeparator" parent="Timeline/HBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 1
+
+[node name="EditorOptions" type="HBoxContainer" parent="Timeline/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ButtonOnion" type="Button" parent="Timeline/HBoxContainer/EditorOptions"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 2
+toggle_mode = true
+icon = ExtResource("6_d6fgv")
+flat = true
+icon_alignment = 1
+
+[node name="LineEditOnionFrames" type="LineEdit" parent="Timeline/HBoxContainer/EditorOptions"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/minimum_character_width = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_jl8sy")
+text = "1"
+max_length = 2
+select_all_on_focus = true
+
+[node name="LayersContainer" type="ScrollContainer" parent="Timeline"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Timeline/LayersContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Timeline/LayersContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="HSeparator2" type="HSeparator" parent="Timeline/LayersContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="LayersInfo" type="VBoxContainer" parent="Timeline/LayersContainer/HBoxContainer/VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(230, 0)
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Timeline/LayersContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 6
+
+[node name="ButtonAddLayer" type="Button" parent="Timeline/LayersContainer/HBoxContainer/VBoxContainer/MarginContainer"]
+custom_minimum_size = Vector2(32, 20)
+layout_mode = 2
+theme_override_font_sizes/font_size = 8
+icon = ExtResource("7_0x6bv")
+icon_alignment = 1
+
+[node name="VSeparator" type="VSeparator" parent="Timeline/LayersContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="Timeline/LayersContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 2
+
+[node name="HSeparator2" type="HSeparator" parent="Timeline/LayersContainer/HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Timeline/LayersContainer/HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 2
+vertical_scroll_mode = 0
+
+[node name="LayersFrames" type="VBoxContainer" parent="Timeline/LayersContainer/HBoxContainer/VBoxContainer2/ScrollContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 2
+
+[node name="PopupMenu" type="PopupMenu" parent="."]
+unique_name_in_owner = true
+size = Vector2i(245, 143)
+item_count = 5
+item_0/text = "Add Frame (5)"
+item_1/text = "Add Keyframe (6)"
+item_1/id = 1
+item_2/text = "Add Empty Keyframe (7)"
+item_2/id = 2
+item_3/text = "Remove Frame (Shift+5)"
+item_3/id = 3
+item_4/text = "Remove Keyframe (Shift+6)"
+item_4/id = 4
+
+[connection signal="pressed" from="Timeline/HBoxContainer/LayerOptionsContainer/LayerOptions/ButtonPreviousFrame" to="." method="_on_button_previous_frame_pressed"]
+[connection signal="pressed" from="Timeline/HBoxContainer/LayerOptionsContainer/LayerOptions/ButtonPlay" to="." method="_on_button_play_pressed"]
+[connection signal="pressed" from="Timeline/HBoxContainer/LayerOptionsContainer/LayerOptions/ButtonNextFrame" to="." method="_on_button_next_frame_pressed"]
+[connection signal="focus_exited" from="Timeline/HBoxContainer/LayerOptionsContainer/LayerOptions/LineEditFPS" to="." method="_on_line_edit_fps_focus_exited"]
+[connection signal="text_submitted" from="Timeline/HBoxContainer/LayerOptionsContainer/LayerOptions/LineEditFPS" to="." method="_on_line_edit_fps_text_submitted"]
+[connection signal="toggled" from="Timeline/HBoxContainer/LayerOptionsContainer/LayerOptions/ButtonAutoPlay" to="." method="_on_button_auto_play_toggled"]
+[connection signal="toggled" from="Timeline/HBoxContainer/LayerOptionsContainer/LayerOptions/ButtonLoop" to="." method="_on_button_loop_toggled"]
+[connection signal="toggled" from="Timeline/HBoxContainer/FrameOptions/ButtonAddFrame" to="." method="_on_button_onion_toggled"]
+[connection signal="toggled" from="Timeline/HBoxContainer/FrameOptions/ButtonAddKeyframe" to="." method="_on_button_onion_toggled"]
+[connection signal="toggled" from="Timeline/HBoxContainer/FrameOptions/ButtonAddKeyframeBlank" to="." method="_on_button_onion_toggled"]
+[connection signal="toggled" from="Timeline/HBoxContainer/FrameOptions/ButtonRemoveKeyframe" to="." method="_on_button_onion_toggled"]
+[connection signal="toggled" from="Timeline/HBoxContainer/FrameOptions/ButtonRemoveFrame" to="." method="_on_button_onion_toggled"]
+[connection signal="toggled" from="Timeline/HBoxContainer/FrameOptions/ButtonAddTweenframe" to="." method="_on_button_onion_toggled"]
+[connection signal="toggled" from="Timeline/HBoxContainer/EditorOptions/ButtonOnion" to="." method="_on_button_onion_toggled"]
+[connection signal="focus_exited" from="Timeline/HBoxContainer/EditorOptions/LineEditOnionFrames" to="." method="_on_line_edit_onion_frames_focus_exited"]
+[connection signal="text_submitted" from="Timeline/HBoxContainer/EditorOptions/LineEditOnionFrames" to="." method="_on_line_edit_onion_frames_text_submitted"]
+[connection signal="pressed" from="Timeline/LayersContainer/HBoxContainer/VBoxContainer/MarginContainer/ButtonAddLayer" to="." method="_on_button_add_layer_pressed"]

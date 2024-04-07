@@ -1,0 +1,649 @@
+[gd_scene load_steps=24 format=3 uid="uid://tlj1uut203ti"]
+
+[ext_resource type="Script" path="res://addons/flipnode/ui/toolbar.gd" id="1_1ry1s"]
+[ext_resource type="PackedScene" uid="uid://dg2r2pc80m4n6" path="res://addons/flipnode/ui/color_picker.tscn" id="2_v77ng"]
+[ext_resource type="Texture2D" uid="uid://jnmhbl8m5hy2" path="res://addons/flipnode/icons/ToolSelect.svg" id="3_dkvun"]
+[ext_resource type="Texture2D" uid="uid://c4t0mpwkude8o" path="res://addons/flipnode/icons/CanvasLayer.svg" id="3_h8gmc"]
+[ext_resource type="Texture2D" uid="uid://da1imqfk7aeg5" path="res://addons/flipnode/icons/Paint.svg" id="4_jkwv7"]
+[ext_resource type="Texture2D" uid="uid://bi6b3ska6mcpo" path="res://addons/flipnode/icons/ToolOval.svg" id="5_mb073"]
+[ext_resource type="Texture2D" uid="uid://bfv15hq42cpvg" path="res://addons/flipnode/icons/ToolRectangle.svg" id="6_3nsi2"]
+[ext_resource type="Texture2D" uid="uid://dpumbmfv451m4" path="res://addons/flipnode/icons/ToolShape.svg" id="7_o5le3"]
+[ext_resource type="Texture2D" uid="uid://cf60f07corl3p" path="res://addons/flipnode/icons/ColorPick.svg" id="8_6cxmd"]
+[ext_resource type="Texture2D" uid="uid://bduj3a2iwrk0c" path="res://addons/flipnode/icons/Bucket.svg" id="9_fjhru"]
+[ext_resource type="Texture2D" uid="uid://ci27pyvjmdmsb" path="res://addons/flipnode/icons/warp_ease_smooth.svg" id="10_16mix"]
+[ext_resource type="Texture2D" uid="uid://d12ynu7xxfgoe" path="res://addons/flipnode/icons/Eraser.svg" id="11_bv4bw"]
+[ext_resource type="Texture2D" uid="uid://bjoaemnk42ku3" path="res://addons/flipnode/icons/warp_ease_sharp.svg" id="12_8tqkh"]
+[ext_resource type="Texture2D" uid="uid://csrntenvlivnf" path="res://addons/flipnode/icons/warp_ease_linear.svg" id="13_l47dq"]
+[ext_resource type="Texture2D" uid="uid://bcfdyrr0a28a7" path="res://addons/flipnode/icons/warp_ease_random.svg" id="14_mjpvl"]
+[ext_resource type="Texture2D" uid="uid://bf5ibats8rlf4" path="res://addons/flipnode/icons/paint_mode_front.svg" id="15_wcclq"]
+[ext_resource type="Texture2D" uid="uid://2sqtdt3603qw" path="res://addons/flipnode/icons/paint_mode_behind.svg" id="16_kgkrr"]
+[ext_resource type="Texture2D" uid="uid://bfa3nkxo2umg7" path="res://addons/flipnode/icons/paint_mode_inside.svg" id="17_wgs5x"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_774xs"]
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_p6wmy"]
+color = Color(0.503, 0.503, 0.503, 0.402)
+grow_begin = -10.0
+grow_end = -10.0
+thickness = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_d636o"]
+bg_color = Color(0.286275, 0.286275, 0.286275, 0)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ajutr"]
+bg_color = Color(0.6, 0.6, 0.6, 0.25)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_qkkh3"]
+
+[node name="Toolbar" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_1ry1s")
+
+[node name="ColorPanels" type="Control" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -40.0
+offset_bottom = 40.0
+grow_horizontal = 0
+
+[node name="ColorPicker" parent="ColorPanels" instance=ExtResource("2_v77ng")]
+unique_name_in_owner = true
+layout_mode = 1
+offset_left = -119.0
+offset_top = 13.0
+offset_right = -8.0
+offset_bottom = 168.0
+
+[node name="Swatches" type="Panel" parent="ColorPanels"]
+unique_name_in_owner = true
+self_modulate = Color(1, 1, 1, 0.823529)
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -84.0
+offset_top = 220.0
+offset_right = -10.0
+offset_bottom = 611.0
+grow_horizontal = 0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="ColorPanels/Swatches"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ColorPanels/Swatches/MarginContainer"]
+layout_mode = 2
+
+[node name="DefaultSwatches" type="HFlowContainer" parent="ColorPanels/Swatches/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/h_separation = 2
+theme_override_constants/v_separation = 2
+
+[node name="HSeparator" type="HSeparator" parent="ColorPanels/Swatches/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="UsedColors" type="HFlowContainer" parent="ColorPanels/Swatches/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/h_separation = 2
+theme_override_constants/v_separation = 2
+
+[node name="Tools" type="Panel" parent="."]
+unique_name_in_owner = true
+self_modulate = Color(1, 1, 1, 0.9)
+layout_mode = 1
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_right = 71.0
+grow_vertical = 2
+scale = Vector2(1.00068, 1)
+
+[node name="MarginContainer" type="MarginContainer" parent="Tools"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 2
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 2
+theme_override_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Tools/MarginContainer"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="ButtonFocus" type="Button" parent="Tools/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+auto_translate_mode = 1
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+theme_override_styles/focus = SubResource("StyleBoxEmpty_774xs")
+toggle_mode = true
+button_pressed = true
+icon = ExtResource("3_h8gmc")
+flat = true
+icon_alignment = 1
+
+[node name="HSeparator2" type="HSeparator" parent="Tools/MarginContainer/VBoxContainer"]
+auto_translate_mode = 1
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_p6wmy")
+
+[node name="Tools" type="VBoxContainer" parent="Tools/MarginContainer/VBoxContainer"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="ButtonSelect" type="Button" parent="Tools/MarginContainer/VBoxContainer/Tools"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+theme_override_styles/focus = SubResource("StyleBoxEmpty_774xs")
+toggle_mode = true
+icon = ExtResource("3_dkvun")
+flat = true
+icon_alignment = 1
+
+[node name="ButtonPaint" type="Button" parent="Tools/MarginContainer/VBoxContainer/Tools"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+theme_override_styles/focus = SubResource("StyleBoxEmpty_774xs")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_d636o")
+toggle_mode = true
+icon = ExtResource("4_jkwv7")
+flat = true
+icon_alignment = 1
+
+[node name="ButtonOval" type="Button" parent="Tools/MarginContainer/VBoxContainer/Tools"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+theme_override_styles/focus = SubResource("StyleBoxEmpty_774xs")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_d636o")
+toggle_mode = true
+icon = ExtResource("5_mb073")
+flat = true
+icon_alignment = 1
+
+[node name="ButtonRect" type="Button" parent="Tools/MarginContainer/VBoxContainer/Tools"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+theme_override_styles/focus = SubResource("StyleBoxEmpty_774xs")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_d636o")
+toggle_mode = true
+icon = ExtResource("6_3nsi2")
+flat = true
+icon_alignment = 1
+
+[node name="ButtonShape" type="Button" parent="Tools/MarginContainer/VBoxContainer/Tools"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+theme_override_styles/focus = SubResource("StyleBoxEmpty_774xs")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_d636o")
+toggle_mode = true
+icon = ExtResource("7_o5le3")
+flat = true
+icon_alignment = 1
+
+[node name="ButtonEyedropper" type="Button" parent="Tools/MarginContainer/VBoxContainer/Tools"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+theme_override_styles/focus = SubResource("StyleBoxEmpty_774xs")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_d636o")
+toggle_mode = true
+icon = ExtResource("8_6cxmd")
+flat = true
+icon_alignment = 1
+
+[node name="ButtonFill" type="Button" parent="Tools/MarginContainer/VBoxContainer/Tools"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+theme_override_styles/focus = SubResource("StyleBoxEmpty_774xs")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_d636o")
+toggle_mode = true
+icon = ExtResource("9_fjhru")
+flat = true
+icon_alignment = 1
+
+[node name="ButtonSmooth" type="Button" parent="Tools/MarginContainer/VBoxContainer/Tools"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+theme_override_styles/focus = SubResource("StyleBoxEmpty_774xs")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_d636o")
+toggle_mode = true
+icon = ExtResource("10_16mix")
+flat = true
+icon_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="Tools/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_p6wmy")
+
+[node name="ButtonEraseMode" type="Button" parent="Tools/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+tooltip_text = "Fill Bucket (G)"
+theme_override_styles/focus = SubResource("StyleBoxEmpty_774xs")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_d636o")
+toggle_mode = true
+icon = ExtResource("11_bv4bw")
+flat = true
+icon_alignment = 1
+
+[node name="HSeparator3" type="HSeparator" parent="Tools/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_p6wmy")
+
+[node name="PropertiesSelect" type="VBoxContainer" parent="Tools/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="Smooth" type="Label" parent="Tools/MarginContainer/VBoxContainer/PropertiesSelect"]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_ajutr")
+text = "Smooth"
+horizontal_alignment = 1
+
+[node name="WarpEaseContainer" type="Control" parent="Tools/MarginContainer/VBoxContainer/PropertiesSelect"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+
+[node name="ButtonWarpEase" type="Button" parent="Tools/MarginContainer/VBoxContainer/PropertiesSelect/WarpEaseContainer"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+icon = ExtResource("10_16mix")
+icon_alignment = 1
+
+[node name="MenuWarpEase" type="Panel" parent="Tools/MarginContainer/VBoxContainer/PropertiesSelect/WarpEaseContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = 5.0
+offset_top = -16.0
+offset_right = 102.0
+offset_bottom = 108.0
+grow_horizontal = 0
+grow_vertical = 2
+
+[node name="WarpEaseButtons" type="VBoxContainer" parent="Tools/MarginContainer/VBoxContainer/PropertiesSelect/WarpEaseContainer/MenuWarpEase"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 0
+
+[node name="ButtonWarpEaseSmooth" type="Button" parent="Tools/MarginContainer/VBoxContainer/PropertiesSelect/WarpEaseContainer/MenuWarpEase/WarpEaseButtons"]
+layout_mode = 2
+text = "Smooth"
+icon = ExtResource("10_16mix")
+flat = true
+alignment = 0
+
+[node name="ButtonWarpEaseSharp" type="Button" parent="Tools/MarginContainer/VBoxContainer/PropertiesSelect/WarpEaseContainer/MenuWarpEase/WarpEaseButtons"]
+layout_mode = 2
+text = "Sharp"
+icon = ExtResource("12_8tqkh")
+flat = true
+alignment = 0
+
+[node name="ButtonWarpEaseLinear" type="Button" parent="Tools/MarginContainer/VBoxContainer/PropertiesSelect/WarpEaseContainer/MenuWarpEase/WarpEaseButtons"]
+layout_mode = 2
+text = "Linear"
+icon = ExtResource("13_l47dq")
+flat = true
+alignment = 0
+
+[node name="ButtonWarpEaseRandom" type="Button" parent="Tools/MarginContainer/VBoxContainer/PropertiesSelect/WarpEaseContainer/MenuWarpEase/WarpEaseButtons"]
+layout_mode = 2
+text = "Random"
+icon = ExtResource("14_mjpvl")
+flat = true
+alignment = 0
+
+[node name="PropertiesPaint" type="VBoxContainer" parent="Tools/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_constants/separation = -1
+
+[node name="Size" type="Label" parent="Tools/MarginContainer/VBoxContainer/PropertiesPaint"]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_ajutr")
+text = "Size"
+horizontal_alignment = 1
+
+[node name="Paint" type="Label" parent="Tools/MarginContainer/VBoxContainer/PropertiesPaint"]
+layout_mode = 2
+text = "Paint"
+horizontal_alignment = 1
+
+[node name="Control" type="Control" parent="Tools/MarginContainer/VBoxContainer/PropertiesPaint"]
+custom_minimum_size = Vector2(0, 23)
+layout_mode = 2
+
+[node name="InputPaintSize" type="LineEdit" parent="Tools/MarginContainer/VBoxContainer/PropertiesPaint/Control"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -22.1484
+offset_top = -11.5
+offset_right = 22.1484
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/minimum_character_width = 3
+theme_override_styles/normal = SubResource("StyleBoxEmpty_qkkh3")
+text = "16.0"
+alignment = 1
+max_length = 6
+
+[node name="Erase" type="Label" parent="Tools/MarginContainer/VBoxContainer/PropertiesPaint"]
+layout_mode = 2
+text = "Erase"
+horizontal_alignment = 1
+
+[node name="Control2" type="Control" parent="Tools/MarginContainer/VBoxContainer/PropertiesPaint"]
+custom_minimum_size = Vector2(0, 23)
+layout_mode = 2
+
+[node name="InputPaintEraseSize" type="LineEdit" parent="Tools/MarginContainer/VBoxContainer/PropertiesPaint/Control2"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -22.1484
+offset_top = -11.5
+offset_right = 22.1484
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/minimum_character_width = 3
+theme_override_styles/normal = SubResource("StyleBoxEmpty_qkkh3")
+text = "32.0"
+alignment = 1
+max_length = 6
+
+[node name="Mode" type="Label" parent="Tools/MarginContainer/VBoxContainer/PropertiesPaint"]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_ajutr")
+text = "Mode"
+horizontal_alignment = 1
+
+[node name="PaintModeContainer" type="Control" parent="Tools/MarginContainer/VBoxContainer/PropertiesPaint"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+
+[node name="ButtonPaintMode" type="Button" parent="Tools/MarginContainer/VBoxContainer/PropertiesPaint/PaintModeContainer"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+icon = ExtResource("15_wcclq")
+icon_alignment = 1
+
+[node name="MenuPaintMode" type="Panel" parent="Tools/MarginContainer/VBoxContainer/PropertiesPaint/PaintModeContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = 5.0
+offset_top = -16.0
+offset_right = 95.0
+offset_bottom = 78.0
+grow_horizontal = 0
+grow_vertical = 2
+
+[node name="PaintModeButtons" type="VBoxContainer" parent="Tools/MarginContainer/VBoxContainer/PropertiesPaint/PaintModeContainer/MenuPaintMode"]
+unique_name_in_owner = true
+layout_mode = 2
+offset_right = 99.0
+offset_bottom = 106.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 0
+
+[node name="ButtonPainModeFront" type="Button" parent="Tools/MarginContainer/VBoxContainer/PropertiesPaint/PaintModeContainer/MenuPaintMode/PaintModeButtons"]
+unique_name_in_owner = true
+layout_mode = 2
+keep_pressed_outside = true
+text = "Front"
+icon = ExtResource("15_wcclq")
+flat = true
+alignment = 0
+
+[node name="ButtonPainModeBehind" type="Button" parent="Tools/MarginContainer/VBoxContainer/PropertiesPaint/PaintModeContainer/MenuPaintMode/PaintModeButtons"]
+unique_name_in_owner = true
+layout_mode = 2
+keep_pressed_outside = true
+text = "Behind"
+icon = ExtResource("16_kgkrr")
+flat = true
+alignment = 0
+
+[node name="ButtonPainModeInside" type="Button" parent="Tools/MarginContainer/VBoxContainer/PropertiesPaint/PaintModeContainer/MenuPaintMode/PaintModeButtons"]
+unique_name_in_owner = true
+layout_mode = 2
+keep_pressed_outside = true
+text = "Inside"
+icon = ExtResource("17_wgs5x")
+flat = true
+alignment = 0
+
+[node name="PropertiesFill" type="VBoxContainer" parent="Tools/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Tools/MarginContainer/VBoxContainer/PropertiesFill"]
+layout_mode = 2
+text = "Size"
+horizontal_alignment = 1
+
+[node name="PropertiesSmooth" type="VBoxContainer" parent="Tools/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Size" type="Label" parent="Tools/MarginContainer/VBoxContainer/PropertiesSmooth"]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_ajutr")
+text = "Size"
+horizontal_alignment = 1
+
+[node name="Control" type="Control" parent="Tools/MarginContainer/VBoxContainer/PropertiesSmooth"]
+custom_minimum_size = Vector2(0, 23)
+layout_mode = 2
+
+[node name="InputSmoothSize" type="LineEdit" parent="Tools/MarginContainer/VBoxContainer/PropertiesSmooth/Control"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -22.1484
+offset_top = -11.5
+offset_right = 22.1484
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/minimum_character_width = 3
+theme_override_styles/normal = SubResource("StyleBoxEmpty_qkkh3")
+text = "16.0"
+alignment = 1
+max_length = 6
+
+[node name="Strength" type="Label" parent="Tools/MarginContainer/VBoxContainer/PropertiesSmooth"]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_ajutr")
+text = "Strength"
+horizontal_alignment = 1
+
+[node name="Control2" type="Control" parent="Tools/MarginContainer/VBoxContainer/PropertiesSmooth"]
+custom_minimum_size = Vector2(0, 23)
+layout_mode = 2
+
+[node name="InputSmoothStrength" type="LineEdit" parent="Tools/MarginContainer/VBoxContainer/PropertiesSmooth/Control2"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -22.1484
+offset_top = -11.5
+offset_right = 22.1484
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/minimum_character_width = 3
+theme_override_styles/normal = SubResource("StyleBoxEmpty_qkkh3")
+text = "0.5"
+alignment = 1
+max_length = 6
+
+[node name="Stats" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 79.0
+offset_top = -92.0
+offset_right = 612.0
+offset_bottom = -13.0
+grow_vertical = 0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.180392)
+theme_override_constants/outline_size = 4
+text = "strokes: 2
+vertices: 356"
+vertical_alignment = 2
+
+[connection signal="mouse_entered" from="ColorPanels/Swatches" to="." method="_on_colors_mouse_entered"]
+[connection signal="mouse_exited" from="ColorPanels/Swatches" to="." method="_on_colors_mouse_exited"]
+[connection signal="pressed" from="ColorPanels/Swatches/MarginContainer/VBoxContainer/DefaultSwatches/ButtonUsedColor" to="ColorPanels/Swatches/MarginContainer/VBoxContainer/DefaultSwatches/ButtonUsedColor" method="_on_pressed"]
+[connection signal="pressed" from="ColorPanels/Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17181" to="ColorPanels/Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17181" method="_on_pressed"]
+[connection signal="pressed" from="ColorPanels/Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17182" to="ColorPanels/Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17182" method="_on_pressed"]
+[connection signal="pressed" from="ColorPanels/Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17183" to="ColorPanels/Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17183" method="_on_pressed"]
+[connection signal="pressed" from="ColorPanels/Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17184" to="ColorPanels/Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17184" method="_on_pressed"]
+[connection signal="pressed" from="ColorPanels/Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17185" to="ColorPanels/Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17185" method="_on_pressed"]
+[connection signal="pressed" from="ColorPanels/Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17186" to="ColorPanels/Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17186" method="_on_pressed"]
+[connection signal="pressed" from="ColorPanels/Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17187" to="ColorPanels/Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17187" method="_on_pressed"]
+[connection signal="pressed" from="ColorPanels/Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17188" to="ColorPanels/Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17188" method="_on_pressed"]
+[connection signal="pressed" from="ColorPanels/Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17189" to="ColorPanels/Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17189" method="_on_pressed"]
+[connection signal="pressed" from="ColorPanels/Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17190" to="ColorPanels/Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17190" method="_on_pressed"]
+[connection signal="pressed" from="ColorPanels/Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17191" to="ColorPanels/Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17191" method="_on_pressed"]
+[connection signal="pressed" from="ColorPanels/Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17192" to="ColorPanels/Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17192" method="_on_pressed"]
+[connection signal="pressed" from="ColorPanels/Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17193" to="ColorPanels/Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17193" method="_on_pressed"]
+[connection signal="pressed" from="ColorPanels/Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17194" to="ColorPanels/Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17194" method="_on_pressed"]
+[connection signal="pressed" from="ColorPanels/Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17195" to="ColorPanels/Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17195" method="_on_pressed"]
+[connection signal="pressed" from="ColorPanels/Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17196" to="ColorPanels/Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17196" method="_on_pressed"]
+[connection signal="pressed" from="ColorPanels/Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17197" to="ColorPanels/Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17197" method="_on_pressed"]
+[connection signal="pressed" from="ColorPanels/Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17198" to="ColorPanels/Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17198" method="_on_pressed"]
+[connection signal="pressed" from="ColorPanels/Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17199" to="ColorPanels/Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17199" method="_on_pressed"]
+[connection signal="pressed" from="ColorPanels/Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17200" to="ColorPanels/Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17200" method="_on_pressed"]
+[connection signal="pressed" from="ColorPanels/Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17201" to="ColorPanels/Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17201" method="_on_pressed"]
+[connection signal="pressed" from="ColorPanels/Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17202" to="ColorPanels/Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17202" method="_on_pressed"]
+[connection signal="pressed" from="ColorPanels/Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17203" to="ColorPanels/Swatches/MarginContainer/VBoxContainer/DefaultSwatches/@Button@17203" method="_on_pressed"]
+[connection signal="pressed" from="Tools/MarginContainer/VBoxContainer/ButtonFocus" to="." method="_on_button_focus_pressed"]
+[connection signal="pressed" from="Tools/MarginContainer/VBoxContainer/Tools/ButtonSelect" to="." method="_on_button_select_pressed"]
+[connection signal="pressed" from="Tools/MarginContainer/VBoxContainer/Tools/ButtonPaint" to="." method="_on_button_paint_pressed"]
+[connection signal="pressed" from="Tools/MarginContainer/VBoxContainer/Tools/ButtonOval" to="." method="_on_button_oval_pressed"]
+[connection signal="pressed" from="Tools/MarginContainer/VBoxContainer/Tools/ButtonRect" to="." method="_on_button_rect_pressed"]
+[connection signal="pressed" from="Tools/MarginContainer/VBoxContainer/Tools/ButtonShape" to="." method="_on_button_pen_pressed"]
+[connection signal="pressed" from="Tools/MarginContainer/VBoxContainer/Tools/ButtonEyedropper" to="." method="_on_button_eyedropper_pressed"]
+[connection signal="pressed" from="Tools/MarginContainer/VBoxContainer/Tools/ButtonFill" to="." method="_on_button_fill_pressed"]
+[connection signal="pressed" from="Tools/MarginContainer/VBoxContainer/Tools/ButtonSmooth" to="." method="_on_button_smooth_pressed"]
+[connection signal="toggled" from="Tools/MarginContainer/VBoxContainer/ButtonEraseMode" to="." method="_on_button_erase_mode_toggled"]
+[connection signal="button_down" from="Tools/MarginContainer/VBoxContainer/PropertiesSelect/WarpEaseContainer/ButtonWarpEase" to="." method="_on_button_warp_ease_button_down"]
+[connection signal="button_down" from="Tools/MarginContainer/VBoxContainer/PropertiesSelect/WarpEaseContainer/MenuWarpEase/WarpEaseButtons/ButtonWarpEaseSmooth" to="." method="_on_button_warp_ease_smooth_button"]
+[connection signal="button_up" from="Tools/MarginContainer/VBoxContainer/PropertiesSelect/WarpEaseContainer/MenuWarpEase/WarpEaseButtons/ButtonWarpEaseSmooth" to="." method="_on_button_warp_ease_smooth_button"]
+[connection signal="button_down" from="Tools/MarginContainer/VBoxContainer/PropertiesSelect/WarpEaseContainer/MenuWarpEase/WarpEaseButtons/ButtonWarpEaseSharp" to="." method="_on_button_warp_ease_sharp_button"]
+[connection signal="button_up" from="Tools/MarginContainer/VBoxContainer/PropertiesSelect/WarpEaseContainer/MenuWarpEase/WarpEaseButtons/ButtonWarpEaseSharp" to="." method="_on_button_warp_ease_sharp_button"]
+[connection signal="button_down" from="Tools/MarginContainer/VBoxContainer/PropertiesSelect/WarpEaseContainer/MenuWarpEase/WarpEaseButtons/ButtonWarpEaseLinear" to="." method="_on_button_warp_ease_linear_button"]
+[connection signal="button_up" from="Tools/MarginContainer/VBoxContainer/PropertiesSelect/WarpEaseContainer/MenuWarpEase/WarpEaseButtons/ButtonWarpEaseLinear" to="." method="_on_button_warp_ease_linear_button"]
+[connection signal="button_down" from="Tools/MarginContainer/VBoxContainer/PropertiesSelect/WarpEaseContainer/MenuWarpEase/WarpEaseButtons/ButtonWarpEaseRandom" to="." method="_on_button_warp_ease_random_button"]
+[connection signal="button_up" from="Tools/MarginContainer/VBoxContainer/PropertiesSelect/WarpEaseContainer/MenuWarpEase/WarpEaseButtons/ButtonWarpEaseRandom" to="." method="_on_button_warp_ease_random_button"]
+[connection signal="focus_exited" from="Tools/MarginContainer/VBoxContainer/PropertiesPaint/Control/InputPaintSize" to="." method="_on_input_paint_size_focus_exited"]
+[connection signal="focus_exited" from="Tools/MarginContainer/VBoxContainer/PropertiesPaint/Control2/InputPaintEraseSize" to="." method="_on_input_paint_erase_size_focus_exited"]
+[connection signal="button_down" from="Tools/MarginContainer/VBoxContainer/PropertiesPaint/PaintModeContainer/ButtonPaintMode" to="." method="_on_button_paint_mode_button_down"]
+[connection signal="button_up" from="Tools/MarginContainer/VBoxContainer/PropertiesPaint/PaintModeContainer/MenuPaintMode/PaintModeButtons/ButtonPainModeFront" to="." method="_on_button_pain_mode_front_button_up"]
+[connection signal="button_up" from="Tools/MarginContainer/VBoxContainer/PropertiesPaint/PaintModeContainer/MenuPaintMode/PaintModeButtons/ButtonPainModeBehind" to="." method="_on_button_pain_mode_behind_button_up"]
+[connection signal="button_up" from="Tools/MarginContainer/VBoxContainer/PropertiesPaint/PaintModeContainer/MenuPaintMode/PaintModeButtons/ButtonPainModeInside" to="." method="_on_button_pain_mode_inside_button_up"]
+[connection signal="focus_exited" from="Tools/MarginContainer/VBoxContainer/PropertiesSmooth/Control/InputSmoothSize" to="." method="_on_input_paint_size_focus_exited"]
+[connection signal="focus_exited" from="Tools/MarginContainer/VBoxContainer/PropertiesSmooth/Control2/InputSmoothStrength" to="." method="_on_input_smooth_strength_focus_exited"]
+[connection signal="text_submitted" from="Tools/MarginContainer/VBoxContainer/PropertiesSmooth/Control2/InputSmoothStrength" to="." method="_on_input_smooth_strength_text_submitted"]

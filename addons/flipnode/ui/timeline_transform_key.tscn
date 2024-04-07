@@ -1,0 +1,78 @@
+[gd_scene load_steps=8 format=3 uid="uid://ccc3xa3unawlt"]
+
+[ext_resource type="Script" path="res://addons/flipnode/ui/timeline_frame.gd" id="1_o7r5s"]
+[ext_resource type="Texture2D" uid="uid://cl88p0t1ojo5m" path="res://addons/flipnode/icons/Add.svg" id="2_b2g52"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_vxft7"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_x8fol"]
+content_margin_left = 1.0
+content_margin_right = 1.0
+bg_color = Color(1, 1, 1, 0.517647)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_u08ck"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8tbbb"]
+bg_color = Color(0.388235, 0.388235, 0.388235, 0.694118)
+border_width_left = 1
+border_width_right = 1
+border_color = Color(0.180392, 0.180392, 0.180392, 0.552941)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+corner_detail = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7vvun"]
+bg_color = Color(1, 1, 1, 0.227451)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[node name="TransformKey" type="Button"]
+modulate = Color(0.415686, 0.666667, 1, 1)
+custom_minimum_size = Vector2(12, 12)
+offset_top = 24.0
+offset_right = 12.0
+offset_bottom = 36.0
+theme_override_styles/focus = SubResource("StyleBoxEmpty_vxft7")
+theme_override_styles/hover = SubResource("StyleBoxFlat_x8fol")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_u08ck")
+script = ExtResource("1_o7r5s")
+style_filled = SubResource("StyleBoxFlat_8tbbb")
+
+[node name="Selected" type="Panel" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_7vvun")
+
+[node name="Symbol" type="TextureRect" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 1.0
+offset_top = -11.0
+offset_right = 11.0
+offset_bottom = -1.0
+grow_vertical = 0
+mouse_filter = 2
+texture = ExtResource("2_b2g52")
+
+[connection signal="pressed" from="." to="." method="_on_pressed"]

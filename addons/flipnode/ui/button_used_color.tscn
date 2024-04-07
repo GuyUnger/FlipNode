@@ -1,0 +1,47 @@
+[gd_scene load_steps=6 format=3 uid="uid://dbnwg2psnoj0f"]
+
+[ext_resource type="Script" path="res://addons/flipnode/ui/button_used_color.gd" id="1_akg50"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1fh0c"]
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="Shader" id="Shader_6y4ij"]
+code = "shader_type canvas_item;
+render_mode blend_mix;
+
+void fragment() {
+	vec2 uv = SCREEN_UV / SCREEN_PIXEL_SIZE / 2.0 + TIME;
+	float checker = abs(smoothstep(-0.2, 0.2, sin(uv.x)) - smoothstep(-0.2, 0.2, sin(uv.y)));
+	COLOR.rgb = vec3(checker * 0.3 + 0.7);
+}"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_t8y2b"]
+shader = SubResource("Shader_6y4ij")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hgqcp"]
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[node name="ButtonUsedColor" type="Button"]
+custom_minimum_size = Vector2(20, 20)
+theme_override_styles/normal = SubResource("StyleBoxFlat_1fh0c")
+theme_override_styles/hover = SubResource("StyleBoxFlat_1fh0c")
+script = ExtResource("1_akg50")
+
+[node name="Panel" type="Panel" parent="."]
+show_behind_parent = true
+material = SubResource("ShaderMaterial_t8y2b")
+layout_mode = 0
+offset_right = 20.0
+offset_bottom = 20.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_hgqcp")
+
+[connection signal="pressed" from="." to="." method="_on_pressed"]

@@ -1,0 +1,6 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://c2m14sd4a74dn"]
+
+[ext_resource type="Shader" path="res://addons/flipnode/shading/area_material.gdshader" id="1_qnvgc"]
+
+[resource]
+shader = ExtResource("1_qnvgc")

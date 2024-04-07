@@ -1,9 +1,0 @@
-[gd_resource type="ShaderMaterial" load_steps=3 format=3 uid="uid://8hs3p3kogtk3"]
-
-[ext_resource type="Shader" path="res://addons/goolash/shading/brush_stroke.gdshader" id="1_q401f"]
-[ext_resource type="Texture2D" uid="uid://dk2shd72pwipw" path="res://addons/goolash/shading/goolash_boil_noise_texture.png" id="2_0k8fg"]
-
-[resource]
-shader = ExtResource("1_q401f")
-shader_parameter/goolash_frame = 392.0
-shader_parameter/goolash_boil_noise = ExtResource("2_0k8fg")
