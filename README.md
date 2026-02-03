@@ -5,10 +5,10 @@
 
 ### Vector paint and animation addon for Godot 4.2+
 
-  🚲 Fast and easy drawing right inside your scene  
+  🐎 Fast and easy drawing directly inside the scene  
   ✍️ Frame by frame animation  
-  🧪 Great for prototyping  
-  ⚽ Draw physics objects, cool for e.g. quick level design
+  🧪 Great for quick prototyping  
+  ⚽ Draw physics objects, great for level design
 
 
 # Shortcuts and how to use
