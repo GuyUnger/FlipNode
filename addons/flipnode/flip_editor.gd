@@ -69,12 +69,10 @@ var _action_paint_size: float = 16.0
 var _action_paint_erase_size: float = 32.0
 
 var _action_warp_size: float = 60.0
-var _action_warp_cut_angle: float = deg_to_rad(30.0)
 var _action_warp_size_preview_t: float = 0.0
 
 var _action_smooth_strength := 0.5
 
-var _pen_pressure: float = 0.0
 
 var onion_skin_enabled := true
 var onion_skin_frames: int = 1
@@ -85,7 +83,7 @@ var editing_brush: Brush2D
 var allow_editing := false
 var _selected_highlight: float = 0.0
 
-var _screen_transform_previous
+var _screen_transform_previous: Transform2D
 
 var allow_custom_cursor := true
 var allow_hide_cursor := false
@@ -101,8 +99,8 @@ var selected_layers := {}
 
 var selection: Brush2D
 
-var focus_frame
-var focus_darken
+var focus_frame: ColorRect
+var focus_darken: ColorRect
 var show_focus := true
 
 var clear_color: Color
@@ -114,13 +112,13 @@ func _ready() -> void:
 	create_focus_darken()
 
 
-func create_focus_frame():
+func create_focus_frame() -> void:
 	focus_frame = ColorRect.new()
 	focus_frame.color = Color.WHITE
 	focus_frame.color.a = 0.5
 
 
-func create_focus_darken():
+func create_focus_darken() -> void:
 	focus_darken = ColorRect.new()
 	focus_darken.color = clear_color
 	focus_darken.color.a = 0.5
@@ -128,11 +126,11 @@ func create_focus_darken():
 	focus_darken.position = -focus_darken.size * 0.5
 
 
-func open():
+func open() -> void:
 	visible = true
 
 
-func close():
+func close() -> void:
 	visible = false
 	if editing_brush:
 		editing_brush.edited.disconnect(_on_brush_edited)
@@ -140,7 +138,7 @@ func close():
 	editing_animation = null
 
 
-func select_layer(layer):
+func select_layer(layer: Layer2D) -> void:
 	selected_layers[editing_animation] = layer
 	selected_layer_changed.emit()
 
@@ -155,10 +153,10 @@ func get_selected_layer() -> Layer2D:
 	return editing_animation.layers[0]
 
 
-func select_brush(brush: Brush2D):
+func select_brush(brush: Brush2D) -> void:
 	if editing_brush == brush:
 		return
-	if editing_brush:
+	if is_instance_valid(editing_brush):
 		editing_brush.edited.disconnect(_on_brush_edited)
 		
 		editing_brush.set_top(false)
@@ -183,12 +181,12 @@ func select_brush(brush: Brush2D):
 	editing_brush_changed.emit(editing_brush)
 
 
-func _on_brush_edited():
+func _on_brush_edited() -> void:
 	brush_edited.emit(editing_brush)
 	update_focus_frame()
 
 
-func update_focus_frame():
+func update_focus_frame() -> void:
 	focus_frame.visible = show_focus
 	focus_darken.visible = show_focus
 	editing_brush.set_top(show_focus)
@@ -196,7 +194,7 @@ func update_focus_frame():
 	focus_frame.size = editing_brush.bounds.size
 
 
-func select_animation(animation: BrushAnimation2D):
+func select_animation(animation: BrushAnimation2D) -> void:
 	if editing_animation == animation:
 		return
 	if editing_animation:
@@ -208,21 +206,21 @@ func select_animation(animation: BrushAnimation2D):
 	editing_animation_changed.emit()
 
 
-func try_select_children(parent, packed_parent = null):
+func try_select_children(parent: Node2D, packed_parent: Node2D = null) -> bool:
 	var children: Array = parent.get_children()
 	children.reverse()
 	
 	if not packed_parent and parent.scene_file_path != "" and parent != EditorInterface.get_edited_scene_root():
 		packed_parent = parent
 	
-	for child in children:
+	for child: Variant in children:
 		# Skip locked nodes.
 		if child.has_meta("_edit_lock_"):
 			continue
 		if try_select_children(child, packed_parent):
 			return true
 		if child is Brush2D:
-			for stroke in child.strokes:
+			for stroke: Stroke in child.strokes:
 				if Geometry2D.is_point_in_polygon(child.get_local_mouse_position(), stroke.polygon):
 					if packed_parent and child.owner == packed_parent:
 						# Brush is inside a packed scene, select the packed scene.
@@ -233,8 +231,10 @@ func try_select_children(parent, packed_parent = null):
 	return false
 
 
-func select(node):
+func select(node: Brush2D) -> void:
 	if not Engine.is_editor_hint():
+		return
+	if EditorInterface.get_selection().get_selected_nodes() == [node]:
 		return
 	await get_tree().process_frame
 	EditorInterface.get_selection().clear()
@@ -242,7 +242,7 @@ func select(node):
 	EditorInterface.get_selection().add_node(node)
 
 
-func _on_animation_frame_changed():
+func _on_animation_frame_changed() -> void:
 	# change selected brush on frame change
 	var selected_nodes = EditorInterface.get_selection().get_selected_nodes()
 	if selected_nodes.size() == 1 and selected_nodes[0] is Brush2D:
@@ -252,7 +252,7 @@ func _on_animation_frame_changed():
 #region Input
 
 
-func _input(event):
+func _input(event: Variant) -> void:
 	if Input.is_key_pressed(KEY_CTRL):
 		if event is InputEventKey and event.is_pressed() and event.keycode == KEY_B:
 			var parent
@@ -283,7 +283,7 @@ func _input(event):
 	
 
 
-func _input_animation(event: InputEventKey):
+func _input_animation(event: InputEventKey) -> bool:
 	match event.keycode:
 		key_play:
 			if editing_animation.is_playing:
@@ -319,6 +319,7 @@ func _input_animation(event: InputEventKey):
 			else:
 				new_brush(editing_animation.current_frame)
 			return true
+	return false
 
 
 func _forward_canvas_gui_input(event: InputEvent) -> bool:
@@ -604,12 +605,12 @@ func _on_mouse_button_released():
 #endregion
 
 
-func _process(delta):
+func _process(delta: float) -> void:
 	if not is_instance_valid(editing_brush) or not allow_editing:
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 		return
 	
-	var screen_transform = editing_brush.get_viewport().get_screen_transform()
+	var screen_transform := editing_brush.get_viewport().get_screen_transform()
 	if screen_transform != _screen_transform_previous:
 		_screen_transform_previous = screen_transform
 		screen_transform_changed.emit()
@@ -839,7 +840,7 @@ func draw_brush_highlight(brush: Brush2D):
 		return
 	var thickness = 2.0 / view_scale
 	for stroke: Stroke in brush.strokes:
-		if stroke.polygon.size() < 3 or stroke._erasing:
+		if stroke.polygon.size() < 3:
 			continue
 		brush.draw_stroke_outline(
 				stroke, thickness, selection_color, ease(_selected_highlight, 0.2)

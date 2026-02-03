@@ -209,7 +209,7 @@ func select_node(node):
 	return false
 
 
-func _forward_canvas_gui_input(event):
+func _forward_canvas_gui_input(event: InputEvent) -> bool:
 	if not Flip.editor.allow_editing:
 		return false
 	return Flip.editor._forward_canvas_gui_input(event)

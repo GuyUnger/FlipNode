@@ -1,6 +1,6 @@
 [gd_scene load_steps=8 format=3 uid="uid://ccc3xa3unawlt"]
 
-[ext_resource type="Script" path="res://addons/flipnode/ui/timeline_frame.gd" id="1_o7r5s"]
+[ext_resource type="Script" uid="uid://bc12vmwmcog5o" path="res://addons/flipnode/ui/timeline_frame.gd" id="1_o7r5s"]
 [ext_resource type="Texture2D" uid="uid://cl88p0t1ojo5m" path="res://addons/flipnode/icons/Add.svg" id="2_b2g52"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_vxft7"]

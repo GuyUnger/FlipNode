@@ -1,6 +1,6 @@
 [gd_scene load_steps=7 format=3 uid="uid://cptiejb5rrike"]
 
-[ext_resource type="Script" path="res://addons/flipnode/ui/timeline_frame.gd" id="1_1gijj"]
+[ext_resource type="Script" uid="uid://bc12vmwmcog5o" path="res://addons/flipnode/ui/timeline_frame.gd" id="1_1gijj"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_vxft7"]
 

@@ -2,7 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://ba2hxmxea6m1a" path="res://addons/flipnode/icons/PagePrevious.svg" id="1_mqbbs"]
 [ext_resource type="Texture2D" uid="uid://cy0je6d77bnw2" path="res://addons/flipnode/icons/Play.svg" id="1_vtfin"]
-[ext_resource type="Script" path="res://addons/flipnode/ui/timeline.gd" id="1_x5p0l"]
+[ext_resource type="Script" uid="uid://detso1qpnph4t" path="res://addons/flipnode/ui/timeline.gd" id="1_x5p0l"]
 [ext_resource type="Texture2D" uid="uid://ntomq1ouceco" path="res://addons/flipnode/icons/PageNext.svg" id="3_w0qs8"]
 [ext_resource type="Texture2D" uid="uid://m5wq1j1x5deq" path="res://addons/flipnode/icons/AutoPlay.svg" id="4_qdy44"]
 [ext_resource type="Texture2D" uid="uid://sp3bibddihdm" path="res://addons/flipnode/icons/Loop.svg" id="6_7ikk7"]

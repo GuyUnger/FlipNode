@@ -2,6 +2,7 @@
 class_name AreaBrush2D
 extends Brush2D
 
+## Emitted when mouse enters this area.
 signal mouse_entered
 ## Emitted when mouse is after pressing inside this area.
 signal mouse_exited
@@ -33,14 +34,6 @@ var mouse_hovering := false
 		for child in area.get_children():
 			if child is CollisionPolygon2D:
 				child.disabled = value
-		#if value:
-			#for child in area.get_children():
-				#if child is CollisionPolygon2D:
-					#child.disabled = value
-		#else:
-			#for child in area.get_children():
-				#if child is CollisionPolygon2D:
-					#child.scale = Vector2.ONE
 
 var area: Area2D
 
@@ -72,7 +65,7 @@ func _draw() -> void:
 		draw_outline(1.0, Color("0198b1"))
 
 
-func _on_area_input_event(viewport, event, shape):
+func _on_area_input_event(viewport, event, shape) -> void:
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if event.pressed:
 			mouse_pressed.emit()
@@ -81,7 +74,7 @@ func _on_area_input_event(viewport, event, shape):
 			mouse_released.emit()
 
 
-func _process_release():
+func _process_release() -> void:
 	if not Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
 		get_tree().process_frame.disconnect(_process_release)
 		if mouse_hovering:
@@ -89,15 +82,15 @@ func _process_release():
 		mouse_unpressed.emit()
 
 
-func _on_area_mouse_entered():
+func _on_area_mouse_entered() -> void:
 	mouse_entered.emit()
 	mouse_hovering = true
 
 
-func _on_area_mouse_exited():
+func _on_area_mouse_exited() -> void:
 	mouse_exited.emit()
 	mouse_hovering = false
 
 
-func get_override_material(stroke):
+func get_override_material(stroke: Stroke) -> Material:
 	return Flip.MaterialArea

@@ -4,7 +4,7 @@ class_name Brush2D extends Node2D
 
 signal edited
 
-@export var strokes: Array
+@export var strokes: Array[Stroke]
 @export var bounds: Rect2
 
 @export var frame_num: int
@@ -18,7 +18,7 @@ var lod_levels := 2
 var lod_level := 0
 
 
-func _validate_property(property):
+func _validate_property(property: Dictionary) -> void:
 	match property.name:
 		"bounds":
 			property.usage = PROPERTY_USAGE_NO_EDITOR
@@ -29,7 +29,7 @@ func _validate_property(property):
 				property.usage = PROPERTY_USAGE_NO_EDITOR
 
 
-func _ready():
+func _ready() -> void:
 	if Engine.is_editor_hint():
 		strokes = strokes.duplicate()
 		for i in strokes.size():
@@ -41,11 +41,12 @@ func _ready():
 		if animation:
 			set_animation_name()
 		return
+	generate_lods()
 	
 	if strokes.size() == 0:
 		return
 	
-	draw(1)
+	draw(0)
 
 
 func _enter_tree() -> void:
@@ -65,67 +66,63 @@ func _exit_tree() -> void:
 		#handle_lod()
 
 
-func _enter():
+func _enter() -> void:
 	pass
 
 
-func add_stroke(stroke: Stroke):
+func add_stroke(stroke: Stroke) -> void:
 	#TODO: not sure if this is the best way to handle stroke data and strokes
 	strokes.push_back(stroke)
 	init_stroke_polygon(stroke)
 
 
-func init_stroke_polygon(stroke: Stroke):
-	var stroke_polygon = take_stroke_polygon()
+func init_stroke_polygon(stroke: Stroke) -> void:
+	var stroke_polygon := take_stroke_polygon()
 	stroke.stroke_polygon = stroke_polygon
 	add_child(stroke_polygon)
 	stroke_polygon.material = get_override_material(stroke)
 	stroke.draw()
 
 
-func remove_stroke(stroke_data: Stroke):
+func remove_stroke(stroke_data: Stroke) -> void:
 	strokes.erase(stroke_data)
-	var stroke_polygon = stroke_data.stroke_polygon
+	var stroke_polygon := stroke_data.stroke_polygon
 	remove_child(stroke_data.stroke_polygon)
 	
 	stroke_data.stroke_polygon = null
 
 
-func move_stroke_to_back(stroke_data: Stroke):
+func move_stroke_to_back(stroke_data: Stroke) -> void:
 	strokes.erase(stroke_data)
 	strokes.push_front(stroke_data)
 
 
-func move_stroke_to_front(stroke_data: Stroke):
+func move_stroke_to_front(stroke_data: Stroke) -> void:
 	strokes.erase(stroke_data)
 	strokes.push_back(stroke_data)
 
 
-func draw(lod_level := -1):
-	var draw_strokes = lods[lod_level] if lod_level >= 0 else strokes
+func draw(lod_level := -1) -> void:
+	var draw_strokes: Array[Stroke] = lods[lod_level] if lod_level >= 0 else strokes
 	for child in get_children():
 		if child is StrokePolygon2D:
 			remove_child(child)
 			put_stroke_polygon(child)
 	
 	for stroke in draw_strokes:
-		if stroke is EncodedObjectAsID:
-			print_stack()
-			return
 		init_stroke_polygon(stroke)
 	queue_redraw()
 
 
-
-func get_islands():
+func get_islands() -> Array:
 	var islands := []
 	for stroke: Stroke in strokes:
 		var i := 0
 		var l := islands.size()
-		var merging_polygon = stroke.polygon
+		var merging_polygon: PackedVector2Array = stroke.polygon
 		
 		while i < l:
-			var overlaps = Geometry2D.intersect_polygons(islands[i], stroke.polygon).size() > 0
+			var overlaps: bool = Geometry2D.intersect_polygons(islands[i], stroke.polygon).size() > 0
 			if overlaps:
 				merging_polygon = Geometry2D.merge_polygons(islands[i], merging_polygon)[0]
 				islands.remove_at(i)
@@ -138,26 +135,26 @@ func get_islands():
 	return islands
 
 
-func _draw():
+func _draw() -> void:
 	if "editor" in Flip and Flip.editor and Flip.editor.editing_brush == self:
 		Flip.editor._draw_brush(self)
-		var zoom = get_viewport().get_screen_transform().get_scale().x * global_scale.x
+		var zoom: float = get_viewport().get_screen_transform().get_scale().x * global_scale.x
 		draw_rect(bounds, Color(0.3, 0.4, 1, 0.2), false, 2.0 / zoom)
 
 
-func draw_outline(thickness := 1.0, color: Color = Color.WHITE, alpha := 1.0):
+func draw_outline(thickness := 1.0, color: Color = Color.WHITE, alpha := 1.0) -> void:
 	for stroke: Stroke in strokes:
 		draw_stroke_outline(stroke, thickness, color, alpha)
 
 
-func draw_stroke_outline(stroke, thickness := 1.0, color: Color = Color.WHITE, alpha := 1.0):
+func draw_stroke_outline(stroke:Stroke, thickness:float = 1.0, color:Color = Color.WHITE, alpha:float = 1.0) -> void:
 	thickness /= get_viewport().get_screen_transform().get_scale().x
 	draw_polygon_outline(stroke.polygon, thickness, color, alpha)
 	for hole in stroke.holes:
 		draw_polygon_outline(hole, thickness, color, alpha)
 
 
-func draw_polygon_outline(polygon, thickness := 1.0, color: Color = Color.WHITE, alpha := 1.0):
+func draw_polygon_outline(polygon:PackedVector2Array, thickness:float = 1.0, color:Color = Color.WHITE, alpha:float = 1.0) -> void:
 	if polygon.size() < 3:
 		return
 	polygon = polygon.duplicate()
@@ -166,14 +163,14 @@ func draw_polygon_outline(polygon, thickness := 1.0, color: Color = Color.WHITE,
 	draw_polyline(polygon, color, thickness, true)
 
 
-func get_strokes_duplicate() -> Array:
-	var strokes_duplicate = []
+func get_strokes_duplicate() -> Array[Stroke]:
+	var strokes_duplicate: Array[Stroke] = []
 	for stroke in strokes:
 		strokes_duplicate.push_back(stroke.copy())
 	return strokes_duplicate
 
 
-func get_override_material(stroke) -> Material:
+func get_override_material(stroke:Stroke) -> Material:
 	if material:
 		return material
 	if animation and animation.material:
@@ -181,13 +178,13 @@ func get_override_material(stroke) -> Material:
 	return null
 
 
-func merge_stroke(merging_stroke: Stroke):
+func merge_stroke(merging_stroke:Stroke) -> void:
 	if strokes.has(merging_stroke):
 		remove_stroke(merging_stroke)
 	
 	var merged_strokes := []
 	while strokes.size() > 0:
-		var stroke = strokes[0]
+		var stroke: Stroke = strokes[0]
 		remove_stroke(stroke)
 		if merging_stroke.is_stroke_overlapping(stroke):
 			if merging_stroke.color.to_html() == stroke.color.to_html():
@@ -202,23 +199,23 @@ func merge_stroke(merging_stroke: Stroke):
 	
 	merged_strokes.push_back(merging_stroke)
 	
-	for stroke in merged_strokes:
+	for stroke: Stroke in merged_strokes:
 		add_stroke(stroke)
 	
 	_on_edit()
 
 
-func subtract_stroke(subtracting_stroke: Stroke):
+func subtract_stroke(subtracting_stroke: Stroke) -> void:
 	if strokes.has(subtracting_stroke):
 		remove_stroke(subtracting_stroke)
 	
-	var subtracted_strokes := []
+	var subtracted_strokes: Array[Stroke] = []
 	while strokes.size() > 0:
 		var stroke: Stroke = strokes[0]
 		remove_stroke(stroke)
 		subtracted_strokes.append_array(stroke.subtract_stroke(subtracting_stroke))
 	
-	for stroke in subtracted_strokes:
+	for stroke: Stroke in subtracted_strokes:
 		add_stroke(stroke)
 	
 	_on_edit()
@@ -260,15 +257,18 @@ func update_bounds():
 
 
 func generate_lods():
-	lods = []
-	var tolerances = [0.6, 1.0, 3.0, 10.0, 20.0]
-	for level in lod_levels:
-		var tolerance = tolerances[level]
-		lods.push_back(generate_lod(tolerance))
+	lods = [generate_lod(0.3)]
+	#lods = []
+	#var tolerances = [0.6, 1.0, 3.0, 10.0, 20.0]
+	##var tolerances = [2.0, 3.0, 5.0, 10.0, 20.0]
+	#for level in lod_levels:
+	#	var tolerance = tolerances[level]
+	#	lods.push_back(generate_lod(tolerance * 2.0))
+	#lods.push_back(generate_lod(0.5))
 
 
-func generate_lod(tolerance) -> Array:
-	var lod_strokes = []
+func generate_lod(tolerance: float) -> Array[Stroke]:
+	var lod_strokes: Array[Stroke] = []
 	for stroke: Stroke in strokes:
 		var lod_stroke: Stroke = stroke.duplicate()
 		lod_stroke.optimize(tolerance)
@@ -299,7 +299,7 @@ func get_edge_selections_ranged(
 	return edge_selections
 
 
-func get_stroke_at_position(position: Vector2):
+func get_stroke_at_position(position: Vector2) -> Stroke:
 	for stroke: Stroke in strokes:
 		if stroke.is_point_inside(position):
 			return stroke
@@ -316,9 +316,9 @@ func get_view_scale() -> Vector2:
 	return get_viewport().get_screen_transform().get_scale() * global_scale
 
 
-func clear():
+func clear() -> void:
 	for stroke_data in strokes:
-		var stroke_polygon = stroke_data.stroke_polygon
+		var stroke_polygon := stroke_data.stroke_polygon
 		remove_child(stroke_polygon)
 		put_stroke_polygon(stroke_polygon)
 	strokes.clear()
@@ -328,18 +328,18 @@ func is_empty() -> bool:
 	return strokes.size() == 0
 
 
-func duplicate(flag := 15) -> Node:
-	var brush = Brush2D.new()
-	brush.stroke_data = strokes.duplicate()
+func copy(flag := 15) -> Brush2D:
+	var brush := Brush2D.new()
+	brush.strokes = strokes.duplicate()
 	return brush
 
 
-func set_animation_name():
+func set_animation_name() -> void:
 	name = "Brush2D (Frame %s)" % frame_num
 
 
-func set_top(value: bool):
-	var index = 4096 if value else 0
+func set_top(value: bool) -> void:
+	var index := 4096 if value else 0
 	for stroke: Stroke in strokes:
 		stroke.stroke_polygon.z_index = index
 
@@ -347,12 +347,12 @@ func set_top(value: bool):
 static var _stroke_polygons := []
 
 
-static func take_stroke_polygon():
+static func take_stroke_polygon() -> StrokePolygon2D:
 	if _stroke_polygons.size() == 0:
 		return StrokePolygon2D.new()
 	else:
 		return _stroke_polygons.pop_back()
 
 
-static func put_stroke_polygon(stroke_polygon):
+static func put_stroke_polygon(stroke_polygon: StrokePolygon2D) -> void:
 	_stroke_polygons.push_back(stroke_polygon)

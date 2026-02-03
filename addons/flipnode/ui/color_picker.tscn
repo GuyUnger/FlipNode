@@ -1,9 +1,9 @@
 [gd_scene load_steps=24 format=3 uid="uid://dg2r2pc80m4n6"]
 
-[ext_resource type="Script" path="res://addons/flipnode/ui/color_picker.gd" id="1_14mjf"]
+[ext_resource type="Script" uid="uid://baf5a0u3k3rnq" path="res://addons/flipnode/ui/color_picker.gd" id="1_14mjf"]
 [ext_resource type="Texture2D" uid="uid://cgncliji5i1vv" path="res://addons/flipnode/icons/temperature.svg" id="2_xoe2n"]
-[ext_resource type="Script" path="res://addons/flipnode/brush2d.gd" id="3_bhoa1"]
-[ext_resource type="Script" path="res://addons/flipnode/stroke.gd" id="4_7a0n8"]
+[ext_resource type="Script" uid="uid://bohdj7rskde7k" path="res://addons/flipnode/brush2d.gd" id="3_bhoa1"]
+[ext_resource type="Script" uid="uid://bodrnkwf5a3mq" path="res://addons/flipnode/stroke.gd" id="4_7a0n8"]
 
 [sub_resource type="Shader" id="Shader_4ss2x"]
 code = "shader_type canvas_item;

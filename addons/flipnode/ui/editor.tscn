@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://kx2i7hym1cbq"]
 
-[ext_resource type="Script" path="res://addons/flipnode/flip_editor.gd" id="1_ut6ce"]
+[ext_resource type="Script" uid="uid://2qq7nwmmkccu" path="res://addons/flipnode/flip_editor.gd" id="1_ut6ce"]
 [ext_resource type="PackedScene" uid="uid://tlj1uut203ti" path="res://addons/flipnode/ui/toolbar.tscn" id="2_pnxo1"]
 
 [node name="FlipEditor" type="Control"]

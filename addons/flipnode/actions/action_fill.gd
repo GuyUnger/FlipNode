@@ -2,15 +2,15 @@
 class_name ActionFill extends ActionDraw
 
 
-func _init(brush: Brush2D, draw_mode := Flip.DRAW_MODE_FRONT, color: Color = Color.BLACK):
+func _init(brush: Brush2D, draw_mode := Flip.DRAW_MODE_FRONT, color: Color = Color.BLACK) -> void:
 	self.brush = brush
 	self.draw_mode = draw_mode
 	self.color = color
 
 
-func start(position):
+func start(position) -> void:
 	if draw_mode == Flip.DRAW_MODE_ERASE:
-		var stroke = brush.get_stroke_at_position(position)
+		var stroke := brush.get_stroke_at_position(position)
 		if stroke:
 			
 			brush.remove_stroke(stroke)

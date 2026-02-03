@@ -13,6 +13,8 @@ extends Brush2D
 
 var body
 
+@export var collision_only: bool = true
+
 
 func _ready() -> void:
 	if Engine.is_editor_hint():
@@ -27,3 +29,5 @@ func _ready() -> void:
 		var collision_polygon = CollisionPolygon2D.new()
 		body.add_child(collision_polygon)
 		collision_polygon.polygon = Flip.douglas_peucker(polygon, 3.0)
+	if not collision_only:
+		super()

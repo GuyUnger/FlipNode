@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://dbnwg2psnoj0f"]
 
-[ext_resource type="Script" path="res://addons/flipnode/ui/button_used_color.gd" id="1_akg50"]
+[ext_resource type="Script" uid="uid://b5epac1utbj0w" path="res://addons/flipnode/ui/button_used_color.gd" id="1_akg50"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1fh0c"]
 bg_color = Color(1, 1, 1, 1)

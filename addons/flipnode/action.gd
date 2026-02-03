@@ -34,13 +34,13 @@ func undo_redo_strokes_start():
 
 func _undo_redo_strokes_complete(name):
 	if undo_redo:
-		var strokes_after = brush.get_strokes_duplicate()
-		
+		var strokes_after := brush.get_strokes_duplicate()
 		undo_redo.create_action(name)
 		undo_redo.add_undo_property(brush, "strokes", _strokes_before)
 		undo_redo.add_do_property(brush, "strokes", strokes_after)
-		undo_redo.add_do_method(brush, "draw")
+		undo_redo.add_do_method(brush, "draw",)
 		undo_redo.add_undo_method(brush, "draw")
+		
 		undo_redo.add_undo_method(brush, "update_bounds")
 		
 		undo_redo.commit_action(false)
